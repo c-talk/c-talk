@@ -19,6 +19,8 @@
     "forceConsistentCasingInFileNames": true,
     "types": [
       "vite/client",
+      "unplugin-icons/types/vue",
+      "naive-ui/volar",
       "vue/ref-macros",
       "vite-plugin-pages/client",
       "vite-plugin-vue-component-preview/client",
