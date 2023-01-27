@@ -7,7 +7,24 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    DefaultHeader: typeof import('./../layouts/common/DefaultHeader.vue')['default']
     Greet: typeof import('./../components/Greet.vue')['default']
+    HeaderElement: typeof import('./../layouts/common/components/HeaderElement.vue')['default']
+    IconFluentDiversity48Regular: typeof import('~icons/fluent/diversity48-regular')['default']
+    IconFluentDocumentAdd48Filled: typeof import('~icons/fluent/document-add48-filled')['default']
+    IconFluentDocumentAdd48Regular: typeof import('~icons/fluent/document-add48-regular')['default']
+    IconFluentQuestionCircle48Regular: typeof import('~icons/fluent/question-circle48-regular')['default']
+    IconFluentSettings48Regular: typeof import('~icons/fluent/settings48-regular')['default']
+    IconFluentShapes48Regular: typeof import('~icons/fluent/shapes48-regular')['default']
+    IconFluentThumbLike48Regular: typeof import('~icons/fluent/thumb-like48-regular')['default']
+    NDivider: typeof import('naive-ui')['NDivider']
+    NIcon: typeof import('naive-ui')['NIcon']
+    NLayout: typeof import('naive-ui')['NLayout']
+    NLayoutContent: typeof import('naive-ui')['NLayoutContent']
+    NLayoutFooter: typeof import('naive-ui')['NLayoutFooter']
+    NLayoutHeader: typeof import('naive-ui')['NLayoutHeader']
+    NMenu: typeof import('naive-ui')['NMenu']
+    NSpace: typeof import('naive-ui')['NSpace']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

@@ -25,7 +25,6 @@ interface ImportMetaEnv {
    */
   readonly VITE_ICON_LOCAL_PREFFIX: string
 }
-
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }

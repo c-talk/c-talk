@@ -4,6 +4,9 @@ module.exports = {
     browser: true,
     node: true
   },
+  ecmaFeatures: {
+    jsx: true
+  },
   extends: [
     'plugin:vue/vue3-recommended',
     'plugin:@typescript-eslint/recommended',
