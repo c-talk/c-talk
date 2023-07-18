@@ -8,7 +8,7 @@ module.exports = {
     'stylelint-config-html/html', // the shareable html config for Stylelint.
     'stylelint-config-html/vue', // the shareable vue config for Stylelint.
     'stylelint-config-recess-order',
-    'stylelint-config-prettier'
+    // 'stylelint-config-prettier'
   ],
   rules: {
     'font-family-name-quotes': null,
