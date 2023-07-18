@@ -7,6 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    DefaultFooter: typeof import('./../layouts/common/DefaultFooter.vue')['default']
     DefaultHeader: typeof import('./../layouts/common/DefaultHeader.vue')['default']
     Greet: typeof import('./../components/Greet.vue')['default']
     HeaderElement: typeof import('./../layouts/common/components/HeaderElement.vue')['default']
@@ -18,6 +19,7 @@ declare module '@vue/runtime-core' {
     IconFluentShapes48Regular: typeof import('~icons/fluent/shapes48-regular')['default']
     IconFluentThumbLike48Regular: typeof import('~icons/fluent/thumb-like48-regular')['default']
     NDivider: typeof import('naive-ui')['NDivider']
+    NGrid: typeof import('naive-ui')['NGrid']
     NIcon: typeof import('naive-ui')['NIcon']
     NLayout: typeof import('naive-ui')['NLayout']
     NLayoutContent: typeof import('naive-ui')['NLayoutContent']

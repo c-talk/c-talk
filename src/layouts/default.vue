@@ -6,7 +6,7 @@
     <n-layout-content class="flex-1" content-style="padding: 24px;">
       <RouterView />
     </n-layout-content>
-    <n-layout-footer inverted>成府路</n-layout-footer>
+    <n-layout-footer inverted><DefaultFooter /></n-layout-footer>
   </n-layout>
 </template>
 

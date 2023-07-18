@@ -24,7 +24,9 @@ const themeVars = useThemeVars()
       <span>策略</span>
     </HeaderElement>
 
+    <!-- 中间的空白 -->
     <div class="flex-1"></div>
+
     <HeaderElement>
       <template #icon>
         <icon-fluent-settings-48-regular width="2.75em" height="2.75em" />

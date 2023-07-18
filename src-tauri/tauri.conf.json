@@ -60,10 +60,12 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
-        "resizable": true,
-        "title": "wbook",
-        "width": 800
+        "maximized": false,
+        "height": 450,
+        "resizable": false,
+        "title": "WBook",
+        "width": 600,
+        "center": true
       }
     ]
   }
