@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import { resolve } from 'path'
-import Preview from 'vite-plugin-vue-component-preview'
+// import Preview from 'vite-plugin-vue-component-preview'
 import Vue from '@vitejs/plugin-vue'
 import VueJSX from '@vitejs/plugin-vue-jsx'
 import Pages from 'vite-plugin-pages'
@@ -38,7 +38,7 @@ export default defineConfig((configEnv) => {
 
   return {
     plugins: [
-      Preview(),
+      // Preview(),
 
       VueMacros({
         plugins: {

@@ -1,6 +1,22 @@
 <script lang="ts" setup>
 import { useThemeVars } from 'naive-ui'
+import { WebviewWindow } from '@tauri-apps/api/window'
 const themeVars = useThemeVars()
+
+const openAboutWindow = () => {
+  console.log('openAboutWindow')
+  new WebviewWindow('About', {
+    url: '/about',
+    center: true,
+    closable: true,
+    focus: true,
+    height: 480,
+    width: 640,
+    maximizable: false,
+    resizable: false,
+    title: '关于'
+  })
+}
 </script>
 
 <template>
@@ -33,7 +49,7 @@ const themeVars = useThemeVars()
       </template>
       <span>设置</span>
     </HeaderElement>
-    <HeaderElement>
+    <HeaderElement @click="openAboutWindow">
       <template #icon>
         <icon-fluent-question-circle-48-regular
           width="2.75em"
