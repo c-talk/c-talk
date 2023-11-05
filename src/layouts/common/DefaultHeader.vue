@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import { useThemeVars } from 'naive-ui'
 import { WebviewWindow } from '@tauri-apps/api/window'
+import { invoke } from '@tauri-apps/api/tauri'
 const themeVars = useThemeVars()
 
-const openAboutWindow = () => {
+const openAboutWindow = async () => {
   console.log('openAboutWindow')
+  console.log(await invoke('app_info'))
   new WebviewWindow('About', {
     url: '/about',
     center: true,

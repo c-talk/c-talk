@@ -12,8 +12,15 @@
 
 <style scoped lang="scss">
 .index-page {
-  .book-cover {
-    aspect-ratio: 1/1;
-  }
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 </style>
+
+<route lang="yaml">
+meta:
+  layout: plain
+</route>
