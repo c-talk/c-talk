@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-pnpm lint-staged
-echo "Linting Rust code..."
-cd src-tauri && cargo clippy --allow-dirty --allow-staged --all-targets --all-features --fix -- -D warnings
