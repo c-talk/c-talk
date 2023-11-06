@@ -346,3 +346,11 @@ fn test_contains() {
     let node_id = toc.add("test", (0, 0), None).unwrap().id;
     assert!(toc.contains(node_id));
 }
+
+#[test]
+fn test_dump() {
+    let mut toc = TocRoot::new();
+    toc.add("test", (0, 0), None).unwrap();
+    let buf = toc.dump().unwrap();
+    assert_eq!(buf, "[{\"id\":0,\"title\":\"test\",\"patch\":null,\"meta\":{\"words\":0,\"range\":[0,0]},\"children\":[]}]");
+}

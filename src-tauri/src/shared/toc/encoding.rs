@@ -1,3 +1,4 @@
+use anyhow::Result;
 use serde::{Serialize, Deserialize};
 
 use super::{TocRoot, TocNode, TreeNodeMeta, Toc};
@@ -61,5 +62,12 @@ impl Serialize for TocRoot {
         S: serde::Serializer
     {
         JSONRoot::from(self).serialize(serializer)
+    }
+}
+
+impl TocRoot {
+    pub fn dump(&self) -> Result<String> {
+        let buf = simd_json::to_string(self)?;
+        Ok(buf)
     }
 }
