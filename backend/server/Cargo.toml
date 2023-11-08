@@ -13,3 +13,4 @@ repository.workspace = true
 [dependencies]
 axum = "0.6.20"
 indexmap = "2.1.0"
+portpicker = "0.1.1"
