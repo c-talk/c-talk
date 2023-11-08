@@ -1,7 +1,7 @@
 use anyhow::Result;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
-use super::{TocRoot, TocNode, TreeNodeMeta, Toc};
+use super::{Toc, TocNode, TocRoot, TreeNodeMeta};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JSONNode {
@@ -45,7 +45,8 @@ impl JSONNode {
             children: Vec::new(),
         };
         for child_id in toc_node.children.iter() {
-            node.children.push(JSONNode::from_toc_node(toc, toc.get(*child_id).unwrap()));
+            node.children
+                .push(JSONNode::from_toc_node(toc, toc.get(*child_id).unwrap()));
         }
         node
     }
@@ -55,11 +56,10 @@ impl JSONNode {
     // }
 }
 
-
 impl Serialize for TocRoot {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: serde::Serializer
+        S: serde::Serializer,
     {
         JSONRoot::from(self).serialize(serializer)
     }

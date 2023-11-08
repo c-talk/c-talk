@@ -22,7 +22,10 @@ fn main() {
     // Everything after here runs in only the app process
     tauri::Builder::default()
         .manage(Port(port))
-        .invoke_handler(tauri::generate_handler![commands::greet, commands::get_port])
+        .invoke_handler(tauri::generate_handler![
+            commands::greet,
+            commands::get_port
+        ])
         .plugin(sentry_tauri::plugin())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

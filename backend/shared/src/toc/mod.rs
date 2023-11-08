@@ -298,7 +298,6 @@ impl Toc for TocRoot {
         node.parent = Some(parent);
     }
 
-
     fn get(&self, id: usize) -> Option<&TocNode> {
         self.container.get(id)
     }
