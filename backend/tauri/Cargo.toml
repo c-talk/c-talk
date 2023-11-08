@@ -14,9 +14,13 @@ repository.workspace = true
 tauri-build = { version = "1.5", features = [] }
 
 [dependencies]
-tauri = { version = "1.5", features = ["shell-open"] }
+
 shared = { path = "../shared" }
 server = { path = "../server" }
+
+tauri = { version = "1.5", features = ["shell-open"] }
+sentry-tauri = "0.2"
+portpicker = "0.1.1"
 
 # workspace dependencies
 serde = { workspace = true }
