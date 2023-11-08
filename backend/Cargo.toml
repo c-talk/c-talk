@@ -1,0 +1,37 @@
+[workspace]
+resolver = "2"
+members = ["shared", "server", "tauri"]
+
+[workspace.package]
+version = "0.1.0"
+repository = "https://github.com/greenhat616/wbook.git"
+edition = "2021"
+description = "WBook is a tool to convert txt files to epub files with toc and metadata."
+documentation = ""
+license = "LGPL-3.0-or-later"
+authors = ["a632079"]
+
+[workspace.dependencies]
+serde = { version = "1.0", features = ["derive", "rc"] }
+serde_json = "1.0"
+simd-json = "0.13.4"
+chrono = "0.4.31"
+tracing = "0.1.40"
+tracing-subscriber = "0.3.17"
+thiserror = "1.0.50"
+anyhow = "1.0.75"
+config = "0.13.3"
+
+[workspace.dependencies.uuid]
+version = "1.5.0"
+features = [
+  "v4",                # Lets you generate random UUIDs
+  "fast-rng",          # Use a faster (but still sufficiently random) RNG
+  "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
+]
+
+[profile.release]
+opt-level = "s"
+codegen-units = 1
+lto = true
+strip = true

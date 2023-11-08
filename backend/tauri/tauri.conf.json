@@ -1,9 +1,9 @@
 {
   "build": {
-    "beforeDevCommand": "bun run dev",
-    "beforeBuildCommand": "bun run build",
+    "beforeDevCommand": "pnpm run dev",
+    "beforeBuildCommand": "pnpm run build",
     "devPath": "http://localhost:1420",
-    "distDir": "../dist",
+    "distDir": "../../dist",
     "withGlobalTauri": false
   },
   "package": {
