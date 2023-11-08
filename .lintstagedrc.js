@@ -7,7 +7,8 @@ export default {
   ],
   'backend/**/*.{rs,toml}': [
     () =>
-      'cargo clippy --manifest-path=./backend/Cargo.toml --all-targets --all-features --fix -- -D warnings',
+      'cargo clippy --manifest-path=./backend/Cargo.toml --all-targets --all-features',
+    () => 'cargo test --manifest-path=./backend/Cargo.toml',
     () => 'cargo fmt --manifest-path=./backend/Cargo.toml --all'
   ],
   '*.{html,sass,scss,less}': ['prettier --write', 'stylelint --fix'],

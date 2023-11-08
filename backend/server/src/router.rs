@@ -1,11 +1,18 @@
 use axum::{
+    extract::{
+        ws::{Message, WebSocket},
+        WebSocketUpgrade,
+    },
     response::IntoResponse,
-    routing::{get, Router}, Json, extract::{WebSocketUpgrade, ws::{WebSocket, Message}},
+    routing::{get, Router},
+    Json,
 };
 
+///
+/// This fn is used to register the routes for the backend.
+///
 pub fn register(app: Router) -> Router {
-    app.route("/ws", get(ws_handler))
-        .route("/", get(handler))
+    app.route("/ws", get(ws_handler)).route("/", get(handler))
 }
 
 async fn handler() -> impl IntoResponse {
