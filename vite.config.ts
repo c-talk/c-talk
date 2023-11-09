@@ -1,9 +1,35 @@
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import Generouted from '@generouted/react-router/plugin'
+import React from '@vitejs/plugin-react'
+import AutoImport from 'unplugin-auto-import/vite'
+import IconsResolver from 'unplugin-icons/resolver'
+import Icons from 'unplugin-icons/vite'
+import I18nextLoader from 'vite-plugin-i18next-loader'
+import Svgr from 'vite-plugin-svgr'
 
+import { defineConfig } from 'vite'
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [react()],
+  plugins: [
+    React(),
+    Svgr(),
+    Generouted(),
+    I18nextLoader({
+      paths: ['./locales']
+    }),
+    AutoImport({
+      resolvers: [
+        IconsResolver({
+          prefix: 'Icon',
+          extension: 'jsx'
+        })
+      ],
+      dirs: ['src/hooks', 'src/components', 'src/utils'],
+      dts: 'src/types/auto-imports.d.ts'
+    }),
+    Icons({
+      compiler: 'jsx' // or 'solid'
+    })
+  ],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
@@ -19,8 +45,8 @@ export default defineConfig(async () => ({
   envPrefix: ['VITE_', 'TAURI_'],
   resolve: {
     alias: {
-      '@/': '/src',
-      '~/': '/'
+      '@': '/src',
+      '~': '/'
     }
   }
 }))

@@ -1,1 +1,4 @@
 index.html
+node_modules/
+dist/
+backend/**/target

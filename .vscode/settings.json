@@ -1,0 +1,14 @@
+{
+    "rust-analyzer.linkedProjects": [
+        ".\\backend\\Cargo.toml"
+    ],
+    "rust-analyzer.showUnlinkedFileNotification": false,
+    "i18n-ally.localesPaths": [
+        "locales"
+    ],
+    "css.customData": [
+      ".vscode/tailwindcss.json"
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.updateImportsOnFileMove.enabled": "always"
+}

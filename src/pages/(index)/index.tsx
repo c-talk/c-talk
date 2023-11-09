@@ -1,9 +1,8 @@
-import { invoke } from '@tauri-apps/api/tauri'
+import reactLogo from '@/assets/react.svg'
+import { invoke } from '@tauri-apps/api'
 import { useState } from 'react'
-import './App.css'
-import reactLogo from './assets/react.svg'
-
-function App() {
+import './_index.css'
+export default function IndexPage() {
   const [greetMsg, setGreetMsg] = useState('')
   const [name, setName] = useState('')
 
@@ -49,5 +48,3 @@ function App() {
     </div>
   )
 }
-
-export default App

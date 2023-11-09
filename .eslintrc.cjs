@@ -4,9 +4,6 @@ module.exports = {
     browser: true,
     node: true
   },
-  ecmaFeatures: {
-    jsx: true
-  },
   extends: [
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
@@ -21,13 +18,16 @@ module.exports = {
     'react/react-in-jsx-scope': 'off'
   },
   settings: {
+    react: {
+      version: 'detect'
+    },
     'import/resolver': {
       alias: {
         map: [
           ['@', './src'],
           ['~', './']
         ],
-        extensions: ['.tsx', '.ts', '.jsx', '.js']
+        extensions: ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.cjs']
       }
     }
   }
