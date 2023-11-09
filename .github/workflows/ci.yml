@@ -53,7 +53,7 @@ jobs:
   # a single job named test
   test:
     # the display name of the test job
-    name: WebDriverIO Test Runner
+    name: Test
 
     # we want to run on the latest linux environment
     runs-on: ubuntu-latest
@@ -118,7 +118,8 @@ jobs:
         with:
           command: install
           args: tauri-driver
-
+      - name: Prepare fronend
+        run: pnpm build # Build frontend
       # run the WebdriverIO test suite.
       # we run it through `xvfb-run` (the dependency we installed earlier) to have a fake
       # display server which allows our application to run headless without any changes to the code
