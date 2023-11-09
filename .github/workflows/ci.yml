@@ -1,4 +1,8 @@
-on: [push]
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
 
 # the name of our workflow
 name: CI
@@ -11,6 +15,15 @@ jobs:
       - uses: actions/checkout@v3
       - name: Rust stable
         run: rustup toolchain install stable --profile minimal
+      - name: Tauri dependencies
+        run: >-
+          sudo apt-get update &&
+          sudo apt-get install -y
+          libgtk-3-dev
+          libayatana-appindicator3-dev
+          libwebkit2gtk-4.0-dev
+          webkit2gtk-driver
+          xvfb
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: "./backend/"
@@ -123,5 +136,5 @@ jobs:
       # run the WebdriverIO test suite.
       # we run it through `xvfb-run` (the dependency we installed earlier) to have a fake
       # display server which allows our application to run headless without any changes to the code
-      - name: WebdriverIO
+      - name: Test
         run: xvfb-run pnpm test
