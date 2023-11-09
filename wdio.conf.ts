@@ -16,12 +16,15 @@ export const config: Options.Testrunner = {
   port: 4444,
   capabilities: [
     {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
       browserName: 'wry',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
       maxInstances: 1,
       'tauri:options': {
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         application:
           './backend/target/release/wbook' +
           (os.platform() === 'win32' ? '.exe' : '')
@@ -34,9 +37,10 @@ export const config: Options.Testrunner = {
     ui: 'bdd',
     timeout: 60000
   },
-  onPrepare: () => spawnSync('pnpm', ['tauri', 'build'], {
-    stdio: [null, process.stdout, process.stderr]
-  }),
+  onPrepare: () =>
+    spawnSync('pnpm', ['tauri', 'build'], {
+      stdio: [null, process.stdout, process.stderr]
+    }),
 
   // ensure we are running `tauri-driver` before the session starts so that we can proxy the webdriver requests
   beforeSession: async () =>

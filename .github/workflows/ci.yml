@@ -5,7 +5,7 @@ name: CI
 
 jobs:
   lint:
-    name: Lint & build
+    name: Lint & Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

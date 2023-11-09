@@ -1,6 +1,6 @@
 export default {
-  'src/**/*.{js,jsx}': ['prettier --write', 'eslint --cache --fix'],
-  'src/**/*.{ts,tsx}': [
+  '*.{js,jsx}': ['prettier --write', 'eslint --cache --fix'],
+  '*.{ts,tsx}': [
     'prettier --write',
     'eslint --cache --fix',
     () => 'tsc -p tsconfig.json --noEmit'
