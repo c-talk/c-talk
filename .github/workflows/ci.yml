@@ -12,7 +12,7 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Rust stable
         run: rustup toolchain install stable --profile minimal
       - name: Tauri dependencies
@@ -60,7 +60,7 @@ jobs:
       - name: Lint
         run: pnpm lint # Lint frontend
 
-  test-unit:
+  test_unit:
     name: Unit Test
 
     # we want to run on the latest linux environment
@@ -69,7 +69,7 @@ jobs:
     # the steps our job runs **in order**
     steps:
       # checkout the code on the workflow runner
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       # install system dependencies that Tauri needs to compile on Linux.
       # note the extra dependencies for `tauri-driver` to run which are: `webkit2gtk-driver` and `xvfb`
@@ -134,7 +134,7 @@ jobs:
       - name: Test
         run: pnpm test:unit && test:backend
 
-  test-e2e:
+  test_e2e:
     # the display name of the test job
     name: E2E Test
 
@@ -144,7 +144,7 @@ jobs:
     # the steps our job runs **in order**
     steps:
       # checkout the code on the workflow runner
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       # install system dependencies that Tauri needs to compile on Linux.
       # note the extra dependencies for `tauri-driver` to run which are: `webkit2gtk-driver` and `xvfb`
