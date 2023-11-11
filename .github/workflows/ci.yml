@@ -207,4 +207,4 @@ jobs:
       # we run it through `xvfb-run` (the dependency we installed earlier) to have a fake
       # display server which allows our application to run headless without any changes to the code
       - name: Test
-        run: xvfb-run pnpm test
+        run: xvfb-run pnpm test:e2e

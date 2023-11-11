@@ -6,7 +6,7 @@ import path from 'path'
 let tauriDriver
 
 export const config: Options.Testrunner = {
-  specs: ['./tests/specs/**/*.ts'],
+  specs: ['./tests/e2e/**/*.e2e.ts'],
   // Patterns to exclude.
   exclude: [
     // 'path/to/excluded/files'
