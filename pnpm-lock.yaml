@@ -41,13 +41,13 @@ devDependencies:
     specifier: 0.21.8
     version: 0.21.8
   '@commitlint/cli':
-    specifier: ^18.2.0
+    specifier: 18.2.0
     version: 18.2.0(typescript@5.2.2)
   '@commitlint/config-conventional':
-    specifier: ^18.1.0
+    specifier: 18.1.0
     version: 18.1.0
   '@commitlint/types':
-    specifier: ^18.1.0
+    specifier: 18.1.0
     version: 18.1.0
   '@iconify/json':
     specifier: 2.2.139
@@ -68,10 +68,10 @@ devDependencies:
     specifier: ^6.1.9
     version: 6.1.9
   '@typescript-eslint/eslint-plugin':
-    specifier: ^6.10.0
+    specifier: 6.10.0
     version: 6.10.0(@typescript-eslint/parser@6.10.0)(eslint@8.53.0)(typescript@5.2.2)
   '@typescript-eslint/parser':
-    specifier: ^6.10.0
+    specifier: 6.10.0
     version: 6.10.0(eslint@8.53.0)(typescript@5.2.2)
   '@vitejs/plugin-react':
     specifier: ^4.2.0
@@ -110,46 +110,46 @@ devDependencies:
     specifier: 1.11.10
     version: 1.11.10
   eslint:
-    specifier: ^8.53.0
+    specifier: 8.53.0
     version: 8.53.0
   eslint-config-prettier:
-    specifier: ^9.0.0
+    specifier: 9.0.0
     version: 9.0.0(eslint@8.53.0)
   eslint-config-standard:
-    specifier: ^17.1.0
+    specifier: 17.1.0
     version: 17.1.0(eslint-plugin-import@2.29.0)(eslint-plugin-n@16.3.0)(eslint-plugin-promise@6.1.1)(eslint@8.53.0)
   eslint-import-resolver-alias:
-    specifier: ^1.1.2
+    specifier: 1.1.2
     version: 1.1.2(eslint-plugin-import@2.29.0)
   eslint-plugin-html:
-    specifier: ^7.1.0
+    specifier: 7.1.0
     version: 7.1.0
   eslint-plugin-import:
-    specifier: ^2.29.0
+    specifier: 2.29.0
     version: 2.29.0(@typescript-eslint/parser@6.10.0)(eslint@8.53.0)
   eslint-plugin-n:
-    specifier: ^16.3.0
+    specifier: 16.3.0
     version: 16.3.0(eslint@8.53.0)
   eslint-plugin-prettier:
-    specifier: ^5.0.1
+    specifier: 5.0.1
     version: 5.0.1(eslint-config-prettier@9.0.0)(eslint@8.53.0)(prettier@3.0.3)
   eslint-plugin-promise:
-    specifier: ^6.1.1
+    specifier: 6.1.1
     version: 6.1.1(eslint@8.53.0)
   eslint-plugin-react:
-    specifier: ^7.33.2
+    specifier: 7.33.2
     version: 7.33.2(eslint@8.53.0)
   framer-motion:
     specifier: 10.16.4
     version: 10.16.4(react-dom@18.2.0)(react@18.2.0)
   husky:
-    specifier: ^8.0.3
+    specifier: 8.0.3
     version: 8.0.3
   i18next:
     specifier: ^23.6.0
     version: 23.6.0
   lint-staged:
-    specifier: ^15.0.2
+    specifier: 15.0.2
     version: 15.0.2
   ofetch:
     specifier: 1.3.3
@@ -167,7 +167,7 @@ devDependencies:
     specifier: 4.0.9
     version: 4.0.9(postcss@8.4.31)
   prettier:
-    specifier: ^3.0.3
+    specifier: 3.0.3
     version: 3.0.3
   qs:
     specifier: 6.11.2
@@ -185,25 +185,25 @@ devDependencies:
     specifier: 0.6.12
     version: 0.6.12
   stylelint:
-    specifier: ^15.11.0
+    specifier: 15.11.0
     version: 15.11.0(typescript@5.2.2)
   stylelint-config-html:
-    specifier: ^1.1.0
+    specifier: 1.1.0
     version: 1.1.0(postcss-html@1.5.0)(stylelint@15.11.0)
   stylelint-config-recess-order:
-    specifier: ^4.3.0
+    specifier: 4.3.0
     version: 4.3.0(stylelint@15.11.0)
   stylelint-config-standard:
-    specifier: ^34.0.0
+    specifier: 34.0.0
     version: 34.0.0(stylelint@15.11.0)
   stylelint-declaration-block-no-ignored-properties:
-    specifier: ^2.7.0
+    specifier: 2.7.0
     version: 2.7.0(stylelint@15.11.0)
   stylelint-order:
-    specifier: ^6.0.3
+    specifier: 6.0.3
     version: 6.0.3(stylelint@15.11.0)
   stylelint-scss:
-    specifier: ^5.3.1
+    specifier: 5.3.1
     version: 5.3.1(stylelint@15.11.0)
   tailwind-merge:
     specifier: 2.0.0
@@ -1113,7 +1113,7 @@ packages:
     dev: true
 
   /@nodelib/fs.scandir@2.1.5:
-    resolution: {integrity: sha1-dhnC6yGyVIP20WdUi0z9WnSIw9U=, tarball: https://registry.npmmirror.com/@nodelib/fs.scandir/download/@nodelib/fs.scandir-2.1.5.tgz}
+    resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -2930,7 +2930,7 @@ packages:
     dev: true
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=, tarball: https://registry.npmmirror.com/concat-map/download/concat-map-0.0.1.tgz}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
   /conventional-changelog-angular@6.0.0:
     resolution: {integrity: sha512-6qLgrBF4gueoC7AFVHu51nHL9pF9FRjXrH+ceVf7WmAfH3gs+gEYOkvxhjMPjZu57I4AGUGoNTY8V7Hrgf1uqg==}
@@ -3099,7 +3099,7 @@ packages:
       supports-color:
         optional: true
     dependencies:
-      ms: 2.1.2
+      ms: 2.1.3
     dev: true
 
   /debug@4.3.4(supports-color@8.1.1):
@@ -5335,7 +5335,7 @@ packages:
     dev: true
 
   /json-buffer@3.0.1:
-    resolution: {integrity: sha1-kziAKjDTtmBfvgYT4JQAjKjAWhM=, tarball: https://registry.npmmirror.com/json-buffer/download/json-buffer-3.0.1.tgz}
+    resolution: {integrity: sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==}
     dev: true
 
   /json-parse-even-better-errors@2.3.1:
