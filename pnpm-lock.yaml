@@ -6,10 +6,10 @@ settings:
 
 dependencies:
   '@generouted/react-router':
-    specifier: ^1.16.1
+    specifier: 1.16.1
     version: 1.16.1(react-router-dom@6.18.0)(react@18.2.0)(vite@5.0.2)
   '@radix-ui/react-slot':
-    specifier: ^1.0.2
+    specifier: 1.0.2
     version: 1.0.2(@types/react@18.2.35)(react@18.2.0)
   '@tauri-apps/api':
     specifier: 1.5.1
@@ -18,16 +18,16 @@ dependencies:
     specifier: 0.7.0
     version: 0.7.0
   lucide-react:
-    specifier: ^0.292.0
+    specifier: 0.292.0
     version: 0.292.0(react@18.2.0)
   react:
-    specifier: ^18.2.0
+    specifier: 18.2.0
     version: 18.2.0
   react-dom:
-    specifier: ^18.2.0
+    specifier: 18.2.0
     version: 18.2.0(react@18.2.0)
   react-router-dom:
-    specifier: ^6.18.0
+    specifier: 6.18.0
     version: 6.18.0(react-dom@18.2.0)(react@18.2.0)
   swr:
     specifier: 2.2.4
@@ -59,13 +59,13 @@ devDependencies:
     specifier: 20.9.0
     version: 20.9.0
   '@types/react':
-    specifier: ^18.2.35
+    specifier: 18.2.35
     version: 18.2.35
   '@types/react-dom':
-    specifier: ^18.2.14
+    specifier: 18.2.14
     version: 18.2.14
   '@types/react-helmet':
-    specifier: ^6.1.9
+    specifier: 6.1.9
     version: 6.1.9
   '@typescript-eslint/eslint-plugin':
     specifier: 6.10.0
@@ -74,7 +74,7 @@ devDependencies:
     specifier: 6.10.0
     version: 6.10.0(eslint@8.53.0)(typescript@5.2.2)
   '@vitejs/plugin-react':
-    specifier: ^4.2.0
+    specifier: 4.2.0
     version: 4.2.0(vite@5.0.2)
   '@wdio/cli':
     specifier: 8.22.1
@@ -146,7 +146,7 @@ devDependencies:
     specifier: 8.0.3
     version: 8.0.3
   i18next:
-    specifier: ^23.6.0
+    specifier: 23.6.0
     version: 23.6.0
   lint-staged:
     specifier: 15.0.2
@@ -173,10 +173,10 @@ devDependencies:
     specifier: 6.11.2
     version: 6.11.2
   react-helmet:
-    specifier: ^6.1.0
+    specifier: 6.1.0
     version: 6.1.0(react@18.2.0)
   react-i18next:
-    specifier: ^13.3.1
+    specifier: 13.3.1
     version: 13.3.1(i18next@23.6.0)(react-dom@18.2.0)(react@18.2.0)
   sass:
     specifier: 1.69.5
@@ -227,7 +227,7 @@ devDependencies:
     specifier: ^5.0.2
     version: 5.0.2(@types/node@20.9.0)(sass@1.69.5)
   vite-plugin-i18next-loader:
-    specifier: ^2.0.4
+    specifier: 2.0.4
     version: 2.0.4(vite@5.0.2)
   vite-plugin-markdown:
     specifier: 2.2.0-2
@@ -242,7 +242,7 @@ devDependencies:
     specifier: 3.22.4
     version: 3.22.4
   zustand:
-    specifier: ^4.4.6
+    specifier: 4.4.6
     version: 4.4.6(@types/react@18.2.35)(react@18.2.0)
 
 packages:
@@ -432,14 +432,6 @@ packages:
       js-tokens: 4.0.0
     dev: true
 
-  /@babel/parser@7.23.0:
-    resolution: {integrity: sha512-vvPKKdMemU85V9WE/l5wZEmImpCtLqbnTvqDS2U1fJ96KrxoW7KrXhNsNCblQlg8Ck4b85yxdTyelsMUgFUXiw==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
-    dependencies:
-      '@babel/types': 7.23.4
-    dev: true
-
   /@babel/parser@7.23.4:
     resolution: {integrity: sha512-vf3Xna6UEprW+7t6EtOmFpHNAuxw3xqPZghy+brsnusscJRW5BMUzzHZc5ICjULee81WeUV2jjakG09MDglJXQ==}
     engines: {node: '>=6.0.0'}
@@ -479,7 +471,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/code-frame': 7.23.4
-      '@babel/parser': 7.23.0
+      '@babel/parser': 7.23.4
       '@babel/types': 7.23.4
     dev: true
 
@@ -499,15 +491,6 @@ packages:
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /@babel/types@7.23.0:
-    resolution: {integrity: sha512-0oIyUfKoI3mSqMvsxBdclDwxXKXAUA8v/apZbc+iSyARYou1o8ZGDxbUYyLFoW2arqS2jDGqJuZvv1d/io1axg==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      '@babel/helper-string-parser': 7.23.4
-      '@babel/helper-validator-identifier': 7.22.20
-      to-fast-properties: 2.0.0
     dev: true
 
   /@babel/types@7.23.4:
@@ -1577,8 +1560,8 @@ packages:
   /@types/babel__core@7.20.5:
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
     dependencies:
-      '@babel/parser': 7.23.0
-      '@babel/types': 7.23.0
+      '@babel/parser': 7.23.4
+      '@babel/types': 7.23.4
       '@types/babel__generator': 7.6.6
       '@types/babel__template': 7.4.3
       '@types/babel__traverse': 7.20.3
@@ -1593,7 +1576,7 @@ packages:
   /@types/babel__template@7.4.3:
     resolution: {integrity: sha512-ciwyCLeuRfxboZ4isgdNZi/tkt06m8Tw6uGbBSBgWrnnZGNXiEyM27xc/PjXGQLqlZ6ylbgHMnm7ccF9tCkOeQ==}
     dependencies:
-      '@babel/parser': 7.23.0
+      '@babel/parser': 7.23.4
       '@babel/types': 7.23.4
     dev: true
 
@@ -8493,7 +8476,7 @@ packages:
     dev: true
 
   /void-elements@3.1.0:
-    resolution: {integrity: sha1-YU9/v42AHwu18GYfWy9XhXUOTwk=, tarball: https://registry.npmmirror.com/void-elements/download/void-elements-3.1.0.tgz}
+    resolution: {integrity: sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==}
     engines: {node: '>=0.10.0'}
     dev: true
 
