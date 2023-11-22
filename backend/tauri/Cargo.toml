@@ -11,16 +11,16 @@ repository.workspace = true
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "1.5", features = [] }
+tauri-build = { version = "=1.5.0", features = [] }
 
 [dependencies]
 
 shared = { path = "../shared" }
 server = { path = "../server" }
 
-tauri = { version = "1.5", features = ["shell-open"] }
-sentry-tauri = "0.2"
-portpicker = "0.1.1"
+tauri = { version = "=1.5.2", features = ["shell-open"] }
+sentry-tauri = "=0.2.0"
+portpicker = "=0.1.1"
 
 # workspace dependencies
 serde = { workspace = true }
