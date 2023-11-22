@@ -23,7 +23,8 @@
     },
     {
       "groupName": "Rust packages",
-      "matchManagers": ["cargo"]
+      "matchManagers": ["cargo"],
+      "rangeStrategy": "range"
     },
     {
       "groupName": "TypeScript",
