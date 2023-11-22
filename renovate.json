@@ -17,6 +17,14 @@
       "matchPackagePatterns": ["react", "zustand", "i18next"]
     },
     {
+      "groupName": "Axum packages",
+      "matchPackageNames": ["axum", "tower-http"]
+    },
+    {
+      "groupName": "Rust packages",
+      "matchManagers": ["cargo"]
+    },
+    {
       "groupName": "TypeScript",
       "matchPackagePatterns": ["typescript"]
     },
@@ -33,7 +41,7 @@
     },
     {
       "groupName": "Testing packages",
-      "matchPackagePatterns": ["vitest", "cypress"]
+      "matchPackagePatterns": ["vitest", "cypress", "wdio"]
     }
   ]
 }
