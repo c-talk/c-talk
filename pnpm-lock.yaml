@@ -18,8 +18,8 @@ dependencies:
     specifier: 0.7.0
     version: 0.7.0
   lucide-react:
-    specifier: 0.293.0
-    version: 0.293.0(react@18.2.0)
+    specifier: 0.294.0
+    version: 0.294.0(react@18.2.0)
   react:
     specifier: 18.2.0
     version: 18.2.0
@@ -146,8 +146,8 @@ devDependencies:
     specifier: 8.0.3
     version: 8.0.3
   i18next:
-    specifier: 23.7.6
-    version: 23.7.6
+    specifier: 23.7.7
+    version: 23.7.7
   lint-staged:
     specifier: 15.1.0
     version: 15.1.0
@@ -177,7 +177,7 @@ devDependencies:
     version: 6.1.0(react@18.2.0)
   react-i18next:
     specifier: 13.5.0
-    version: 13.5.0(i18next@23.7.6)(react-dom@18.2.0)(react@18.2.0)
+    version: 13.5.0(i18next@23.7.7)(react-dom@18.2.0)(react@18.2.0)
   sass:
     specifier: 1.69.5
     version: 1.69.5
@@ -4808,8 +4808,8 @@ packages:
     hasBin: true
     dev: true
 
-  /i18next@23.7.6:
-    resolution: {integrity: sha512-O66BhXBw0fH4bEJMA0/klQKPEbcwAp5wjXEL803pdAynNbg2f4qhLIYlNHJyE7icrL6XmSZKPYaaXwy11kJ6YQ==}
+  /i18next@23.7.7:
+    resolution: {integrity: sha512-peTvdT+Lma+o0LfLFD7IC2M37N9DJ04dH0IJYOyOHRhDfLo6nK36v7LkrQH35C2l8NHiiXZqGirhKESlEb/5PA==}
     dependencies:
       '@babel/runtime': 7.23.2
     dev: true
@@ -5677,8 +5677,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /lucide-react@0.293.0(react@18.2.0):
-    resolution: {integrity: sha512-g3AN0EYITCpAjNgLHrKrFWvIJzZy0Y9OPBaonyKw1cM+nZE6piOM+TiuQdYfha7oa76TMiDaWXQHE44CEqsrzw==}
+  /lucide-react@0.294.0(react@18.2.0):
+    resolution: {integrity: sha512-V7o0/VECSGbLHn3/1O67FUgBwWB+hmzshrgDVRJQhMh8uj5D3HBuIvhuAmQTtlupILSplwIZg5FTc4tTKMA2SA==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
@@ -6763,7 +6763,7 @@ packages:
       react-side-effect: 2.1.2(react@18.2.0)
     dev: true
 
-  /react-i18next@13.5.0(i18next@23.7.6)(react-dom@18.2.0)(react@18.2.0):
+  /react-i18next@13.5.0(i18next@23.7.7)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-CFJ5NDGJ2MUyBohEHxljOq/39NQ972rh1ajnadG9BjTk+UXbHLq4z5DKEbEQBDoIhUmmbuS/fIMJKo6VOax1HA==}
     peerDependencies:
       i18next: '>= 23.2.3'
@@ -6778,7 +6778,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.23.2
       html-parse-stringify: 3.0.1
-      i18next: 23.7.6
+      i18next: 23.7.7
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: true
