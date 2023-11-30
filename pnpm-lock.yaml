@@ -50,8 +50,8 @@ devDependencies:
     specifier: 18.4.3
     version: 18.4.3
   '@iconify/json':
-    specifier: 2.2.149
-    version: 2.2.149
+    specifier: 2.2.150
+    version: 2.2.150
   '@tauri-apps/cli':
     specifier: 1.5.6
     version: 1.5.6
@@ -140,8 +140,8 @@ devDependencies:
     specifier: 7.33.2
     version: 7.33.2(eslint@8.54.0)
   framer-motion:
-    specifier: 10.16.7
-    version: 10.16.7(react-dom@18.2.0)(react@18.2.0)
+    specifier: 10.16.9
+    version: 10.16.9(react-dom@18.2.0)(react@18.2.0)
   husky:
     specifier: 8.0.3
     version: 8.0.3
@@ -982,8 +982,8 @@ packages:
     resolution: {integrity: sha512-dvuCeX5fC9dXgJn9t+X5atfmgQAzUOWqS1254Gh0m6i8wKd10ebXkfNKiRK+1GWi/yTvvLDHpoxLr0xxxeslWw==}
     dev: true
 
-  /@iconify/json@2.2.149:
-    resolution: {integrity: sha512-fGFitEzqp02PtmmYq30PpAHwf9d4WIOf9j7tOHY8N3vmqY84/oleadLwVu32czCOs+Ss5Usj1oKSgA69M1O4Aw==}
+  /@iconify/json@2.2.150:
+    resolution: {integrity: sha512-SltvXzHpr919VfTXlxYaO9hWIOZnDl3DMnqdB+BVsh2nHs7QkKHEdimx3XhDmX5wJAKg7gup7sGDwwh9P3aTqQ==}
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.1
@@ -4188,8 +4188,8 @@ packages:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
     dev: true
 
-  /framer-motion@10.16.7(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-iJrX0RXxbRI3qSvDjMIp0hj+Rq6eAx+GotpX8fnZhI88Texkhlj5QHifY4BdokCh4C0oYKPsyf0wL+kwM6/taw==}
+  /framer-motion@10.16.9(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-tcLz4X7PplYu6f4KHmclZFhHe8bFhCqfIG0z0Ssb+xi6OTfYeAb8BuVD235PMvypwi232VQ68KYlu3pfMKwPzA==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
