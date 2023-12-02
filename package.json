@@ -31,7 +31,7 @@
     "lucide-react": "0.294.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-router-dom": "6.20.0",
+    "react-router-dom": "6.20.1",
     "swr": "2.2.4",
     "tailwindcss-animate": "1.0.7"
   },
@@ -43,7 +43,7 @@
     "@iconify/json": "2.2.150",
     "@tauri-apps/cli": "1.5.7",
     "@types/node": "20.10.2",
-    "@types/react": "18.2.39",
+    "@types/react": "18.2.40",
     "@types/react-dom": "18.2.17",
     "@types/react-helmet": "6.1.9",
     "@typescript-eslint/eslint-plugin": "6.13.1",
