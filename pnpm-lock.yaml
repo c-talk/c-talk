@@ -221,8 +221,8 @@ devDependencies:
     specifier: 0.17.1
     version: 0.17.1
   unplugin-icons:
-    specifier: 0.18.0
-    version: 0.18.0(@svgr/core@8.1.0)
+    specifier: 0.18.1
+    version: 0.18.1(@svgr/core@8.1.0)
   vite:
     specifier: 5.0.4
     version: 5.0.4(@types/node@20.10.2)(sass@1.69.5)
@@ -8239,8 +8239,8 @@ packages:
       - rollup
     dev: true
 
-  /unplugin-icons@0.18.0(@svgr/core@8.1.0):
-    resolution: {integrity: sha512-/HEkomWitqf8QLY8FgUqNNjuM24kw+FS7YRGxHa5XyamboW+HnbvLU5ztIBOYY5rtBO1+cHPntzBsln2nX3f+A==}
+  /unplugin-icons@0.18.1(@svgr/core@8.1.0):
+    resolution: {integrity: sha512-WzKu/eoq74YC7vyEAGsFebkRzsZrRkR4FUzLU6gbpfa7WRaVVpQS2n7LSxE1iRUN0scKL5b9bq+i0wucR+ttFQ==}
     peerDependencies:
       '@svgr/core': '>=7.0.0'
       '@svgx/core': ^1.0.1
@@ -8761,6 +8761,7 @@ packages:
 
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
+    requiresBuild: true
 
   /write-file-atomic@5.0.1:
     resolution: {integrity: sha512-+QU2zd6OTD8XWIJCbffaiQeH9U73qIqafo1x6V1snCWYGJf6cVE0cDR4D8xRzcEnfI21IFrUPzPGtcPf8AC+Rw==}
