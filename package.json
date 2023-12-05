@@ -70,7 +70,7 @@
     "eslint-plugin-prettier": "5.0.1",
     "eslint-plugin-promise": "6.1.1",
     "eslint-plugin-react": "7.33.2",
-    "framer-motion": "10.16.12",
+    "framer-motion": "10.16.14",
     "husky": "8.0.3",
     "i18next": "23.7.7",
     "lint-staged": "15.2.0",
