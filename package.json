@@ -98,7 +98,7 @@
     "typescript": "5.3.2",
     "unplugin-auto-import": "0.17.2",
     "unplugin-icons": "0.18.1",
-    "vite": "5.0.5",
+    "vite": "5.0.6",
     "vite-plugin-i18next-loader": "2.0.4",
     "vite-plugin-markdown": "2.2.0-2",
     "vite-plugin-svgr": "4.2.0",
