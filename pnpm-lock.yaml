@@ -50,8 +50,8 @@ devDependencies:
     specifier: 18.4.3
     version: 18.4.3
   '@iconify/json':
-    specifier: 2.2.153
-    version: 2.2.153
+    specifier: 2.2.154
+    version: 2.2.154
   '@tauri-apps/cli':
     specifier: 1.5.7
     version: 1.5.7
@@ -140,8 +140,8 @@ devDependencies:
     specifier: 7.33.2
     version: 7.33.2(eslint@8.55.0)
   framer-motion:
-    specifier: 10.16.15
-    version: 10.16.15(react-dom@18.2.0)(react@18.2.0)
+    specifier: 10.16.16
+    version: 10.16.16(react-dom@18.2.0)(react@18.2.0)
   husky:
     specifier: 8.0.3
     version: 8.0.3
@@ -210,10 +210,10 @@ devDependencies:
     version: 2.1.0
   tailwindcss:
     specifier: 3.3.6
-    version: 3.3.6(ts-node@10.9.1)
+    version: 3.3.6(ts-node@10.9.2)
   ts-node:
-    specifier: 10.9.1
-    version: 10.9.1(@types/node@20.10.4)(typescript@5.3.3)
+    specifier: 10.9.2
+    version: 10.9.2(@types/node@20.10.4)(typescript@5.3.3)
   typescript:
     specifier: 5.3.3
     version: 5.3.3
@@ -1081,8 +1081,8 @@ packages:
     resolution: {integrity: sha512-dvuCeX5fC9dXgJn9t+X5atfmgQAzUOWqS1254Gh0m6i8wKd10ebXkfNKiRK+1GWi/yTvvLDHpoxLr0xxxeslWw==}
     dev: true
 
-  /@iconify/json@2.2.153:
-    resolution: {integrity: sha512-aGX9jwdUHpH0Iqr2k5d+eRdheklsloSrnvpdgkOWZOmgNaSP5JqkuTsOgSOwZySqotFbDqZK8Il7ezMj1vCFJQ==}
+  /@iconify/json@2.2.154:
+    resolution: {integrity: sha512-AafpksywlG0N1vYny+Jjdi79j0URy5HQFCnOcjcr+H24OS1nDZU4udfyQZ1rQsLqzpIOYaWOkpDODsCU9SfHcQ==}
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.1
@@ -4295,8 +4295,8 @@ packages:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
     dev: true
 
-  /framer-motion@10.16.15(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-BapW1EKc/Sgph1rKEwL9bFt2B79z7bu7jN4Up1jGUaTE78WBsVO+6eCmoUZsQH0hHtRUDnnTqjjBbM7dk9Kp8A==}
+  /framer-motion@10.16.16(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-je6j91rd7NmUX7L1XHouwJ4v3R+SO4umso2LUcgOct3rHZ0PajZ80ETYZTajzEXEl9DlKyzjyt4AvGQ+lrebOw==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
@@ -6621,7 +6621,7 @@ packages:
       camelcase-css: 2.0.1
       postcss: 8.4.32
 
-  /postcss-load-config@4.0.1(postcss@8.4.32)(ts-node@10.9.1):
+  /postcss-load-config@4.0.1(postcss@8.4.32)(ts-node@10.9.2):
     resolution: {integrity: sha512-vEJIc8RdiBRu3oRAI0ymerOn+7rPuMvRXslTvZUKZonDHFIczxztIyJ1urxM1x9JXEikvpWWTUUqal5j/8QgvA==}
     engines: {node: '>= 14'}
     peerDependencies:
@@ -6635,7 +6635,7 @@ packages:
     dependencies:
       lilconfig: 2.1.0
       postcss: 8.4.32
-      ts-node: 10.9.1(@types/node@20.10.4)(typescript@5.3.3)
+      ts-node: 10.9.2(@types/node@20.10.4)(typescript@5.3.3)
       yaml: 2.3.4
 
   /postcss-media-query-parser@0.2.3:
@@ -7936,10 +7936,10 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders'
     dependencies:
-      tailwindcss: 3.3.6(ts-node@10.9.1)
+      tailwindcss: 3.3.6(ts-node@10.9.2)
     dev: false
 
-  /tailwindcss@3.3.6(ts-node@10.9.1):
+  /tailwindcss@3.3.6(ts-node@10.9.2):
     resolution: {integrity: sha512-AKjF7qbbLvLaPieoKeTjG1+FyNZT6KaJMJPFeQyLfIp7l82ggH1fbHJSsYIvnbTFQOlkh+gBYpyby5GT1LIdLw==}
     engines: {node: '>=14.0.0'}
     hasBin: true
@@ -7961,7 +7961,7 @@ packages:
       postcss: 8.4.32
       postcss-import: 15.1.0(postcss@8.4.32)
       postcss-js: 4.0.1(postcss@8.4.32)
-      postcss-load-config: 4.0.1(postcss@8.4.32)(ts-node@10.9.1)
+      postcss-load-config: 4.0.1(postcss@8.4.32)(ts-node@10.9.2)
       postcss-nested: 6.0.1(postcss@8.4.32)
       postcss-selector-parser: 6.0.13
       resolve: 1.22.8
@@ -8093,8 +8093,8 @@ packages:
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
-  /ts-node@10.9.1(@types/node@20.10.4)(typescript@5.3.3):
-    resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
+  /ts-node@10.9.2(@types/node@20.10.4)(typescript@5.3.3):
+    resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
       '@swc/core': '>=1.2.50'
