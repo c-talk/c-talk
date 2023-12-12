@@ -24,7 +24,7 @@
     "test:backend": "cargo test --manifest-path=./backend/Cargo.toml --all-features"
   },
   "dependencies": {
-    "@generouted/react-router": "1.16.1",
+    "@generouted/react-router": "1.17.0",
     "@radix-ui/react-slot": "1.0.2",
     "@tauri-apps/api": "1.5.2",
     "class-variance-authority": "0.7.0",
