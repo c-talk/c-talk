@@ -84,7 +84,7 @@
     "react-helmet": "6.1.0",
     "react-i18next": "13.5.0",
     "sass": "1.69.5",
-    "shikiji": "0.8.4",
+    "shikiji": "0.8.6",
     "stylelint": "16.0.2",
     "stylelint-config-html": "1.1.0",
     "stylelint-config-recess-order": "4.4.0",
