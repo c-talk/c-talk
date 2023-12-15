@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@generouted/react-router':
-    specifier: 1.17.0
-    version: 1.17.0(react-router-dom@6.21.0)(react@18.2.0)(vite@5.0.9)
+    specifier: 1.17.1
+    version: 1.17.1(react-router-dom@6.21.0)(react@18.2.0)(vite@5.0.9)
   '@radix-ui/react-slot':
     specifier: 1.0.2
     version: 1.0.2(@types/react@18.2.45)(react@18.2.0)
@@ -146,8 +146,8 @@ devDependencies:
     specifier: 8.0.3
     version: 8.0.3
   i18next:
-    specifier: 23.7.9
-    version: 23.7.9
+    specifier: 23.7.11
+    version: 23.7.11
   lint-staged:
     specifier: 15.2.0
     version: 15.2.0
@@ -177,7 +177,7 @@ devDependencies:
     version: 6.1.0(react@18.2.0)
   react-i18next:
     specifier: 13.5.0
-    version: 13.5.0(i18next@23.7.9)(react-dom@18.2.0)(react@18.2.0)
+    version: 13.5.0(i18next@23.7.11)(react-dom@18.2.0)(react@18.2.0)
   sass:
     specifier: 1.69.5
     version: 1.69.5
@@ -1047,15 +1047,15 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@generouted/react-router@1.17.0(react-router-dom@6.21.0)(react@18.2.0)(vite@5.0.9):
-    resolution: {integrity: sha512-zxjJqs0FWtqrdE81bsNNJVwaByOGOf8yhynu/uHEt8dUZVzIlYToE/oBUK3/4vCPhBqHTUrURfGba+I43JgAbw==}
+  /@generouted/react-router@1.17.1(react-router-dom@6.21.0)(react@18.2.0)(vite@5.0.9):
+    resolution: {integrity: sha512-I31pwZV9mssbiTeQJlSBROrnBeoJWCVjJBebyPhOMolViIpqVDq0zU/0yXQupZ6ww2YDP+n91YECFWHz08EvTg==}
     peerDependencies:
       react: '>=18'
       react-router-dom: '>=6'
       vite: '>=4'
     dependencies:
       fast-glob: 3.3.2
-      generouted: 1.17.0(vite@5.0.9)
+      generouted: 1.17.1(vite@5.0.9)
       react: 18.2.0
       react-router-dom: 6.21.0(react-dom@18.2.0)(react@18.2.0)
       vite: 5.0.9(@types/node@20.10.4)(sass@1.69.5)
@@ -4415,8 +4415,8 @@ packages:
       - supports-color
     dev: true
 
-  /generouted@1.17.0(vite@5.0.9):
-    resolution: {integrity: sha512-p7HJGQbPxeQpKJt2A/O6/28BMgX3eVlHn6bMVyh6acbcvji8reZMFDDt8kBR9UYmO0nx5W+IhH7GJ192IfUiGQ==}
+  /generouted@1.17.1(vite@5.0.9):
+    resolution: {integrity: sha512-RxdunIMy4cb5vyRnPM6moTQiV5H3crm2EgFLmug3w+w6Rv1Z/mNFgGnGtM43OAmlq5Pn/Kb72SzWnalmN5FCUQ==}
     peerDependencies:
       vite: '>=3'
     dependencies:
@@ -4935,8 +4935,8 @@ packages:
     hasBin: true
     dev: true
 
-  /i18next@23.7.9:
-    resolution: {integrity: sha512-wturtxTfJLJdLzHhyfxXo2l9Cbu2Iz4wF4065oWThPvdFJMUUG3fhXD3BLCHgrv4VxfScORq0i9sfCdjVPbgiw==}
+  /i18next@23.7.11:
+    resolution: {integrity: sha512-A/vOkw8vY99YHU9A1Td3I1dcTiYaPnwBWzrpVzfXUXSYgogK3cmBcmop/0cnXPc6QpUWIyqaugKNxRUEZVk9Nw==}
     dependencies:
       '@babel/runtime': 7.23.5
     dev: true
@@ -6899,7 +6899,7 @@ packages:
       react-side-effect: 2.1.2(react@18.2.0)
     dev: true
 
-  /react-i18next@13.5.0(i18next@23.7.9)(react-dom@18.2.0)(react@18.2.0):
+  /react-i18next@13.5.0(i18next@23.7.11)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-CFJ5NDGJ2MUyBohEHxljOq/39NQ972rh1ajnadG9BjTk+UXbHLq4z5DKEbEQBDoIhUmmbuS/fIMJKo6VOax1HA==}
     peerDependencies:
       i18next: '>= 23.2.3'
@@ -6914,7 +6914,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.23.2
       html-parse-stringify: 3.0.1
-      i18next: 23.7.9
+      i18next: 23.7.11
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: true
