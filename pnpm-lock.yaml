@@ -77,8 +77,8 @@ devDependencies:
     specifier: 4.2.1
     version: 4.2.1(vite@5.0.10)
   '@wdio/cli':
-    specifier: 8.27.0
-    version: 8.27.0(typescript@5.3.3)
+    specifier: 8.27.1
+    version: 8.27.1(typescript@5.3.3)
   '@wdio/globals':
     specifier: 8.27.0
     version: 8.27.0(typescript@5.3.3)
@@ -2027,8 +2027,8 @@ packages:
       pretty-format: 29.7.0
     dev: true
 
-  /@wdio/cli@8.27.0(typescript@5.3.3):
-    resolution: {integrity: sha512-wdNYNvu52XxOqNHqDMGAtexBz+MM0RE2Z5U5ljyllbP3ed5vcvvK9vswURtI4cFGoqobVeoC7wif3VeD3aN+aQ==}
+  /@wdio/cli@8.27.1(typescript@5.3.3):
+    resolution: {integrity: sha512-RY9o4h0iN6UGpU31X5c9mu/TK2FlHtKtDaRJYunm5ycZvGahQcN+naYpea1ftDr4IpI2gGGlHxvEeHkJF7urDQ==}
     engines: {node: ^16.13 || >=18}
     hasBin: true
     dependencies:
