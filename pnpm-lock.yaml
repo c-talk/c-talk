@@ -50,8 +50,8 @@ devDependencies:
     specifier: 18.4.3
     version: 18.4.3
   '@iconify/json':
-    specifier: 2.2.162
-    version: 2.2.162
+    specifier: 2.2.163
+    version: 2.2.163
   '@tauri-apps/cli':
     specifier: 1.5.9
     version: 1.5.9
@@ -182,8 +182,8 @@ devDependencies:
     specifier: 1.69.6
     version: 1.69.6
   shikiji:
-    specifier: 0.9.13
-    version: 0.9.13
+    specifier: 0.9.14
+    version: 0.9.14
   stylelint:
     specifier: 16.1.0
     version: 16.1.0(typescript@5.3.3)
@@ -1085,8 +1085,8 @@ packages:
     resolution: {integrity: sha512-dvuCeX5fC9dXgJn9t+X5atfmgQAzUOWqS1254Gh0m6i8wKd10ebXkfNKiRK+1GWi/yTvvLDHpoxLr0xxxeslWw==}
     dev: true
 
-  /@iconify/json@2.2.162:
-    resolution: {integrity: sha512-+3JGi38kZzXpXf/0kviQPjx2yBKLmd/V/kbL+1f4FdcfCd8HeYpcs07SU9HdGxS7jqiTltXws9IKciiahp2rig==}
+  /@iconify/json@2.2.163:
+    resolution: {integrity: sha512-cBca9e8x6Bp5qN2++sl54OUbME/Y20OhXJEdkpFFvvHvt8UfQLiBKzz7q3uZ1l3EQjc8JoKgDB/n8nqfNqEWig==}
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.1
@@ -7221,14 +7221,14 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /shikiji-core@0.9.13:
-    resolution: {integrity: sha512-9r6hLKZ6Y0eIkPdt6AQJASITIM0MTOoNgDDnCS6oHL6TH94mWUwUtZ0O9I4OhKVb5m/QnD9PqlxI6+aj42eUng==}
+  /shikiji-core@0.9.14:
+    resolution: {integrity: sha512-ja+PUlDCwMMIrr9FsRhMYQHKDbjWC3VTUtKfvt20p5u4iEQFYJ/oJn+gfa1eixP6+HDHvE9Zb1vOs8TJS7FcUA==}
     dev: true
 
-  /shikiji@0.9.13:
-    resolution: {integrity: sha512-nEmxSoeOgzfHcpv1dVeYml0PYBso10Ak9KH7Pgz1fHAvyvvsh1PcgZfTb6Aj2y+Nbw3h4vxNCho9+lNcuzHrNA==}
+  /shikiji@0.9.14:
+    resolution: {integrity: sha512-u9VUYYH/S6/ssA4hgAjp2KBdPymC2wRKd4omwkJSG8BRBtHJ8M6ubjnFjdqWbNlqvAkxoyaG+DWzQEmcEuLFUA==}
     dependencies:
-      shikiji-core: 0.9.13
+      shikiji-core: 0.9.14
     dev: true
 
   /side-channel@1.0.4:
