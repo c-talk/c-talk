@@ -176,8 +176,8 @@ devDependencies:
     specifier: 6.1.0
     version: 6.1.0(react@18.2.0)
   react-i18next:
-    specifier: 13.5.0
-    version: 13.5.0(i18next@23.7.12)(react-dom@18.2.0)(react@18.2.0)
+    specifier: 14.0.0
+    version: 14.0.0(i18next@23.7.12)(react-dom@18.2.0)(react@18.2.0)
   sass:
     specifier: 1.69.6
     version: 1.69.6
@@ -543,6 +543,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.0
+    dev: false
 
   /@babel/runtime@7.23.5:
     resolution: {integrity: sha512-NdUTHcPe4C99WxPub+K9l9tK5/lV4UXIoaHSYgzco9BCyjKAAwzdBI+wWtYqHt7LJdbo74ZjRPJgzVweq1sz0w==}
@@ -6753,8 +6754,8 @@ packages:
       react-side-effect: 2.1.2(react@18.2.0)
     dev: true
 
-  /react-i18next@13.5.0(i18next@23.7.12)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-CFJ5NDGJ2MUyBohEHxljOq/39NQ972rh1ajnadG9BjTk+UXbHLq4z5DKEbEQBDoIhUmmbuS/fIMJKo6VOax1HA==}
+  /react-i18next@14.0.0(i18next@23.7.12)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-OCrS8rHNAmnr8ggGRDxjakzihrMW7HCbsplduTm3EuuQ6fyvWGT41ksZpqbduYoqJurBmEsEVZ1pILSUWkHZng==}
     peerDependencies:
       i18next: '>= 23.2.3'
       react: '>= 16.8.0'
@@ -6766,7 +6767,7 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.5
       html-parse-stringify: 3.0.1
       i18next: 23.7.12
       react: 18.2.0
