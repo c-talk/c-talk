@@ -50,8 +50,8 @@ devDependencies:
     specifier: 18.4.4
     version: 18.4.4
   '@iconify/json':
-    specifier: 2.2.167
-    version: 2.2.167
+    specifier: 2.2.168
+    version: 2.2.168
   '@tauri-apps/cli':
     specifier: 1.5.9
     version: 1.5.9
@@ -1082,8 +1082,8 @@ packages:
     resolution: {integrity: sha512-dvuCeX5fC9dXgJn9t+X5atfmgQAzUOWqS1254Gh0m6i8wKd10ebXkfNKiRK+1GWi/yTvvLDHpoxLr0xxxeslWw==}
     dev: true
 
-  /@iconify/json@2.2.167:
-    resolution: {integrity: sha512-5VFebxiHKApn9U9IFuBniJ0BSlDfDhkyNsWIVGYwBT9jSW2HSQJhybnuBh8EiEi2KL3l8NF7QP86RrJfWgRsNA==}
+  /@iconify/json@2.2.168:
+    resolution: {integrity: sha512-NuimrvW7/BfOK97Kx0YMWG8UMcqdfc0GZ0mZfewA90Qvl3+dchLmbyvNXnFraUFrrS8Luie3P6R0+3gHE9DnIA==}
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.1
