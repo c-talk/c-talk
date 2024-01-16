@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@generouted/react-router':
-    specifier: 1.17.1
-    version: 1.17.1(react-router-dom@6.21.2)(react@18.2.0)(vite@5.0.11)
+    specifier: 1.18.2
+    version: 1.18.2(react-router-dom@6.21.2)(react@18.2.0)(vite@5.0.11)
   '@radix-ui/react-slot':
     specifier: 1.0.2
     version: 1.0.2(@types/react@18.2.48)(react@18.2.0)
@@ -18,8 +18,8 @@ dependencies:
     specifier: 0.7.0
     version: 0.7.0
   lucide-react:
-    specifier: 0.309.0
-    version: 0.309.0(react@18.2.0)
+    specifier: 0.311.0
+    version: 0.311.0(react@18.2.0)
   react:
     specifier: 18.2.0
     version: 18.2.0
@@ -1048,15 +1048,15 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@generouted/react-router@1.17.1(react-router-dom@6.21.2)(react@18.2.0)(vite@5.0.11):
-    resolution: {integrity: sha512-I31pwZV9mssbiTeQJlSBROrnBeoJWCVjJBebyPhOMolViIpqVDq0zU/0yXQupZ6ww2YDP+n91YECFWHz08EvTg==}
+  /@generouted/react-router@1.18.2(react-router-dom@6.21.2)(react@18.2.0)(vite@5.0.11):
+    resolution: {integrity: sha512-HyYgyfsEhUrAS52mtWiUPlW+QV8FVzpQhgvn51aj7htVV6mzr+Y87qOxQJs+mgI2SUTwF3OBrbAmW1irR6LaXA==}
     peerDependencies:
       react: '>=18'
       react-router-dom: '>=6'
       vite: '>=4'
     dependencies:
       fast-glob: 3.3.2
-      generouted: 1.17.1(vite@5.0.11)
+      generouted: 1.18.2(vite@5.0.11)
       react: 18.2.0
       react-router-dom: 6.21.2(react-dom@18.2.0)(react@18.2.0)
       vite: 5.0.11(@types/node@20.11.4)(sass@1.69.7)
@@ -4385,8 +4385,8 @@ packages:
       - supports-color
     dev: true
 
-  /generouted@1.17.1(vite@5.0.11):
-    resolution: {integrity: sha512-RxdunIMy4cb5vyRnPM6moTQiV5H3crm2EgFLmug3w+w6Rv1Z/mNFgGnGtM43OAmlq5Pn/Kb72SzWnalmN5FCUQ==}
+  /generouted@1.18.2(vite@5.0.11):
+    resolution: {integrity: sha512-cYTSewf2Us8V+TCFUQbLTGVC6yo7ZFO0Gig2/Q+mIgKQBPJ5iaccTK/sCSj9U2cITJJQvTUnCtqdhr8zXCO89g==}
     peerDependencies:
       vite: '>=3'
     dependencies:
@@ -5692,8 +5692,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /lucide-react@0.309.0(react@18.2.0):
-    resolution: {integrity: sha512-zNVPczuwFrCfksZH3zbd1UDE6/WYhYAdbe2k7CImVyPAkXLgIwbs6eXQ4loigqDnUFjyFYCI5jZ1y10Kqal0dg==}
+  /lucide-react@0.311.0(react@18.2.0):
+    resolution: {integrity: sha512-kyMc6YyVepMVnmZT2X1sl7iyf7w6l8YdhEVKmcBLiT0lMlXqcPGsr2/drYP1/VaGf7DmBJ4/CjQAmOpDd8R8uw==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
