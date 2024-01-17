@@ -100,7 +100,7 @@
     "unplugin-icons": "0.18.2",
     "vite": "5.0.11",
     "vite-plugin-i18next-loader": "2.0.4",
-    "vite-plugin-markdown": "2.2.0-4",
+    "vite-plugin-markdown": "2.2.0",
     "vite-plugin-svgr": "4.2.0",
     "vitest": "1.2.0",
     "zod": "3.22.4",
