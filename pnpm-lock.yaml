@@ -18,8 +18,8 @@ dependencies:
     specifier: 0.7.0
     version: 0.7.0
   lucide-react:
-    specifier: 0.311.0
-    version: 0.311.0(react@18.2.0)
+    specifier: 0.312.0
+    version: 0.312.0(react@18.2.0)
   react:
     specifier: 18.2.0
     version: 18.2.0
@@ -2107,18 +2107,6 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@wdio/logger@8.24.12:
-    resolution: {integrity: sha512-QisOiVIWKTUCf1H7S+DOtC+gruhlpimQrUXfWMTeeh672PvAJYnTpOJDWA+BtXfsikkUYFAzAaq8SeMJk8rqKg==}
-    engines: {node: ^16.13 || >=18}
-    requiresBuild: true
-    dependencies:
-      chalk: 5.3.0
-      loglevel: 1.8.1
-      loglevel-plugin-prefix: 0.8.4
-      strip-ansi: 7.1.0
-    dev: true
-    optional: true
-
   /@wdio/logger@8.28.0:
     resolution: {integrity: sha512-/s6zNCqwy1hoc+K4SJypis0Ud0dlJ+urOelJFO1x0G0rwDRWyFiUP6ijTaCcFxAm29jYEcEPWijl2xkVIHwOyA==}
     engines: {node: ^16.13 || >=18}
@@ -3331,6 +3319,7 @@ packages:
 
   /devtools-protocol@0.0.1245094:
     resolution: {integrity: sha512-c7Tk8wCk2bw+wuQbl8vDh/7rDboWY8TEtcuHj5Q8S9E4F0AJMGJBnp+OqBCTI+xuVeGitQHt04/Rp3tzUStJxg==}
+    requiresBuild: true
     dev: true
 
   /didyoumean@1.2.2:
@@ -4086,7 +4075,7 @@ packages:
       lodash.isequal: 4.5.0
     optionalDependencies:
       '@wdio/globals': 8.28.4(typescript@5.3.3)
-      '@wdio/logger': 8.24.12
+      '@wdio/logger': 8.28.0
       webdriverio: 8.28.4(typescript@5.3.3)
     transitivePeerDependencies:
       - bufferutil
@@ -5722,8 +5711,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /lucide-react@0.311.0(react@18.2.0):
-    resolution: {integrity: sha512-kyMc6YyVepMVnmZT2X1sl7iyf7w6l8YdhEVKmcBLiT0lMlXqcPGsr2/drYP1/VaGf7DmBJ4/CjQAmOpDd8R8uw==}
+  /lucide-react@0.312.0(react@18.2.0):
+    resolution: {integrity: sha512-3UZsqyswRXjW4t+nw+InICewSimjPKHuSxiFYqTshv9xkK3tPPntXk/lvXc9pKlXIxm3v9WKyoxcrB6YHhP+dg==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
