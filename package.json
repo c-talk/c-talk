@@ -104,6 +104,6 @@
     "vite-plugin-svgr": "4.2.0",
     "vitest": "1.2.1",
     "zod": "3.22.4",
-    "zustand": "4.4.7"
+    "zustand": "4.5.0"
   }
 }
