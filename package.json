@@ -96,7 +96,7 @@
     "tailwindcss": "3.4.1",
     "ts-node": "10.9.2",
     "typescript": "5.3.3",
-    "unplugin-auto-import": "0.17.4",
+    "unplugin-auto-import": "0.17.5",
     "unplugin-icons": "0.18.2",
     "vite": "5.0.12",
     "vite-plugin-i18next-loader": "2.0.4",
