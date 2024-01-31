@@ -50,8 +50,8 @@ devDependencies:
     specifier: 18.6.0
     version: 18.6.0
   '@iconify/json':
-    specifier: 2.2.176
-    version: 2.2.176
+    specifier: 2.2.177
+    version: 2.2.177
   '@tauri-apps/cli':
     specifier: 1.5.9
     version: 1.5.9
@@ -1089,11 +1089,11 @@ packages:
     resolution: {integrity: sha512-dvuCeX5fC9dXgJn9t+X5atfmgQAzUOWqS1254Gh0m6i8wKd10ebXkfNKiRK+1GWi/yTvvLDHpoxLr0xxxeslWw==}
     dev: true
 
-  /@iconify/json@2.2.176:
-    resolution: {integrity: sha512-Pw1MA57OZdzyrJgGHzZXVnoht8vndv4aM6I3xj4SeimF14HA3e101Ignnlw2h/+Yjujf43jH7doPIVAhgCTFMw==}
+  /@iconify/json@2.2.177:
+    resolution: {integrity: sha512-BKWZMvJklkkuDcmBqOYLXUSBCFDoYn5oaUU6j6eVQHE6KEfVYawSsTvfu4aCTx6Pzd47HR5zhTL4LJzhuKZOxg==}
     dependencies:
       '@iconify/types': 2.0.0
-      pathe: 1.1.1
+      pathe: 1.1.2
     dev: true
 
   /@iconify/types@2.0.0:
@@ -6415,6 +6415,10 @@ packages:
 
   /pathe@1.1.1:
     resolution: {integrity: sha512-d+RQGp0MAYTIaDBIMmOfMwz3E+LOZnxx1HZd5R18mmCZY0QBlK0LDZfPc8FW8Ed2DlvsuE6PRjroDY+wg4+j/Q==}
+    dev: true
+
+  /pathe@1.1.2:
+    resolution: {integrity: sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==}
     dev: true
 
   /pathval@1.1.1:
