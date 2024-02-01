@@ -83,8 +83,8 @@ devDependencies:
     specifier: 8.29.3
     version: 8.29.3(typescript@5.3.3)
   '@wdio/local-runner':
-    specifier: 8.29.3
-    version: 8.29.3(typescript@5.3.3)
+    specifier: 8.29.5
+    version: 8.29.5(typescript@5.3.3)
   '@wdio/mocha-framework':
     specifier: 8.29.3
     version: 8.29.3
@@ -2094,14 +2094,14 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@wdio/local-runner@8.29.3(typescript@5.3.3):
-    resolution: {integrity: sha512-krKrPg8iwOvmps2iNxvpKUTV6szvYPWJiZDi585qEtDUJ+l67ucwuA2hkP9tpIyJU3rjErH5Z3awWuTaehulYA==}
+  /@wdio/local-runner@8.29.5(typescript@5.3.3):
+    resolution: {integrity: sha512-+5A4i+h2ty0rn+TzjGPVR3m8ufqKev4guujx0d/dgrGiiyFb0jLxkAXQbz/0MktS1n11WMuflC8nr3AZ7J6FRA==}
     engines: {node: ^16.13 || >=18}
     dependencies:
       '@types/node': 20.11.14
       '@wdio/logger': 8.28.0
       '@wdio/repl': 8.24.12
-      '@wdio/runner': 8.29.3(typescript@5.3.3)
+      '@wdio/runner': 8.29.5(typescript@5.3.3)
       '@wdio/types': 8.29.1
       async-exit-hook: 2.0.1
       split2: 4.2.0
@@ -2161,8 +2161,8 @@ packages:
       object-inspect: 1.13.1
     dev: true
 
-  /@wdio/runner@8.29.3(typescript@5.3.3):
-    resolution: {integrity: sha512-GdqJH4Kk3n97fTPCLJtt27Vda9+7mKbb0o8Q89NRxF0AJJ9xAysXQ8qSxlZfKej6YRkaMr7V64qgM8LmjvogBQ==}
+  /@wdio/runner@8.29.5(typescript@5.3.3):
+    resolution: {integrity: sha512-CIKFFajJocQZsZe3l/QWuGgHTpFO13toXBR/02LuPke6Z8dJd9poxQVYt6DKNcyC6jpI+Cpd0ZXMEOE5qfOUrA==}
     engines: {node: ^16.13 || >=18}
     dependencies:
       '@types/node': 20.11.14
