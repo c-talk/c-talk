@@ -5,7 +5,6 @@ use axum::{
     },
     response::IntoResponse,
     routing::{get, Router},
-    Json,
 };
 
 ///

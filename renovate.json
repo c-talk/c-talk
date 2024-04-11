@@ -22,9 +22,9 @@
       "matchPackageNames": ["axum", "tower-http"]
     },
     {
-      "groupName": "Rust packages",
+      "groupName": "Rust crates",
       "matchManagers": ["cargo"],
-      "rangeStrategy": "range"
+      "rangeStrategy": "update-lockfile"
     },
     {
       "groupName": "TypeScript",
