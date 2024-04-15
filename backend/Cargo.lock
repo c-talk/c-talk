@@ -4036,8 +4036,9 @@ dependencies = [
 
 [[package]]
 name = "sentry-tauri"
-version = "0.2.0"
-source = "git+https://github.com/greenhat616/sentry-tauri.git#22e41e38b1474cb01f4cce0259972fc99c6b25f3"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d5e64cb472278a890f0e12deeedbd0f98c259b4c12ef707a15aadfd536bc6275"
 dependencies = [
  "base64 0.22.0",
  "sentry",

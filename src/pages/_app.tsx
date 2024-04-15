@@ -1,12 +1,27 @@
+import { PageTransition } from '@/components/page'
+import { TailwindIndicator } from '@/components/tailwind-indicator'
+import { AnimatePresence } from 'framer-motion'
 import { Helmet } from 'react-helmet'
-import { Outlet } from 'react-router-dom'
+import { SWRConfig } from 'swr'
+
+export const Catch = () => {
+  return <div>Something went wrong... Caught at _app error boundary</div>
+}
+
+export const Pending = () => <div>Loading from _app...</div>
+
 export default function App() {
   return (
     <>
       <Helmet>
-        <title>WBook</title>
+        <title>CTalk</title>
       </Helmet>
-      <Outlet />
+      <SWRConfig value={{ errorRetryCount: 5 }}>
+        <AnimatePresence mode="wait" initial={false}>
+          <PageTransition />
+        </AnimatePresence>
+        <TailwindIndicator />
+      </SWRConfig>
     </>
   )
 }

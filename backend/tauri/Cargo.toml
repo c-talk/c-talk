@@ -19,7 +19,7 @@ shared = { path = "../shared" }
 server = { path = "../server" }
 
 tauri = { version = "1.6.1", features = ["shell-open"] }
-sentry-tauri = { git = "https://github.com/greenhat616/sentry-tauri.git" }
+sentry-tauri = "0.3"
 portpicker = "0.1.1"
 
 # workspace dependencies

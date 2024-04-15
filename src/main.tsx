@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
-import { Routes } from '@generouted/react-router'
+import { Routes } from '@generouted/react-router/lazy'
 
 import './styles/global.scss'
 

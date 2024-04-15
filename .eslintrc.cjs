@@ -15,6 +15,7 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'react/jsx-no-undef': 'off',
     'react/react-in-jsx-scope': 'off'
   },
   settings: {
