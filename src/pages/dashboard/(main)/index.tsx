@@ -1,4 +1,4 @@
-import { NoSelectedChat } from '@/components/dashboard/chat-viewer'
+import { ChatViewer } from '@/components/dashboard/chat-viewer'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
 import {
@@ -6,7 +6,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup
 } from '@/components/ui/resizable'
-import SolarChatRoundDotsOutline from '~icons/solar/chat-round-dots-outline'
+import SolarChatDotsLinear from '~icons/solar/chat-dots-linear'
 import SolarSettingsOutline from '~icons/solar/settings-outline'
 
 export default function DashboardPage() {
@@ -21,7 +21,7 @@ export default function DashboardPage() {
             </Avatar>
           </div>
           <div className="flex items-center justify-center w-full h-10">
-            <SolarChatRoundDotsOutline className="text-2xl text-white" />
+            <SolarChatDotsLinear className="text-2xl text-white" />
           </div>
           <div className="flex-1" />
           <div className="flex items-center justify-center w-full h-10">
@@ -32,7 +32,7 @@ export default function DashboardPage() {
       <ResizablePanelGroup direction="horizontal" className="h-[100vh] flex-1">
         <ResizablePanel defaultSize={25} className="bg-slate-50">
           <div className="flex flex-col max-h-full h-fit">
-            <div className="h-12 px-2 flex items-center bg-slate-200 gap-2">
+            <div className="h-14 px-2 flex items-center bg-slate-200 gap-2">
               <Input placeholder="Search" className="h-2/3 w-full" />
             </div>
             <div className="flex-1 overflow-y-auto">
@@ -88,7 +88,7 @@ export default function DashboardPage() {
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel defaultSize={75}>
-          <NoSelectedChat />
+          <ChatViewer />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

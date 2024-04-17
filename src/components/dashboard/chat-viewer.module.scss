@@ -1,0 +1,22 @@
+.chat-viewer {
+  .chat-log {
+    .date-info {
+      @apply hidden;
+    }
+
+    .message {
+      // @apply p-1;
+      // @apply box-content;
+
+      &:hover {
+        @apply bg-gray-100 rounded-sm shadow-[0px_0px_0px_0.25rem] shadow-gray-100;
+      }
+    }
+
+    &:hover {
+      .date-info {
+        @apply flex;
+      }
+    }
+  }
+}

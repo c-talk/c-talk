@@ -3,3 +3,4 @@ node_modules/
 dist/
 backend/**/target
 src/components/ui
+**/*.module.*.d.ts
