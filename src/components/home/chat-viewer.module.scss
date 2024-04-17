@@ -9,7 +9,7 @@
       // @apply box-content;
 
       &:hover {
-        @apply bg-gray-100 rounded-sm shadow-[0px_0px_0px_0.25rem] shadow-gray-100;
+        @apply bg-gray-100 rounded-[2px] ring-[0.1rem] shadow-gray-100;
       }
     }
 

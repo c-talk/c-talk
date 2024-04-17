@@ -1,0 +1,10 @@
+.chat-list {
+  .chat-item {
+    @apply flex items-center gap-3 px-3 py-2 select-none;
+
+    &.active,
+    &:hover {
+      @apply bg-gray-100;
+    }
+  }
+}

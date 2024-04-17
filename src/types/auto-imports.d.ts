@@ -6,7 +6,9 @@
 export {}
 declare global {
   const AnimatedOutlet: (typeof import('../components/page'))['AnimatedOutlet']
+  const IconSolarErrorCircle: (typeof import('~icons/solar/error-circle.jsx'))['default']
   const IconSolarInboxArchiveOutline: (typeof import('~icons/solar/inbox-archive-outline.jsx'))['default']
+  const IconSolarLoadingCircle: (typeof import('~icons/solar/loading-circle.jsx'))['default']
   const PageTransition: (typeof import('../components/page'))['PageTransition']
   const TailwindIndicator: (typeof import('../components/tailwind-indicator'))['TailwindIndicator']
   const cn: (typeof import('../utils/ui'))['cn']

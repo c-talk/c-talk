@@ -6,10 +6,17 @@ import {
 } from '@/components/ui/resizable'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import dayjs from 'dayjs'
-import { useMemo, useState } from 'react'
+import { Suspense, useMemo, useState } from 'react'
 // Icons
+import { chatIDAtom } from '@/stores/home'
+import { useAtom } from 'jotai'
+import { ErrorBoundary, type FallbackProps } from 'react-error-boundary'
+
+import GgSpinner from '~icons/gg/spinner'
+import SolarCloseCircleBold from '~icons/solar/close-circle-bold'
 import SolarGalleryMinimalisticLinear from '~icons/solar/gallery-minimalistic-linear'
 import SolarSmileCircleLinear from '~icons/solar/smile-circle-linear'
+
 import styles from './chat-viewer.module.scss'
 
 export function NoSelectedChat() {
@@ -104,7 +111,7 @@ export function ChatLog(props: ChatLogProps) {
         </div>
       ) : (
         <Avatar className="w-10 h-10">
-          <AvatarImage src={avatar} />
+          <AvatarImage src={avatar} draggable={false} />
           <AvatarFallback>{name}</AvatarFallback>
         </Avatar>
       )}
@@ -148,7 +155,7 @@ export function ChatLogsViewer() {
   return (
     <ScrollArea
       className={cn(
-        'h-full flex flex-col gap-3 overflow-y-auto px-3 py-2',
+        'h-full flex flex-col gap-3 px-3 py-2',
         styles['chat-viewer']
       )}
     >
@@ -185,10 +192,9 @@ export function ChatLogsViewer() {
   )
 }
 
-// 聊天界面
-export function ChatViewer() {
+export function ChatViewerPanel() {
   return (
-    <div className="flex flex-col h-full">
+    <>
       <div className="h-14 border-b border-inherit border-solid flex items-center justify-between px-5">
         <span className="text-lg font-semibold">Shad</span>
       </div>
@@ -203,6 +209,44 @@ export function ChatViewer() {
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
+    </>
+  )
+}
+
+function Loading() {
+  return (
+    <div className="h-full flex flex-col gap-2 items-center justify-center">
+      <GgSpinner className="text-4xl text-slate-300 animate-spin" />
+      <p className="text-xs font-semibold text-slate-300">Loading...</p>
+    </div>
+  )
+}
+
+function CatchError({ error }: FallbackProps) {
+  return (
+    <div className="h-full flex items-center justify-center">
+      <SolarCloseCircleBold className="text-4xl text-slate-400" />
+      <p className="text-xs font-semibold text-slate-400">{error.message}</p>
+    </div>
+  )
+}
+
+// 聊天界面
+export function ChatViewer() {
+  const [chatID] = useAtom(chatIDAtom)
+  // TODO: here should fetch data from upstream
+  // const messages = useMemo<Message[]>(() => [], [])
+  return (
+    <div className="flex flex-col h-full">
+      {!chatID ? (
+        <NoSelectedChat />
+      ) : (
+        <ErrorBoundary FallbackComponent={CatchError}>
+          <Suspense fallback={<Loading />}>
+            <ChatViewerPanel />
+          </Suspense>
+        </ErrorBoundary>
+      )}
     </div>
   )
 }

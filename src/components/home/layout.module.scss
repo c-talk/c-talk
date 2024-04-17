@@ -1,0 +1,9 @@
+.operations-panel {
+  .operation-item {
+    @apply flex items-center justify-center px-2.5 h-10 w-fit hover:bg-slate-500/35 rounded-md;
+
+    &.active {
+      @apply bg-slate-500/40;
+    }
+  }
+}
