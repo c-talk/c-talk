@@ -18,7 +18,7 @@ tauri-build = { version = "1.5.1", features = [] }
 shared = { path = "../shared" }
 server = { path = "../server" }
 
-tauri = { version = "1.6.1", features = ["shell-open"] }
+tauri = { version = "1.6.1", features = [ "http-all", "shell-open"] }
 sentry-tauri = "0.3"
 portpicker = "0.1.1"
 

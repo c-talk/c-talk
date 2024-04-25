@@ -16,42 +16,54 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/use-toast'
+import { useRegister } from '@/hooks/apis/users'
 import { useNavigate } from '@/router'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 const FormSchema = z
   .object({
     email: z.string().email(),
+    nickName: z.string().min(3),
     password: z.string().min(8),
-    confirm_password: z.string().min(8)
+    rePassword: z.string().min(8)
   })
-  .refine((data) => data.password === data.confirm_password, {
+  .refine((data) => data.password === data.rePassword, {
     message: 'Passwords do not match',
     path: ['confirm_password']
   })
 
 export default function Register() {
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+  const { execute } = useRegister()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       email: '',
+      nickName: '',
       password: '',
-      confirm_password: ''
+      rePassword: ''
     }
   })
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      )
-    })
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    setLoading(true)
+    try {
+      await execute(data)
+      toast({
+        title: '注册成功',
+        description: '请登录'
+      })
+      setTimeout(() => {
+        navigate('/')
+      }, 2000)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -85,6 +97,23 @@ export default function Register() {
               />
               <FormField
                 control={form.control}
+                name="nickName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>昵称</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="nickName"
+                        placeholder="请输入昵称……"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
@@ -102,7 +131,7 @@ export default function Register() {
               />
               <FormField
                 control={form.control}
-                name="confirm_password"
+                name="rePassword"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>确认密码</FormLabel>
@@ -129,7 +158,10 @@ export default function Register() {
             >
               拥有账号？
             </Button>
-            <Button type="submit">注 册</Button>
+            <Button type="submit" disabled={loading}>
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} 注
+              册
+            </Button>
           </CardFooter>
         </Card>
       </form>

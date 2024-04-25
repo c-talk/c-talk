@@ -12,4 +12,6 @@ declare global {
   const PageTransition: (typeof import('../components/page'))['PageTransition']
   const TailwindIndicator: (typeof import('../components/tailwind-indicator'))['TailwindIndicator']
   const cn: (typeof import('../utils/ui'))['cn']
+  const useFetch: (typeof import('../hooks/ofetch'))['useFetch']
+  const useWebsocket: (typeof import('../hooks/websocket'))['useWebsocket']
 }

@@ -14,8 +14,13 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useLogin } from '@/hooks/apis/users'
 import { useNavigate } from '@/router'
+import { isUserExpiredAtom, userAtom } from '@/stores/user'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useAtom } from 'jotai'
+import { Loader2 } from 'lucide-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -26,6 +31,16 @@ const FormSchema = z.object({
 
 export default function Index() {
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+  const { execute: executeLogin } = useLogin()
+  const [, setUser] = useAtom(userAtom)
+  const [isUserExpired] = useAtom(isUserExpiredAtom)
+
+  if (!isUserExpired) {
+    navigate('/main')
+    return null
+  }
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -33,10 +48,25 @@ export default function Index() {
       password: ''
     }
   })
+  async function onSubmit(values: z.infer<typeof FormSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    setLoading(true)
+    try {
+      const user = await executeLogin(values.email, values.password)
+      setUser(user.result)
+      console.log(navigate('/main'))
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <Form {...form}>
-      <form className="w-4/5 sm:w-3/5 md:w-[42.85%] lg:w-2/5 xl:w-1/3 2xl:w-[22.2%]">
+      <form
+        className="w-4/5 sm:w-3/5 md:w-[42.85%] lg:w-2/5 xl:w-1/3 2xl:w-[22.2%]"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <Card>
           <CardHeader>
             <CardTitle>Hello 👋</CardTitle>
@@ -83,7 +113,10 @@ export default function Index() {
             >
               没有账号？
             </Button>
-            <Button type="submit">登 录</Button>
+            <Button type="submit" disabled={loading}>
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} 登
+              录
+            </Button>
           </CardFooter>
         </Card>
       </form>
