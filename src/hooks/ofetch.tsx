@@ -1,6 +1,7 @@
 import { useToast } from '@/components/ui/use-toast'
 import { userAtom } from '@/stores/user'
-import { useAtom } from 'jotai'
+import { useLatest } from 'ahooks'
+import { useAtomValue } from 'jotai'
 import { ofetch } from 'ofetch'
 
 export interface R<T> {
@@ -11,9 +12,10 @@ export interface R<T> {
 }
 
 export const useFetch = () => {
-  const [user] = useAtom(userAtom)
-
+  const user = useAtomValue(userAtom)
+  const latestUserRef = useLatest(user)
   const { toast } = useToast()
+  // console.log(user)
 
   return ofetch.create({
     baseURL: `http://100.98.108.126:1002`,
@@ -22,14 +24,17 @@ export const useFetch = () => {
     async onRequest({ request, options }) {
       // Log request
       console.log('[fetch request]', request, options)
-
-      if (user?.auth_token) {
+      console.log(latestUserRef.current?.token)
+      if (latestUserRef.current?.token) {
         options.headers = options.headers || {}
         if (Array.isArray(options.headers)) {
-          options.headers.push(['Authorization', `Bearer ${user.auth_token}`])
+          options.headers.push([
+            'Authorization',
+            `Bearer ${latestUserRef.current.token}`
+          ])
         } else {
           // @ts-expect-error Authorization header
-          options.headers.Authorization = `Bearer ${user.auth_token}`
+          options.headers.Authorization = `Bearer ${latestUserRef.current.token}`
         }
       }
 
@@ -46,6 +51,7 @@ export const useFetch = () => {
         description: 'There was a problem with your request. Please try again.'
         // action: <ToastAction altText="Try again">Try again</ToastAction>
       })
+      return Promise.reject(error)
     },
 
     async onResponse({ request, response, options }) {
@@ -90,8 +96,10 @@ export const useFetch = () => {
             description: `${response._data.code}: ${response._data.message}`
             // action: <ToastAction altText="Try again">Try again</ToastAction>
           })
+          return Promise.reject(response._data)
         }
       }
+      return Promise.reject(response)
     }
   })
 }

@@ -18,7 +18,7 @@ import { useLogin } from '@/hooks/apis/users'
 import { useNavigate } from '@/router'
 import { isUserExpiredAtom, userAtom } from '@/stores/user'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -33,7 +33,7 @@ export default function Index() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const { execute: executeLogin } = useLogin()
-  const [, setUser] = useAtom(userAtom)
+  const setUser = useSetAtom(userAtom)
   const [isUserExpired] = useAtom(isUserExpiredAtom)
 
   if (!isUserExpired) {
@@ -55,7 +55,9 @@ export default function Index() {
     try {
       const user = await executeLogin(values.email, values.password)
       setUser(user.result)
-      console.log(navigate('/main'))
+      navigate('/main')
+    } catch (e) {
+      console.error(e)
     } finally {
       setLoading(false)
     }

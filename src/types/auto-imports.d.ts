@@ -11,7 +11,9 @@ declare global {
   const IconSolarLoadingCircle: (typeof import('~icons/solar/loading-circle.jsx'))['default']
   const PageTransition: (typeof import('../components/page'))['PageTransition']
   const TailwindIndicator: (typeof import('../components/tailwind-indicator'))['TailwindIndicator']
+  const WebsocketState: (typeof import('../hooks/websocket'))['WebsocketState']
   const cn: (typeof import('../utils/ui'))['cn']
+  const sleep: (typeof import('../utils/index'))['sleep']
   const useFetch: (typeof import('../hooks/ofetch'))['useFetch']
   const useWebsocket: (typeof import('../hooks/websocket'))['useWebsocket']
 }

@@ -7,11 +7,12 @@ export interface User {
   nickName: string
   avatar: string
   verify: boolean
-  auth_token: string
+  token: string
 }
 
 export interface WebSocketToken {
   token: string // websocket token
+  expire: number
 }
 
 export function useLogin() {
@@ -35,7 +36,7 @@ export function useToken() {
   const ofetch = useFetch()
   const execute = async () => {
     return ofetch<R<WebSocketToken>>('/token/get', {
-      credentials: 'include'
+      // credentials: 'include'
     })
   }
   return {

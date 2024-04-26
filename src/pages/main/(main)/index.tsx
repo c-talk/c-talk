@@ -7,8 +7,39 @@ import {
   ResizablePanel,
   ResizablePanelGroup
 } from '@/components/ui/resizable'
-
+import { useToken } from '@/hooks/apis/users'
+import { useNavigate } from '@/router'
+import {
+  isUserExpiredAtom,
+  userAtom,
+  websocketAuthTokenAtom
+} from '@/stores/user'
+import { useAsyncEffect } from 'ahooks'
+import { useAtom, useAtomValue } from 'jotai'
 export default function DashboardPage() {
+  const [isUserExpired] = useAtom(isUserExpiredAtom)
+  const [websocketToken, setWebsocketToken] = useAtom(websocketAuthTokenAtom)
+  const user = useAtomValue(userAtom)
+  const { execute: executeGetWebsocketToken } = useToken()
+  const navigate = useNavigate()
+  useAsyncEffect(async () => {
+    if (websocketToken === null) {
+      const token = await executeGetWebsocketToken()
+      console.log(token.result)
+      setWebsocketToken(token.result)
+    }
+  }, [websocketToken, user])
+  useWebsocket({
+    onConnected: (socket) => {
+      console.log(socket)
+    }
+  })
+
+  if (isUserExpired) {
+    navigate('/')
+    return null
+  }
+
   const chats = [
     {
       name: 'Shad',
