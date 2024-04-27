@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { userAtom } from '@/stores/user'
-import { Message } from '@/types/globals'
+import { ChatType, Message, MessageType } from '@/types/globals'
 import { useLatest } from 'ahooks'
 import { useAtomValue } from 'jotai'
 import useSWR, { SWRConfiguration, mutate } from 'swr'
@@ -74,11 +74,6 @@ export function useUserSearch() {
   }
 }
 
-export enum ChatType {
-  Private,
-  Group
-}
-
 export function useChatLogs() {
   const ofetch = useFetch()
   const user = useAtomValue(userAtom)
@@ -107,12 +102,6 @@ export function useChatLogs() {
   return {
     execute
   }
-}
-
-export enum MessageType {
-  Text = 1,
-  Image = 2,
-  Voice = 3
 }
 
 export function useSendMessage() {

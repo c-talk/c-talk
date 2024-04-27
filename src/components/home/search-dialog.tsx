@@ -86,12 +86,10 @@ export default function SearchDialog(props: {
   const setChatRoomType = useSetAtom(chatRoomTypeAtom)
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <button className={clsx(styles['search-button'])}>
-          <IconSolarAddCircleLinear
-            className={clsx('w-5 h-5 text-slate-500', styles.icon)}
-          />
-        </button>
+      <DialogTrigger className={clsx(styles['search-button'])}>
+        <IconSolarAddCircleLinear
+          className={clsx('w-5 h-5 text-slate-500', styles.icon)}
+        />
       </DialogTrigger>
       <SearchDialogContent
         onUserSelect={(user) => {
