@@ -9,8 +9,13 @@ export enum ChatType {
   Private
 }
 
-export type Message = {
+export type BasePo = {
   id: string
+  createTime: string
+  updateTime: string
+}
+
+export interface Message extends BasePo {
   content: string
   type: MessageType
   receiver: string

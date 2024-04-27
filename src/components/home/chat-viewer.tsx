@@ -8,7 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import dayjs from 'dayjs'
 import { Suspense, useMemo, useState } from 'react'
 // Icons
-import { chatRoomIDAtom } from '@/stores/home'
+import { chatRoomIDAtom, chatRoomTypeAtom } from '@/stores/home'
 import { useAtom, useAtomValue } from 'jotai'
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary'
 
@@ -17,8 +17,8 @@ import SolarCloseCircleBold from '~icons/solar/close-circle-bold'
 import SolarGalleryMinimalisticLinear from '~icons/solar/gallery-minimalistic-linear'
 import SolarSmileCircleLinear from '~icons/solar/smile-circle-linear'
 
-import { useAddFriend, useUserSearch } from '@/hooks/apis/chat'
-import { friendsAtom } from '@/stores/user'
+import { useAddFriend, useChatLogs, useUserSearch } from '@/hooks/apis/chat'
+import { friendsAtom, userAtom } from '@/stores/user'
 import { MessageType } from '@/types/globals'
 import { Loader2 } from 'lucide-react'
 import useSWR, { mutate } from 'swr'
@@ -183,6 +183,16 @@ export function ChatLogWithFetcher(
 }
 
 export function ChatLogsViewer() {
+  const chatID = useAtomValue(chatRoomIDAtom)
+  const chatType = useAtomValue(chatRoomTypeAtom)
+  const user = useAtomValue(userAtom)
+
+  const { execute } = useChatLogs()
+  const { isLoading, error, data } = useSWR(
+    !!chatID ? `/messages/${chatID}` : null,
+    () => execute(chatType, chatID),
+    { revalidateOnFocus: false }
+  )
   return (
     <ScrollArea
       className={cn(
@@ -190,7 +200,7 @@ export function ChatLogsViewer() {
         styles['chat-viewer']
       )}
     >
-      <DateDivider date="2024/4/17" />
+      {/* <DateDivider date="2024/4/17" />
       <ChatLog
         name="Shad"
         time="2024/4/17 10:00:00"
@@ -218,7 +228,43 @@ export function ChatLogsViewer() {
         avatar="https://github.com/greenhat616.png"
         withoutHeader
         isMe
-      />
+      /> */}
+      {isLoading && <Loading />}
+      {error && (
+        <div className="h-full flex items-center justify-center">
+          <SolarCloseCircleBold className="text-4xl text-slate-400" />
+          <p className="text-xs font-semibold text-slate-400">
+            {error.message}
+          </p>
+        </div>
+      )}
+      {data &&
+        data.result.items.map((item) => {
+          // TODO: 支持图片消息
+          // TODO: 添加一种算法自动插入日期分割线以及合并相邻发送者的消息
+          if (item.sender === user!.id) {
+            return (
+              <ChatLog
+                key={item.id}
+                name={user!.nickName}
+                time={item.createTime}
+                message={item.content}
+                isMe
+              />
+            )
+          }
+          return (
+            <ChatLogWithFetcher
+              key={item.id}
+              userID={item.sender}
+              isMe={false}
+              time={item.createTime}
+              message={item.content}
+              type={item.type}
+              withoutHeader={false}
+            />
+          )
+        })}
     </ScrollArea>
   )
 }
