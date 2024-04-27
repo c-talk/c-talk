@@ -6,7 +6,7 @@ import {
 } from '@/components/ui/resizable'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import dayjs from 'dayjs'
-import { Suspense, useMemo, useState } from 'react'
+import { Suspense, useCallback, useMemo, useState } from 'react'
 // Icons
 import { chatRoomIDAtom, chatRoomTypeAtom } from '@/stores/home'
 import { useAtom, useAtomValue } from 'jotai'
@@ -17,7 +17,12 @@ import SolarCloseCircleBold from '~icons/solar/close-circle-bold'
 import SolarGalleryMinimalisticLinear from '~icons/solar/gallery-minimalistic-linear'
 import SolarSmileCircleLinear from '~icons/solar/smile-circle-linear'
 
-import { useAddFriend, useChatLogs, useUserSearch } from '@/hooks/apis/chat'
+import {
+  useAddFriend,
+  useChatLogs,
+  useSendMessage,
+  useUserSearch
+} from '@/hooks/apis/chat'
 import { friendsAtom, userAtom } from '@/stores/user'
 import { MessageType } from '@/types/globals'
 import { Loader2 } from 'lucide-react'
@@ -29,7 +34,7 @@ export function NoSelectedChat() {
     <div className="h-full flex flex-col items-center justify-center gap-3">
       <IconSolarInboxArchiveOutline className="text-4xl text-slate-400" />
       <p className="text-xs font-semibold text-slate-400">
-        Please select a chat
+        请选择一个聊天开始对话
       </p>
     </div>
   )
@@ -37,6 +42,21 @@ export function NoSelectedChat() {
 
 export function ChatInput() {
   const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
+  const chatID = useAtomValue(chatRoomIDAtom)
+  const chatType = useAtomValue(chatRoomTypeAtom)
+  const { execute } = useSendMessage()
+  const sendMessage = useCallback(async () => {
+    setLoading(true)
+    try {
+      // TODO: 支持发送图片
+      await execute(chatType, MessageType.Text, chatID, message)
+      setMessage('')
+      mutate('/messages/' + chatID)
+    } finally {
+      setLoading(false)
+    }
+  }, [message, chatID, chatType])
   return (
     <div className="h-full flex flex-col">
       <div className="h-8 flex items-center gap-2 px-2">
@@ -45,18 +65,30 @@ export function ChatInput() {
       </div>
       <div className="flex-1 flex flex-col">
         <textarea
-          className="flex-1 w-full h-full px-2 py-1 text-sm text-slate-900 rounded-none resize-none outline-0"
+          className="flex-1 w-full h-full px-2 py-1 text-sm text-slate-900 rounded-none resize-none outline-0 relative"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault()
+              sendMessage()
+            }
+          }}
+          disabled={loading}
         />
+
         <div className="h-10 flex justify-end items-center gap-2 pt-3 pb-6 px-4">
           <button
             className="text-sm text-slate-900 bg-slate-100 px-4 py-1 rounded-sm"
-            disabled={!message.length}
+            disabled={!message.length || loading}
+            onClick={sendMessage}
           >
-            Send
+            发送
           </button>
         </div>
+        {loading && (
+          <Loader2 className="absolute right-2 bottom-2 w-5 h-5 animate-spin" />
+        )}
       </div>
     </div>
   )
@@ -319,7 +351,7 @@ export function JoinChatButton() {
           }
         }}
       >
-        加入聊天{' '}
+        加入聊天
         {loading && <Loader2 className="w-5 h-5 text-slate-500 animate-spin" />}
       </button>
     </div>
