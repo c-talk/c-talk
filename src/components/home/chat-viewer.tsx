@@ -8,8 +8,8 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import dayjs from 'dayjs'
 import { Suspense, useMemo, useState } from 'react'
 // Icons
-import { chatIDAtom } from '@/stores/home'
-import { useAtom } from 'jotai'
+import { chatRoomIDAtom } from '@/stores/home'
+import { useAtom, useAtomValue } from 'jotai'
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary'
 
 import GgSpinner from '~icons/gg/spinner'
@@ -17,6 +17,11 @@ import SolarCloseCircleBold from '~icons/solar/close-circle-bold'
 import SolarGalleryMinimalisticLinear from '~icons/solar/gallery-minimalistic-linear'
 import SolarSmileCircleLinear from '~icons/solar/smile-circle-linear'
 
+import { useAddFriend, useUserSearch } from '@/hooks/apis/chat'
+import { friendsAtom } from '@/stores/user'
+import { MessageType } from '@/types/globals'
+import { Loader2 } from 'lucide-react'
+import useSWR, { mutate } from 'swr'
 import styles from './chat-viewer.module.scss'
 
 export function NoSelectedChat() {
@@ -73,6 +78,7 @@ type ChatLogProps = {
   time: string
   message: string
   avatar?: string
+  type?: MessageType
 }
 
 export function ChatLog(props: ChatLogProps) {
@@ -151,6 +157,31 @@ export function ChatLog(props: ChatLogProps) {
   )
 }
 
+export function ChatLogWithFetcher(
+  props: { userID: string } & Required<Omit<ChatLogProps, 'name' | 'avatar'>>
+) {
+  const { execute } = useUserSearch()
+  const { isLoading, error, data } = useSWR(
+    `/user/${props.userID}`,
+    () => execute(props.userID),
+    { revalidateOnFocus: false }
+  )
+  if (isLoading) {
+    return <Loading />
+  }
+  if (error) {
+    throw error
+  }
+  return (
+    <ChatLog
+      {...props}
+      isMe={false}
+      name={data!.result.items[0].nickName}
+      avatar={data!.result.items[0].avatar}
+    />
+  )
+}
+
 export function ChatLogsViewer() {
   return (
     <ScrollArea
@@ -193,6 +224,15 @@ export function ChatLogsViewer() {
 }
 
 export function ChatViewerPanel() {
+  const friends = useAtomValue(friendsAtom)
+  const chatID = useAtomValue(chatRoomIDAtom)
+  const isFriend = useMemo(
+    () => !!friends.find((o) => o.friendId === chatID),
+    [friends]
+  )
+
+  // TODO: add a api to get group or friend info by id!
+
   return (
     <>
       <div className="h-14 border-b border-inherit border-solid flex items-center justify-between px-5">
@@ -205,11 +245,38 @@ export function ChatViewerPanel() {
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel defaultSize={25}>
-            <ChatInput />
+            {isFriend ? <ChatInput /> : <JoinChatButton />}
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
     </>
+  )
+}
+
+export function JoinChatButton() {
+  const chatID = useAtomValue(chatRoomIDAtom)
+  // const chatType = useAtomValue(chatRoomTypeAtom)
+  // TODO: add add group api
+  const { execute } = useAddFriend()
+  const [loading, setLoading] = useState(false)
+  return (
+    <div className="h-full flex items-center justify-center">
+      <button
+        className="text-sm text-slate-900 bg-slate-100 px-4 py-1 rounded-sm"
+        onClick={async () => {
+          setLoading(true)
+          try {
+            await execute(chatID)
+            mutate('/friends')
+          } finally {
+            setLoading(false)
+          }
+        }}
+      >
+        加入聊天{' '}
+        {loading && <Loader2 className="w-5 h-5 text-slate-500 animate-spin" />}
+      </button>
+    </div>
   )
 }
 
@@ -233,7 +300,7 @@ function CatchError({ error }: FallbackProps) {
 
 // 聊天界面
 export function ChatViewer() {
-  const [chatID] = useAtom(chatIDAtom)
+  const [chatID] = useAtom(chatRoomIDAtom)
   // TODO: here should fetch data from upstream
   // const messages = useMemo<Message[]>(() => [], [])
   return (

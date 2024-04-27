@@ -1,3 +1,4 @@
+import { Friend } from '@/hooks/apis/chat'
 import { User, WebSocketToken } from '@/hooks/apis/users'
 import { atom } from 'jotai'
 import { atomWithStorage, createJSONStorage } from 'jotai/utils'
@@ -10,6 +11,7 @@ export const isUserExpiredAtom = atom((get) => {
   const user = get(userAtom)
   return !user || !user.token
 })
+export const friendsAtom = atomWithStorage<Friend[]>('friends', [], storage)
 
 export const websocketAuthTokenAtom = atomWithStorage<WebSocketToken | null>(
   'websocket_authtoken',

@@ -14,6 +14,9 @@ import useSWR from 'swr'
 import { Input } from '../ui/input'
 
 import { User } from '@/hooks/apis/users'
+import { chatRoomIDAtom, chatRoomTypeAtom } from '@/stores/home'
+import { ChatType } from '@/types/globals'
+import { useSetAtom } from 'jotai'
 import styles from './search-dialog.module.scss'
 import UserItem from './user-item'
 
@@ -79,6 +82,8 @@ export default function SearchDialog(props: {
   onUserSelect?: (user: User) => void
 }) {
   const [open, setOpen] = useState(false)
+  const setChatRoomID = useSetAtom(chatRoomIDAtom)
+  const setChatRoomType = useSetAtom(chatRoomTypeAtom)
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -91,6 +96,8 @@ export default function SearchDialog(props: {
       <SearchDialogContent
         onUserSelect={(user) => {
           setOpen(false)
+          setChatRoomID(user.id)
+          setChatRoomType(ChatType.Private)
           props.onUserSelect?.(user)
         }}
       />

@@ -10,13 +10,11 @@ export enum ChatType {
 }
 
 export type Message = {
-  id: string // message id
-  from_id: string // sender user id
-  to_id: string // receiver id, maybe group id or user id
+  id: string
   content: string
   type: MessageType
-  chat_type: ChatType
-  create_time: string
+  receiver: string
+  sender: string
 }
 
 export type Chat = {

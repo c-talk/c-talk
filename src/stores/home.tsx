@@ -1,10 +1,13 @@
 import { ChatItem } from '@/components/home/chat-list'
 import { OperationType } from '@/components/home/layout'
 import { ProfileDialogProps } from '@/components/home/profile-dialog'
+import { ChatType } from '@/types/globals'
 import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 
-export const chatIDAtom = atom<number>(0)
+// Chats
+export const chatRoomIDAtom = atom<string>('')
+export const chatRoomTypeAtom = atom<ChatType>(ChatType.Private)
 
 export const operationItemAtom = atom<OperationType>(OperationType.Chat)
 

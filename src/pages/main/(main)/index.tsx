@@ -9,16 +9,19 @@ import {
   ResizablePanel,
   ResizablePanelGroup
 } from '@/components/ui/resizable'
+import { useFriendsListSWR } from '@/hooks/apis/chat'
 import { useToken } from '@/hooks/apis/users'
 import { useNavigate } from '@/router'
 import { profileDialogAtom, profileDialogPropsAtom } from '@/stores/home'
 import {
+  friendsAtom,
   isUserExpiredAtom,
   userAtom,
   websocketAuthTokenAtom
 } from '@/stores/user'
 import { useAsyncEffect } from 'ahooks'
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { useEffect } from 'react'
 
 export default function DashboardPage() {
   const [isUserExpired] = useAtom(isUserExpiredAtom)
@@ -39,13 +42,27 @@ export default function DashboardPage() {
     }
   })
 
-  if (isUserExpired) {
-    navigate('/')
-    return null
-  }
+  // Friends
+  const setFriendsList = useSetAtom(friendsAtom)
+  useFriendsListSWR({
+    onSuccess: (data) => {
+      setFriendsList(data.result)
+    }
+  })
 
+  // Dialogs
   const [profileDialog, setProfileDialog] = useAtom(profileDialogAtom)
   const profileDialogProps = useAtomValue(profileDialogPropsAtom)
+
+  useEffect(() => {
+    if (isUserExpired) {
+      navigate('/')
+    }
+  }, [isUserExpired])
+
+  if (isUserExpired) {
+    return null
+  }
 
   // const chats = [
   //   {

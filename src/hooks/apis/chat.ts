@@ -1,15 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { userAtom } from '@/stores/user'
+import { Message } from '@/types/globals'
 import { useLatest } from 'ahooks'
 import { useAtomValue } from 'jotai'
-import useSWR, { mutate } from 'swr'
+import useSWR, { SWRConfiguration, mutate } from 'swr'
 import isEmail from 'validator/es/lib/isEmail'
 import { Page, R } from '../ofetch'
 import { User } from './users'
 
-type Friends = {
+export type Friend = {
   id: string
   name: string
   avatar: string
+  friendId: string
 }
 
 export function useFriendsList() {
@@ -18,23 +21,23 @@ export function useFriendsList() {
   const latestUserRef = useLatest(user)
 
   const execute = async () => {
-    return ofetch<R<Friends[]>>(`/friend/list/${latestUserRef.current?.id}`)
+    return ofetch<R<Friend[]>>(`/friend/list/${latestUserRef.current?.id}`)
   }
   return {
     execute
   }
 }
 
-export function useFriendsListSWR() {
+export function useFriendsListSWR(opts: SWRConfiguration<R<Friend[]>> = {}) {
   const { execute } = useFriendsList()
-  return useSWR<R<Friends[]>>(`/friend/list`, execute)
+  return useSWR<R<Friend[]>>(`/friend/list`, execute, opts)
 }
 
 export function useAddFriend() {
   const ofetch = useFetch()
 
   const execute = async (userID: string) => {
-    const res = await ofetch<R<Friends[]>>(`/friend/add/`, {
+    const res = await ofetch<R<Friend[]>>(`/friend/add/`, {
       method: 'POST',
       body: {
         id: userID
@@ -65,6 +68,86 @@ export function useUserSearch() {
       method: 'POST',
       body: query
     })
+  }
+  return {
+    execute
+  }
+}
+
+export enum ChatType {
+  Private,
+  Group
+}
+
+export function useChatLogs() {
+  const ofetch = useFetch()
+  const user = useAtomValue(userAtom)
+  const latestUserRef = useLatest(user)
+  const execute = async (chatType: ChatType, chatID: string) => {
+    switch (chatType) {
+      case ChatType.Private:
+        return ofetch<R<Page<Message>>>(`/message/history/private`, {
+          method: 'POST',
+          body: {
+            receiver: chatID,
+            sender: latestUserRef.current!.id
+          }
+        })
+      case ChatType.Group:
+        // TODO: Implement group chat logs
+        return ofetch<R<Page<Message>>>(`/message/history/group`, {
+          method: 'POST',
+          body: {
+            receiver: chatID,
+            sender: latestUserRef.current!.id
+          }
+        })
+    }
+  }
+  return {
+    execute
+  }
+}
+
+export enum MessageType {
+  Text = 1,
+  Image = 2,
+  Voice = 3
+}
+
+export function useSendMessage() {
+  const ofetch = useFetch()
+  const user = useAtomValue(userAtom)
+  const latestUserRef = useLatest(user)
+  const execute = async (
+    chatType: ChatType,
+    messageType: MessageType,
+    content: string,
+    chatID: string
+  ) => {
+    switch (chatType) {
+      case ChatType.Private:
+        return ofetch<R<Message>>(`/message/send/private`, {
+          method: 'POST',
+          body: {
+            content,
+            messageType,
+            receiver: chatID,
+            sender: latestUserRef.current!.id
+          }
+        })
+      case ChatType.Group:
+        // TODO: Implement group chat
+        return ofetch<R<Message>>(`/message/send/group`, {
+          method: 'POST',
+          body: {
+            content,
+            messageType,
+            receiver: chatID,
+            sender: latestUserRef.current!.id
+          }
+        })
+    }
   }
   return {
     execute

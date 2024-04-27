@@ -20,7 +20,7 @@ import { isUserExpiredAtom, userAtom } from '@/stores/user'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAtom, useSetAtom } from 'jotai'
 import { Loader2 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -44,8 +44,13 @@ export default function Index() {
     }
   })
 
+  useEffect(() => {
+    if (!isUserExpired) {
+      navigate('/main')
+    }
+  }, [isUserExpired])
+
   if (!isUserExpired) {
-    navigate('/main')
     return null
   }
 

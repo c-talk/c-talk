@@ -1,13 +1,14 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import dayjs from 'dayjs'
-import { useEffect, useMemo, useState, type MouseEventHandler } from 'react'
+import { useMemo, useState, type MouseEventHandler } from 'react'
 
 import { useFriendsListSWR } from '@/hooks/apis/chat'
 import { ChatListAtom, operationItemAtom } from '@/stores/home'
 import { useAtomValue } from 'jotai'
 import styles from './chat-list.module.scss'
 import { OperationType } from './layout'
+import UserItem from './user-item'
 
 export type ChatItem = {
   selected?: boolean
@@ -90,10 +91,14 @@ export function Chats(props: ChatListProps) {
 
 export function ContactsList({ className }: { className?: string }) {
   const { isLoading, data } = useFriendsListSWR()
-  useEffect(() => {
-    console.log(data)
-  }, [data, isLoading])
+  if (isLoading) {
+    return <div>加载中</div>
+  }
   return (
-    <ScrollArea className={cn(styles['chat-list'], className)}></ScrollArea>
+    <ScrollArea className={cn(styles['chat-list'], className)}>
+      {data?.result.map((item) => (
+        <UserItem key={item.id} userID={item.friendId} />
+      ))}
+    </ScrollArea>
   )
 }
