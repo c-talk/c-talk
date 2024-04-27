@@ -181,6 +181,9 @@ devDependencies:
   '@types/react-helmet':
     specifier: 6.1.11
     version: 6.1.11
+  '@types/validator':
+    specifier: ^13.11.9
+    version: 13.11.9
   '@typescript-eslint/eslint-plugin':
     specifier: 7.6.0
     version: 7.6.0(@typescript-eslint/parser@7.6.0)(eslint@8.56.0)(typescript@5.4.5)
@@ -352,6 +355,9 @@ devDependencies:
   unplugin-icons:
     specifier: 0.18.5
     version: 0.18.5(@svgr/core@8.1.0)
+  validator:
+    specifier: ^13.11.0
+    version: 13.11.0
   vite:
     specifier: 5.2.8
     version: 5.2.8(@types/node@20.12.7)(sass@1.75.0)
@@ -3178,6 +3184,10 @@ packages:
   /@types/stack-utils@2.0.3:
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
     requiresBuild: true
+    dev: true
+
+  /@types/validator@13.11.9:
+    resolution: {integrity: sha512-FCTsikRozryfayPuiI46QzH3fnrOoctTjvOYZkho9BTFLCOZ2rgZJHMOVgCOfttjPJcgOx52EpkY0CMfy87MIw==}
     dev: true
 
   /@types/which@2.0.2:
@@ -10371,6 +10381,11 @@ packages:
     dependencies:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
+    dev: true
+
+  /validator@13.11.0:
+    resolution: {integrity: sha512-Ii+sehpSfZy+At5nPdnyMhx78fEoPDkR2XW/zimHEL3MyGJQOCQ7WeP20jPYRz7ZCpcKLB21NxuXHF3bxjStBQ==}
+    engines: {node: '>= 0.10'}
     dev: true
 
   /vaul@0.9.0(@types/react-dom@18.2.25)(@types/react@18.2.78)(react-dom@18.2.0)(react@18.2.0):

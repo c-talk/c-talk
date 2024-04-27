@@ -1,9 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import dayjs from 'dayjs'
-import { useMemo, useState, type MouseEventHandler } from 'react'
+import { useEffect, useMemo, useState, type MouseEventHandler } from 'react'
 
+import { useFriendsListSWR } from '@/hooks/apis/chat'
+import { ChatListAtom, operationItemAtom } from '@/stores/home'
+import { useAtomValue } from 'jotai'
 import styles from './chat-list.module.scss'
+import { OperationType } from './layout'
 
 export type ChatItem = {
   selected?: boolean
@@ -51,13 +55,21 @@ export function ChatItem(props: ChatItemProps) {
 }
 
 export type ChatListProps = {
-  chats: ChatItem[]
   className?: string
 }
 
-export default function ChatList(props: ChatListProps) {
+export default function ChatList({ className }: { className?: string }) {
+  const type = useAtomValue(operationItemAtom)
+  if (type === OperationType.Chat) {
+    return <Chats className={className} />
+  } else if (type === OperationType.Contacts) {
+    return <ContactsList className={className} />
+  }
+}
+
+export function Chats(props: ChatListProps) {
   const { className } = props
-  const chats = useMemo(() => props.chats, [props.chats])
+  const chats = useAtomValue(ChatListAtom)
   const [selectedItem, setSelectedItem] = useState<number>(0)
 
   return (
@@ -73,5 +85,15 @@ export default function ChatList(props: ChatListProps) {
         />
       ))}
     </ScrollArea>
+  )
+}
+
+export function ContactsList({ className }: { className?: string }) {
+  const { isLoading, data } = useFriendsListSWR()
+  useEffect(() => {
+    console.log(data)
+  }, [data, isLoading])
+  return (
+    <ScrollArea className={cn(styles['chat-list'], className)}></ScrollArea>
   )
 }

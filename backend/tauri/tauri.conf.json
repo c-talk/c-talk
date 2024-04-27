@@ -21,6 +21,9 @@
         "all": true,
         "request": true,
         "scope": ["https://*", "http://*", "http://100.98.108.126:1002/*"]
+      },
+      "dialog": {
+        "all": true
       }
     },
     "bundle": {

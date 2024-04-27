@@ -11,6 +11,13 @@ export interface R<T> {
   ts: number
 }
 
+export interface Page<T> {
+  items: T[]
+  total: number
+  page: number
+  pageSize: number
+}
+
 export const useFetch = () => {
   const user = useAtomValue(userAtom)
   const latestUserRef = useLatest(user)

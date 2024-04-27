@@ -4,15 +4,23 @@ import {
   ContextMenuItem,
   ContextMenuTrigger
 } from '@/components/ui/context-menu'
-import { useState, type MouseEventHandler } from 'react'
+import { type MouseEventHandler } from 'react'
 import SolarChatDotsLinear from '~icons/solar/chat-dots-linear'
 import SolarSettingsOutline from '~icons/solar/settings-outline'
+import SolarUsersGroupTwoRoundedLinear from '~icons/solar/users-group-two-rounded-linear'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
+import { User } from '@/hooks/apis/users'
 import { useNavigate } from '@/router'
+import {
+  operationItemAtom,
+  profileDialogAtom,
+  profileDialogPropsAtom
+} from '@/stores/home'
 import { userAtom, websocketAuthTokenAtom } from '@/stores/user'
 import { useAtom, useSetAtom } from 'jotai'
 import styles from './layout.module.scss'
+import { ProfileDialogProps } from './profile-dialog'
 
 type OperationItemProps = {
   children: React.ReactNode
@@ -36,16 +44,19 @@ export function OperationItem({
 }
 
 export enum OperationType {
-  Chat = 'chat'
+  Chat = 'chat',
+  Contacts = 'contacts'
 }
 
 export function OperationsPanel() {
   const [user, setUser] = useAtom(userAtom)
   const setWebsocketAuthToken = useSetAtom(websocketAuthTokenAtom)
   const navigate = useNavigate()
-  const [selected, setSelected] = useState<null | OperationType>(
-    OperationType.Chat
-  )
+  const [selectedOperationItem, setSelectedOperationItem] =
+    useAtom(operationItemAtom)
+
+  const setProfileDialogProps = useSetAtom(profileDialogPropsAtom)
+  const setProfileDialogOpen = useSetAtom(profileDialogAtom)
 
   return (
     <div
@@ -66,7 +77,16 @@ export function OperationsPanel() {
               </Avatar>
             </ContextMenuTrigger>
             <ContextMenuContent>
-              <ContextMenuItem>信息</ContextMenuItem>
+              <ContextMenuItem
+                onClick={() => {
+                  setProfileDialogProps({
+                    user: user as User
+                  } as ProfileDialogProps)
+                  setProfileDialogOpen(true)
+                }}
+              >
+                信息
+              </ContextMenuItem>
               <ContextMenuItem>修改密码</ContextMenuItem>
               <ContextMenuItem
                 onClick={() => {
@@ -81,13 +101,19 @@ export function OperationsPanel() {
           </ContextMenu>
         </div>
         <OperationItem
-          active={selected === OperationType.Chat}
-          onClick={() => setSelected(OperationType.Chat)}
+          active={selectedOperationItem === OperationType.Chat}
+          onClick={() => setSelectedOperationItem(OperationType.Chat)}
         >
           <SolarChatDotsLinear className="text-2xl text-white" />
         </OperationItem>
+        <OperationItem
+          active={selectedOperationItem === OperationType.Contacts}
+          onClick={() => setSelectedOperationItem(OperationType.Contacts)}
+        >
+          <SolarUsersGroupTwoRoundedLinear className="text-2xl text-white" />
+        </OperationItem>
         <div className="flex-1" />
-        <div className="flex items-center justify-center w-full h-10 ">
+        <div className="flex items-center justify-center w-full h-10">
           <SolarSettingsOutline className="text-2xl text-white" />
         </div>
       </div>

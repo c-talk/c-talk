@@ -36,11 +36,6 @@ export default function Index() {
   const setUser = useSetAtom(userAtom)
   const [isUserExpired] = useAtom(isUserExpiredAtom)
 
-  if (!isUserExpired) {
-    navigate('/main')
-    return null
-  }
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -48,6 +43,12 @@ export default function Index() {
       password: ''
     }
   })
+
+  if (!isUserExpired) {
+    navigate('/main')
+    return null
+  }
+
   async function onSubmit(values: z.infer<typeof FormSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.

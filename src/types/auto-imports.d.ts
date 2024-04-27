@@ -6,6 +6,7 @@
 export {}
 declare global {
   const AnimatedOutlet: (typeof import('../components/page'))['AnimatedOutlet']
+  const IconSolarAddCircleLinear: (typeof import('~icons/solar/add-circle-linear.jsx'))['default']
   const IconSolarErrorCircle: (typeof import('~icons/solar/error-circle.jsx'))['default']
   const IconSolarInboxArchiveOutline: (typeof import('~icons/solar/inbox-archive-outline.jsx'))['default']
   const IconSolarLoadingCircle: (typeof import('~icons/solar/loading-circle.jsx'))['default']
@@ -13,6 +14,7 @@ declare global {
   const TailwindIndicator: (typeof import('../components/tailwind-indicator'))['TailwindIndicator']
   const WebsocketState: (typeof import('../hooks/websocket'))['WebsocketState']
   const cn: (typeof import('../utils/ui'))['cn']
+  const getResourceUrl: (typeof import('../utils/url'))['getResourceUrl']
   const sleep: (typeof import('../utils/index'))['sleep']
   const useFetch: (typeof import('../hooks/ofetch'))['useFetch']
   const useWebsocket: (typeof import('../hooks/websocket'))['useWebsocket']

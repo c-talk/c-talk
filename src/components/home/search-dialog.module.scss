@@ -1,0 +1,10 @@
+.search-button {
+  @apply p-1.5 rounded-sm bg-slate-300 flex items-center justify-center;
+  @apply hover:bg-slate-400 transition-colors;
+
+  &:hover {
+    .icon {
+      @apply text-slate-900;
+    }
+  }
+}
