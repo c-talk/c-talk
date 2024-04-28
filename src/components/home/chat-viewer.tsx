@@ -21,7 +21,7 @@ import {
   useAddFriend,
   useChatLogs,
   useSendMessage,
-  useUserSearch
+  useUserById
 } from '@/hooks/apis/chat'
 import { friendsAtom, userAtom } from '@/stores/user'
 import { MessageType } from '@/types/globals'
@@ -192,7 +192,7 @@ export function ChatLog(props: ChatLogProps) {
 export function ChatLogWithFetcher(
   props: { userID: string } & Required<Omit<ChatLogProps, 'name' | 'avatar'>>
 ) {
-  const { execute } = useUserSearch()
+  const { execute } = useUserById()
   const { isLoading, error, data } = useSWR(
     `/user/${props.userID}`,
     () => execute(props.userID),
@@ -208,8 +208,8 @@ export function ChatLogWithFetcher(
     <ChatLog
       {...props}
       isMe={false}
-      name={data!.result.items[0].nickName}
-      avatar={data!.result.items[0].avatar}
+      name={data!.result.nickName}
+      avatar={data!.result.avatar}
     />
   )
 }
@@ -308,13 +308,18 @@ export function ChatViewerPanel() {
     () => !!friends.find((o) => o.friendId === chatID),
     [friends]
   )
-
-  // TODO: add a api to get group or friend info by id!
+  // TODO: add a api to get group info by id!
+  const { execute } = useUserById()
+  const { isLoading, error, data } = useSWR(`/user/${chatID}`, () =>
+    execute(chatID)
+  )
 
   return (
     <>
       <div className="h-14 border-b border-inherit border-solid flex items-center justify-between px-5">
-        <span className="text-lg font-semibold">Shad</span>
+        <span className="text-lg font-semibold">
+          {isLoading ? '加载中...' : error ? '加载失败' : data?.result.nickName}
+        </span>
       </div>
       <div className="flex-1">
         <ResizablePanelGroup direction="vertical">

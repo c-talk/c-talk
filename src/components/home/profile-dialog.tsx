@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useUserSearch } from '@/hooks/apis/chat'
+import { useUserById } from '@/hooks/apis/chat'
 import { User } from '@/hooks/apis/users'
 import { userAtom } from '@/stores/user'
 import { open } from '@tauri-apps/api/dialog'
@@ -50,7 +50,7 @@ export default function ProfileDialog(props: ProfileDialogProps) {
 }
 
 function ProfileContentWithFetcher(props: UserItemWithFetcherProps) {
-  const { execute } = useUserSearch()
+  const { execute } = useUserById()
   const { isLoading, data, error } = useSWR(`/user/${props.userID}`, () =>
     execute(props.userID)
   )
@@ -60,7 +60,7 @@ function ProfileContentWithFetcher(props: UserItemWithFetcherProps) {
   if (error) {
     return <div>Error...</div>
   }
-  return <ProfileContent user={data!.result.items[0]} />
+  return <ProfileContent user={data!.result} />
 }
 
 function ProfileContent(props: UserItemInnerProps) {

@@ -15,6 +15,16 @@ export type Friend = {
   friendId: string
 }
 
+type PageParams = {
+  pageNum: number
+  pageSize: number
+}
+
+const basePageParams: PageParams = {
+  pageNum: 1,
+  pageSize: 10
+}
+
 export function useFriendsList() {
   const ofetch = useFetch()
   const user = useAtomValue(userAtom)
@@ -54,11 +64,14 @@ export function useAddFriend() {
 export function useUserSearch() {
   const ofetch = useFetch()
 
-  const execute = async (keyword: string) => {
+  const execute = async (
+    keyword: string,
+    pageParams: Partial<PageParams> = {}
+  ) => {
     const query: {
       email?: string
       nickname?: string
-    } = {}
+    } & PageParams = { ...basePageParams, ...pageParams }
     if (isEmail(keyword)) {
       query.email = keyword
     } else {
@@ -74,18 +87,34 @@ export function useUserSearch() {
   }
 }
 
+export function useUserById() {
+  const ofetch = useFetch()
+  const execute = async (userID: string) => {
+    return ofetch<R<User>>(`/user/get/${userID}`)
+  }
+  return {
+    execute
+  }
+}
+
 export function useChatLogs() {
   const ofetch = useFetch()
   const user = useAtomValue(userAtom)
   const latestUserRef = useLatest(user)
-  const execute = async (chatType: ChatType, chatID: string) => {
+  const execute = async (
+    chatType: ChatType,
+    chatID: string,
+    pageParams: Partial<PageParams> = {}
+  ) => {
     switch (chatType) {
       case ChatType.Private:
         return ofetch<R<Page<Message>>>(`/message/history/private`, {
           method: 'POST',
           body: {
             receiver: chatID,
-            sender: latestUserRef.current!.id
+            sender: latestUserRef.current!.id,
+            ...basePageParams,
+            ...pageParams
           }
         })
       case ChatType.Group:
@@ -94,7 +123,9 @@ export function useChatLogs() {
           method: 'POST',
           body: {
             receiver: chatID,
-            sender: latestUserRef.current!.id
+            sender: latestUserRef.current!.id,
+            ...basePageParams,
+            ...pageParams
           }
         })
     }

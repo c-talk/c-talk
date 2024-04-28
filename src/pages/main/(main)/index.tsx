@@ -46,7 +46,7 @@ export default function DashboardPage() {
   const setFriendsList = useSetAtom(friendsAtom)
   useFriendsListSWR({
     onSuccess: (data) => {
-      setFriendsList(data.result)
+      setFriendsList(data.result || [])
     }
   })
 

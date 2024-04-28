@@ -1,4 +1,4 @@
-import { useUserSearch } from '@/hooks/apis/chat'
+import { useUserById } from '@/hooks/apis/chat'
 import { User } from '@/hooks/apis/users'
 import useSWR from 'swr'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
@@ -24,7 +24,7 @@ export function UserItemWithFetcher(
     onClick?: (user: User) => void
   }
 ) {
-  const { execute } = useUserSearch()
+  const { execute } = useUserById()
   const { data, isLoading, error } = useSWR(`/user/${props.userID}`, () =>
     execute(props.userID)
   )
@@ -40,7 +40,7 @@ export function UserItemWithFetcher(
         加载失败
       </div>
     )
-  return <UserItem user={data?.result.items[0]} />
+  return <UserItem user={data?.result} />
 }
 
 export function UserItemInner(
@@ -48,11 +48,11 @@ export function UserItemInner(
 ) {
   return (
     <div
-      className="h-14 flex gap-2 items-center"
+      className="h-14 w-full flex gap-4 items-center hover:bg-slate-100/60 p-3 rounded-md"
       onClick={() => props.onClick?.(props)}
     >
-      <div className="w-10 h-10 bg-slate-200 rounded-full">
-        <Avatar className="w-10 h-10 cursor-default">
+      <div className="w-12 h-12 bg-slate-200 rounded-full">
+        <Avatar className="w-12 h-12 cursor-default">
           {props?.avatar && (
             <AvatarImage
               src={props?.avatar ? getResourceUrl(props?.avatar) : undefined}
@@ -62,7 +62,7 @@ export function UserItemInner(
           <AvatarFallback>{props?.nickName}</AvatarFallback>
         </Avatar>
       </div>
-      <div>{props.nickName}</div>
+      <div className="text-base font-semibold">{props.nickName}</div>
     </div>
   )
 }

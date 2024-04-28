@@ -15,13 +15,15 @@ import { Input } from '../ui/input'
 
 import { User } from '@/hooks/apis/users'
 import { chatRoomIDAtom, chatRoomTypeAtom } from '@/stores/home'
+import { userAtom } from '@/stores/user'
 import { ChatType } from '@/types/globals'
-import { useSetAtom } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import styles from './search-dialog.module.scss'
 import UserItem from './user-item'
 
 // TODO: add group 搜索
 function SearchDialogContent(props: { onUserSelect?: (user: User) => void }) {
+  const user = useAtomValue(userAtom)
   const [searchKeyword, setSearchKeyword] = useState('')
   const deferredSearchKeyword = useDebounce(searchKeyword)
   const [searchList, setSearchList] = useState<User[]>([])
@@ -59,13 +61,15 @@ function SearchDialogContent(props: { onUserSelect?: (user: User) => void }) {
           </div>
           {searchList.length > 0 ? (
             <div className="grid gap-2">
-              {searchList.map((item) => (
-                <UserItem
-                  key={item.id}
-                  user={item}
-                  onClick={props.onUserSelect}
-                />
-              ))}
+              {searchList
+                .filter((o) => o.id !== user!.id)
+                .map((item) => (
+                  <UserItem
+                    key={item.id}
+                    user={item}
+                    onClick={props.onUserSelect}
+                  />
+                ))}
             </div>
           ) : (
             <div className="h-14 flex items-center justify-center text-slate-500">
