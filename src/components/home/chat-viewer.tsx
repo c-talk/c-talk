@@ -16,6 +16,7 @@ import {
 // Icons
 import {
   ChatLogsViewerIsBottomAtom,
+  chatListTryUpdateWhileNewMessageAtom,
   chatRoomIDAtom,
   chatRoomTypeAtom,
   profileDialogAtom,
@@ -37,7 +38,7 @@ import {
   useUserById
 } from '@/hooks/apis/chat'
 import { friendsAtom, userAtom } from '@/stores/user'
-import { Message, MessageType } from '@/types/globals'
+import { ChatType, Message, MessageType } from '@/types/globals'
 import { Loader2 } from 'lucide-react'
 import useSWR, { mutate } from 'swr'
 import { ScrollAreaWithoutViewport } from '../ui/scroll-area'
@@ -65,15 +66,21 @@ export function ChatInput(props: ChatInputProps) {
   const [loading, setLoading] = useState(false)
   const chatID = useAtomValue(chatRoomIDAtom)
   const chatType = useAtomValue(chatRoomTypeAtom)
+  const newMessageReceived = useSetAtom(chatListTryUpdateWhileNewMessageAtom)
   const { execute } = useSendMessage()
   const sendMessage = useCallback(async () => {
     setLoading(true)
     try {
       // TODO: 支持发送图片
-      await execute(chatType, MessageType.Text, message, chatID)
+      const res = await execute(chatType, MessageType.Text, message, chatID)
       setMessage('')
       mutate('/messages/' + chatID)
       props.onMessageSend?.(message)
+      newMessageReceived({
+        ...res.result,
+        chatID: chatID,
+        chatType: ChatType.Private
+      })
     } finally {
       setLoading(false)
     }
@@ -372,12 +379,12 @@ export function ChatViewerPanel() {
   const scrollAreaRef = useRef<HTMLDivElement | null>(null)
   const [isBottom, setIsBottom] = useAtom(ChatLogsViewerIsBottomAtom)
   const [scrollHeight, setScrollHeight] = useState(0)
-  const scrollToBottom = useCallback(() => {
+  const scrollToBottom = (height?: number) => {
     scrollAreaRef.current?.scrollTo({
-      top: scrollHeight,
+      top: height || scrollHeight,
       behavior: 'smooth'
     })
-  }, [scrollAreaRef, scrollHeight])
+  }
   // const scroll = useScroll(scrollAreaRef)
   useEffect(() => {
     const el = scrollAreaRef.current
@@ -427,13 +434,15 @@ export function ChatViewerPanel() {
           <ResizablePanel defaultSize={75} className="flex flex-col">
             <ChatLogsViewer
               viewpointRef={scrollAreaRef}
-              scrollToBottom={scrollToBottom}
+              scrollToBottom={() => {
+                scrollToBottom(scrollAreaRef.current?.scrollHeight)
+              }}
             />
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel defaultSize={25}>
             {isFriend ? (
-              <ChatInput onMessageSend={scrollToBottom} />
+              <ChatInput onMessageSend={() => scrollToBottom()} />
             ) : (
               <JoinChatButton />
             )}
