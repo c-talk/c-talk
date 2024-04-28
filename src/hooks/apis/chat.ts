@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { userAtom } from '@/stores/user'
+import { friendsAtom, userAtom } from '@/stores/user'
 import { ChatType, Message, MessageType } from '@/types/globals'
 import { useLatest } from 'ahooks'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import useSWR, { SWRConfiguration, mutate } from 'swr'
 import isEmail from 'validator/es/lib/isEmail'
 import { Page, R } from '../ofetch'
@@ -40,8 +40,17 @@ export function useFriendsList() {
 
 export function useFriendsListSWR(opts: SWRConfiguration<R<Friend[]>> = {}) {
   const { execute } = useFriendsList()
+  const setFriends = useSetAtom(friendsAtom)
   return useSWR<R<Friend[]>>(`/friends`, execute, {
-    // refreshInterval: 1000 * 2,
+    onSuccess: (data) => {
+      setFriends(
+        data.result
+          ? Array.isArray(data.result)
+            ? data.result
+            : [data.result]
+          : []
+      )
+    },
     ...opts
   })
 }

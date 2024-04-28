@@ -1,4 +1,4 @@
-import { PopoverContent, PopoverTrigger } from '@radix-ui/react-popover'
+import { PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import emojis from 'emoji.json'
 import { Loader2 } from 'lucide-react'
 import { useState, useTransition } from 'react'
@@ -23,9 +23,9 @@ export default function StickerPopover(props: StickerPopoverProps) {
   return (
     <Popover>
       <PopoverTrigger>{props.children}</PopoverTrigger>
-      <PopoverContent className="w-80 z-10 bg-slate-100 rounded-md">
+      <PopoverContent className="w-80 z-10 bg-slate-100 rounded-md px-2 py-2">
         {/* add emojis card */}
-        <ScrollArea className="h-[11rem] px-2">
+        <ScrollArea className="h-[11rem]">
           {isLoading ? (
             <div className="flex items-center justify-center h-full w-full">
               <Loader2 className="w-10 h-10 text-slate-500 animate-spin" />

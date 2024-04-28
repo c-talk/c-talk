@@ -21,7 +21,9 @@ import {
   chatRoomTypeAtom,
   isChatJoinAtom,
   profileDialogAtom,
-  profileDialogPropsAtom
+  profileDialogPropsAtom,
+  uploadImageDialogAtom,
+  uploadImageDialogPropsAtom
 } from '@/stores/home'
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
@@ -38,6 +40,7 @@ import {
   useSendMessage,
   useUserById
 } from '@/hooks/apis/chat'
+import { Resource } from '@/hooks/apis/resource'
 import { userAtom } from '@/stores/user'
 import { ChatType, Message, MessageType } from '@/types/globals'
 import { Loader2 } from 'lucide-react'
@@ -46,6 +49,7 @@ import { ScrollAreaWithoutViewport } from '../ui/scroll-area'
 import styles from './chat-viewer.module.scss'
 import { ProfileDialogProps } from './profile-dialog'
 import StickerPopover from './sticker-popover'
+import UploadImageConfirmDialog from './upload-image-confirm-dialog'
 
 export function NoSelectedChat() {
   return (
@@ -58,6 +62,48 @@ export function NoSelectedChat() {
   )
 }
 
+function UploadImageButton({
+  onImageUploaded
+}: {
+  onImageUploaded: (resource: Resource) => void
+}) {
+  const imageUploaderRef = useRef<HTMLInputElement>(null)
+  const setUploadImageConfirmDialogOpen = useSetAtom(uploadImageDialogAtom)
+  const setUploadImageDialogProps = useSetAtom(uploadImageDialogPropsAtom)
+  useEffect(() => {
+    const el = imageUploaderRef.current
+    const handler = (e: Event) => {
+      const files = (e.target as HTMLInputElement).files
+      // TODO: support multiple files
+      if (files && files.length) {
+        setUploadImageDialogProps({
+          image: files[0],
+          onUploaded: (resource) => onImageUploaded(resource)
+        })
+        setUploadImageConfirmDialogOpen(true)
+      }
+    }
+    el?.addEventListener('change', handler)
+    return () => {
+      el?.removeEventListener('change', handler)
+    }
+  }, [imageUploaderRef])
+  return (
+    <>
+      <input
+        ref={imageUploaderRef}
+        type="file"
+        accept="image/jpg,image/jpeg,image/png,image/gif,image/webp"
+        className="hidden"
+      />
+      <SolarGalleryMinimalisticLinear
+        className="text-lg text-slate-400"
+        onClick={() => imageUploaderRef.current?.click()}
+      />
+    </>
+  )
+}
+
 type ChatInputProps = {
   onMessageSend?: (message: string) => void
 }
@@ -67,27 +113,45 @@ export function ChatInput(props: ChatInputProps) {
   const [loading, setLoading] = useState(false)
   const chatID = useAtomValue(chatRoomIDAtom)
   const chatType = useAtomValue(chatRoomTypeAtom)
+  const [openUploadPreview, setOpenUploadPreview] = useAtom(
+    uploadImageDialogAtom
+  )
+  const uploadImageConfirmDialogProps = useAtomValue(uploadImageDialogPropsAtom)
+
   const newMessageReceived = useSetAtom(chatListTryUpdateWhileNewMessageAtom)
   const { execute } = useSendMessage()
-  const sendMessage = useCallback(async () => {
-    setLoading(true)
-    try {
-      // TODO: 支持发送图片
-      const res = await execute(chatType, MessageType.Text, message, chatID)
-      setMessage('')
-      mutate('/messages/' + chatID)
-      props.onMessageSend?.(message)
-      newMessageReceived({
-        ...res.result,
-        chatID: chatID,
-        chatType: ChatType.Private
-      })
-    } finally {
-      setLoading(false)
-    }
-  }, [message, chatID, chatType])
+  const sendMessage = useCallback(
+    async (messageType: MessageType = MessageType.Text, content?: string) => {
+      setLoading(true)
+      try {
+        // TODO: 支持发送图片
+        const msg = content || message
+        const res = await execute(chatType, messageType, msg, chatID)
+        setMessage('')
+        mutate('/messages/' + chatID)
+        props.onMessageSend?.(msg)
+        newMessageReceived({
+          ...res.result,
+          chatID: chatID,
+          chatType: ChatType.Private // TODO: support group chat
+        })
+      } finally {
+        setLoading(false)
+      }
+    },
+    [message, chatID, chatType]
+  )
+  const onImageUploaded = useCallback((resource: Resource) => {
+    sendMessage(MessageType.Image, resource.id)
+  }, [])
+
   return (
     <div className="h-full flex flex-col">
+      <UploadImageConfirmDialog
+        open={openUploadPreview}
+        setOpen={setOpenUploadPreview}
+        {...uploadImageConfirmDialogProps}
+      />
       <div className="h-8 flex items-center gap-2 px-2">
         <StickerPopover
           onStickerSelect={(sticker) => {
@@ -96,7 +160,7 @@ export function ChatInput(props: ChatInputProps) {
         >
           <SolarSmileCircleLinear className="text-lg text-slate-400" />
         </StickerPopover>
-        <SolarGalleryMinimalisticLinear className="text-lg text-slate-400" />
+        <UploadImageButton onImageUploaded={onImageUploaded} />
       </div>
       <div className="flex-1 flex flex-col">
         <textarea
@@ -116,7 +180,7 @@ export function ChatInput(props: ChatInputProps) {
           <button
             className="text-sm text-slate-900 bg-slate-100 px-4 py-1 rounded-sm"
             disabled={!message.length || loading}
-            onClick={sendMessage}
+            onClick={() => sendMessage()}
           >
             发送
           </button>

@@ -1,6 +1,7 @@
 import { ChatItem } from '@/components/home/chat-list'
 import { OperationType } from '@/components/home/layout'
 import { ProfileDialogProps } from '@/components/home/profile-dialog'
+import { UploadImageConfirmProps } from '@/components/home/upload-image-confirm-dialog'
 import { ChatType, Message } from '@/types/globals'
 import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
@@ -13,6 +14,7 @@ export const isChatJoinAtom = atom((get) => {
   // TODO: add a check for a group
   const chatID = get(chatRoomIDAtom)
   const friends = get(friendsAtom)
+  console.log(chatID, friends)
   return !!friends.find((friend) => friend.friendId === chatID)
 })
 
@@ -104,4 +106,10 @@ export const chatListTryUpdateWhileNewMessageAtom = atom(
 export const profileDialogAtom = atom<boolean>(false)
 export const profileDialogPropsAtom = atom<ProfileDialogProps>(
   {} as ProfileDialogProps
+)
+
+// Upload Image Dialog
+export const uploadImageDialogAtom = atom<boolean>(false)
+export const uploadImageDialogPropsAtom = atom<UploadImageConfirmProps>(
+  {} as UploadImageConfirmProps
 )

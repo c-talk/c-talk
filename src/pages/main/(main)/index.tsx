@@ -14,13 +14,12 @@ import { useToken } from '@/hooks/apis/users'
 import { useNavigate } from '@/router'
 import { profileDialogAtom, profileDialogPropsAtom } from '@/stores/home'
 import {
-  friendsAtom,
   isUserExpiredAtom,
   userAtom,
   websocketAuthTokenAtom
 } from '@/stores/user'
 import { useAsyncEffect } from 'ahooks'
-import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 
 export default function DashboardPage() {
@@ -39,13 +38,7 @@ export default function DashboardPage() {
   useWebsocketWithHandler()
 
   // Friends
-  const setFriendsList = useSetAtom(friendsAtom)
-  useFriendsListSWR({
-    onSuccess: (data) => {
-      console.log(data)
-      setFriendsList(data.result || [])
-    }
-  })
+  useFriendsListSWR()
 
   // Dialogs
   const [profileDialog, setProfileDialog] = useAtom(profileDialogAtom)
