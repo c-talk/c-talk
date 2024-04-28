@@ -1,7 +1,11 @@
+import { chatRoomIDAtom } from '@/stores/home'
 import { websocketAuthTokenAtom } from '@/stores/user'
-import { useAtom } from 'jotai'
+import { Message } from '@/types/globals'
+import { useLatest } from 'ahooks'
+import { useAtom, useAtomValue } from 'jotai'
 import { useEffect, useRef } from 'react'
 import io from 'socket.io-client'
+import { mutate } from 'swr'
 
 export enum WebsocketState {
   CONNECTING = 0,
@@ -48,9 +52,7 @@ export const useWebsocket = (params: {
         // 在此处执行处理未经授权的操作，例如重新连接或提示用户重新登录
         setWebsocketAuthToken(null) // 清除令牌
       })
-      socket.on('private', (content: unknown) => {
-        console.log(content)
-      })
+
       socket.on('disconnect', (reason) => {
         console.log(reason)
         if (reason === 'io server disconnect') {
@@ -68,4 +70,25 @@ export const useWebsocket = (params: {
       }
     }
   }, [websocketAuthToken])
+}
+
+export function useWebsocketWithHandler() {
+  const chatID = useAtomValue(chatRoomIDAtom)
+  const latestChatIDRef = useLatest(chatID)
+  useWebsocket({
+    onConnected: (socket) => {
+      socket.on('private', (content: Message | string) => {
+        console.log(content)
+        if (typeof content === 'string') {
+          content = JSON.parse(content) as Message
+        }
+        // 处理私有消息
+        mutate(
+          (key) =>
+            typeof key === 'string' &&
+            key.startsWith(`/messages/${latestChatIDRef.current}`)
+        )
+      })
+    }
+  })
 }

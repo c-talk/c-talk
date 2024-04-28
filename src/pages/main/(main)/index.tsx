@@ -36,11 +36,7 @@ export default function DashboardPage() {
       setWebsocketToken(token.result)
     }
   }, [websocketToken, user])
-  useWebsocket({
-    onConnected: (socket) => {
-      console.log(socket)
-    }
-  })
+  useWebsocketWithHandler()
 
   // Friends
   const setFriendsList = useSetAtom(friendsAtom)

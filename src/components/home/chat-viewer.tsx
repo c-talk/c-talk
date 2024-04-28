@@ -377,15 +377,15 @@ export function ChatViewerPanel() {
       top: scrollHeight,
       behavior: 'smooth'
     })
-  }, [scrollAreaRef])
+  }, [scrollAreaRef, scrollHeight])
   // const scroll = useScroll(scrollAreaRef)
   useEffect(() => {
     const el = scrollAreaRef.current
     const handler = (handler: Event) => {
       const { scrollTop, scrollHeight, clientHeight } =
         handler.target as HTMLDivElement
-      setIsBottom(Math.abs(scrollTop) + clientHeight >= scrollHeight - 1)
       setScrollHeight(scrollHeight)
+      setIsBottom(Math.abs(scrollTop) + clientHeight >= scrollHeight - 1)
     }
     if (el) {
       el.addEventListener('scroll', handler)
@@ -407,16 +407,6 @@ export function ChatViewerPanel() {
   return (
     <>
       <div className="h-14 border-b border-inherit border-solid flex items-center justify-between px-5 relative">
-        <div className="absolute right-2 bottom-10">
-          <button
-            className="text-sm text-slate-900 bg-slate-100 px-4 py-1 rounded-sm"
-            onClick={() => {
-              scrollToBottom()
-            }}
-          >
-            To Bottom
-          </button>
-        </div>
         <span
           className="text-lg font-semibold"
           onClick={() => {

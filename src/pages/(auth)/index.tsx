@@ -111,7 +111,12 @@ export default function Index() {
               />
             </div>
           </CardContent>
-          <CardFooter className="justify-end gap-3">
+          <CardFooter className="flex flex-row-reverse justify-start gap-3">
+            <Button type="submit" disabled={loading}>
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} 登
+              录
+            </Button>
+
             <Button
               variant="ghost"
               onClick={(e) => {
@@ -120,10 +125,6 @@ export default function Index() {
               }}
             >
               没有账号？
-            </Button>
-            <Button type="submit" disabled={loading}>
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} 登
-              录
             </Button>
           </CardFooter>
         </Card>

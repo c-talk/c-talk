@@ -19,4 +19,6 @@ declare global {
   const useFetch: (typeof import('../hooks/ofetch'))['useFetch']
   const useScroll: (typeof import('../hooks/useScroll'))['default']
   const useWebsocket: (typeof import('../hooks/websocket'))['useWebsocket']
+  const useWebsocketWithHandlder: (typeof import('../hooks/websocket'))['useWebsocketWithHandlder']
+  const useWebsocketWithHandler: (typeof import('../hooks/websocket'))['useWebsocketWithHandler']
 }
