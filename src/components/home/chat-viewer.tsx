@@ -346,7 +346,45 @@ export function ChatLogsViewer(props: {
       props.scrollToBottom?.()
     }
   }, [isBottom, messages])
-
+  const items = useMemo(() => {
+    if (!data) return null
+    let current = ''
+    let previousNode: Message | null = null
+    return messages.map((item) => {
+      // TODO: 支持图片消息
+      // TODO: 添加一种算法自动插入日期分割线以及合并相邻发送者的消息
+      const items = (
+        <>
+          {current !== dayjs(item.createTime).format('YYYY-MM-DD') && (
+            <DateDivider key={item.createTime} date={item.createTime} />
+          )}
+          {item.sender === user!.id ? (
+            <ChatLog
+              key={item.id}
+              name={user!.nickName}
+              time={item.createTime}
+              message={item.content}
+              withoutHeader={previousNode?.sender === item.sender}
+              isMe
+            />
+          ) : (
+            <ChatLogWithFetcher
+              key={item.id}
+              userID={item.sender}
+              isMe={false}
+              time={item.createTime}
+              message={item.content}
+              type={item.type}
+              withoutHeader={previousNode?.sender === item.sender}
+            />
+          )}
+        </>
+      )
+      current = dayjs(item.createTime).format('YYYY-MM-DD')
+      previousNode = item
+      return items
+    })
+  }, [data, messages])
   return (
     <ScrollAreaWithoutViewport
       className={cn('px-3 my-2 flex-1', styles['chat-viewer'])}
@@ -355,35 +393,6 @@ export function ChatLogsViewer(props: {
         className={cn('h-full w-full rounded-[inherit]')}
         ref={props.viewpointRef}
       >
-        {/* <DateDivider date="2024/4/17" />
-      <ChatLog
-        name="Shad"
-        time="2024/4/17 10:00:00"
-        message="Hey! How are you?"
-        avatar="https://github.com/shadcn.png"
-      />
-      <ChatLog
-        name="Shad"
-        time="2024/4/17 10:00:01"
-        message="Hey! How are you?"
-        avatar="https://github.com/shadcn.png"
-        withoutHeader
-      />
-      <ChatLog
-        name="a632079"
-        time="2024/4/17 10:01:20"
-        message="I'm fine. Thank you."
-        avatar="https://github.com/greenhat616.png"
-        isMe
-      />
-      <ChatLog
-        name="a632079"
-        time="2024/4/17 10:01:32"
-        message="What about you?"
-        avatar="https://github.com/greenhat616.png"
-        withoutHeader
-        isMe
-      /> */}
         {isLoading && <Loading />}
         {error && (
           <div className="h-full flex items-center justify-center">
@@ -393,33 +402,7 @@ export function ChatLogsViewer(props: {
             </p>
           </div>
         )}
-        {data &&
-          messages.map((item) => {
-            // TODO: 支持图片消息
-            // TODO: 添加一种算法自动插入日期分割线以及合并相邻发送者的消息
-            if (item.sender === user!.id) {
-              return (
-                <ChatLog
-                  key={item.id}
-                  name={user!.nickName}
-                  time={item.createTime}
-                  message={item.content}
-                  isMe
-                />
-              )
-            }
-            return (
-              <ChatLogWithFetcher
-                key={item.id}
-                userID={item.sender}
-                isMe={false}
-                time={item.createTime}
-                message={item.content}
-                type={item.type}
-                withoutHeader={false}
-              />
-            )
-          })}
+        {items}
       </ScrollAreaPrimitive.Viewport>
     </ScrollAreaWithoutViewport>
   )
