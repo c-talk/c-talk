@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { User } from '@/hooks/apis/users'
 import { useNavigate } from '@/router'
 import {
+  chatRoomIDAtom,
   operationItemAtom,
   profileDialogAtom,
   profileDialogPropsAtom
@@ -54,7 +55,7 @@ export function OperationsPanel() {
   const navigate = useNavigate()
   const [selectedOperationItem, setSelectedOperationItem] =
     useAtom(operationItemAtom)
-
+  const setChatRoomID = useSetAtom(chatRoomIDAtom)
   const setProfileDialogProps = useSetAtom(profileDialogPropsAtom)
   const setProfileDialogOpen = useSetAtom(profileDialogAtom)
 
@@ -108,7 +109,10 @@ export function OperationsPanel() {
         </OperationItem>
         <OperationItem
           active={selectedOperationItem === OperationType.Contacts}
-          onClick={() => setSelectedOperationItem(OperationType.Contacts)}
+          onClick={() => {
+            setChatRoomID('')
+            setSelectedOperationItem(OperationType.Contacts)
+          }}
         >
           <SolarUsersGroupTwoRoundedLinear className="text-2xl text-white" />
         </OperationItem>

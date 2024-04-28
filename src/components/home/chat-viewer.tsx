@@ -365,10 +365,7 @@ export function ChatViewerPanel() {
   const chatID = useAtomValue(chatRoomIDAtom)
   const setProfileDialogOpen = useSetAtom(profileDialogAtom)
   const setProfileDialogProps = useSetAtom(profileDialogPropsAtom)
-  const isFriend = useMemo(
-    () => !!friends.find((o) => o.friendId === chatID),
-    [friends, chatID]
-  )
+  const isFriend = !!friends.find((o) => o.friendId === chatID)
 
   // TODO: add a api to get group info by id!
   const { execute } = useUserById()
