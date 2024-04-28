@@ -19,6 +19,7 @@ import {
   chatListTryUpdateWhileNewMessageAtom,
   chatRoomIDAtom,
   chatRoomTypeAtom,
+  isChatJoinAtom,
   profileDialogAtom,
   profileDialogPropsAtom
 } from '@/stores/home'
@@ -37,7 +38,7 @@ import {
   useSendMessage,
   useUserById
 } from '@/hooks/apis/chat'
-import { friendsAtom, userAtom } from '@/stores/user'
+import { userAtom } from '@/stores/user'
 import { ChatType, Message, MessageType } from '@/types/globals'
 import { Loader2 } from 'lucide-react'
 import useSWR, { mutate } from 'swr'
@@ -361,11 +362,10 @@ export function ChatLogsViewer(props: {
 }
 
 export function ChatViewerPanel() {
-  const friends = useAtomValue(friendsAtom)
   const chatID = useAtomValue(chatRoomIDAtom)
   const setProfileDialogOpen = useSetAtom(profileDialogAtom)
   const setProfileDialogProps = useSetAtom(profileDialogPropsAtom)
-  const isFriend = !!friends.find((o) => o.friendId === chatID)
+  const isFriend = useAtomValue(isChatJoinAtom)
 
   // TODO: add a api to get group info by id!
   const { execute } = useUserById()

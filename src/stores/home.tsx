@@ -4,10 +4,17 @@ import { ProfileDialogProps } from '@/components/home/profile-dialog'
 import { ChatType, Message } from '@/types/globals'
 import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
+import { friendsAtom } from './user'
 
 // Chats
 export const chatRoomIDAtom = atom<string>('')
 export const chatRoomTypeAtom = atom<ChatType>(ChatType.Private)
+export const isChatJoinAtom = atom((get) => {
+  // TODO: add a check for a group
+  const chatID = get(chatRoomIDAtom)
+  const friends = get(friendsAtom)
+  return !!friends.find((friend) => friend.friendId === chatID)
+})
 
 export const operationItemAtom = atom<OperationType>(OperationType.Chat)
 export const ChatLogsViewerIsBottomAtom = atom<boolean>(true)
