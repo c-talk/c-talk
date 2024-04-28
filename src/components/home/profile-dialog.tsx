@@ -6,7 +6,8 @@ import {
   DialogTitle
 } from '@/components/ui/dialog'
 import { useUserById } from '@/hooks/apis/chat'
-import { User } from '@/hooks/apis/users'
+import { useResourceUpload } from '@/hooks/apis/resource'
+import { User, useUpdateUser } from '@/hooks/apis/users'
 import {
   chatRoomIDAtom,
   chatRoomTypeAtom,
@@ -14,9 +15,8 @@ import {
 } from '@/stores/home'
 import { userAtom } from '@/stores/user'
 import { ChatType } from '@/types/globals'
-import { open } from '@tauri-apps/api/dialog'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import useSWR from 'swr'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
@@ -74,32 +74,48 @@ function ProfileContent(props: UserItemInnerProps) {
   const setProfileDialogOpen = useSetAtom(profileDialogAtom)
   const setChatRoomID = useSetAtom(chatRoomIDAtom)
   const setChatRoomType = useSetAtom(chatRoomTypeAtom)
+  const avatarUploaderRef = useRef<HTMLInputElement>(null)
   const uploadUserAvatar = useCallback(async () => {
     if (user?.id !== props.user.id) {
       return
     }
     // open a file dialog to upload avatar
-    const selected = await open({
-      multiple: false,
-      directory: false,
-      filters: [
-        {
-          name: 'Image',
-          extensions: ['jpg', 'png', 'jpeg']
-        }
-      ]
-    })
-    if (!selected) return
-    console.log(selected)
+    avatarUploaderRef.current?.click()
     // TODO: finish the resource upload logic
   }, [user, props.user])
   // TODO: add password, email, nickname change logic
+  const { execute: executeUploadResource } = useResourceUpload()
+  const { execute: executeUpdateUser } = useUpdateUser()
+  useEffect(() => {
+    const el = avatarUploaderRef.current
+    const handleFileChange = async (e: Event) => {
+      const target = e.target as HTMLInputElement
+      const file = target.files?.[0]
+      if (file) {
+        const res = await executeUploadResource([file])
+        const avatar = res.result[0].id
+        await executeUpdateUser({ avatar })
+      }
+    }
+
+    el?.addEventListener('change', handleFileChange)
+    return () => {
+      el?.removeEventListener('change', handleFileChange)
+    }
+  }, [avatarUploaderRef])
+
   return (
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle>用户信息</DialogTitle>
       </DialogHeader>
       <div className="flex flex-col items-center gap-4 relative">
+        <input
+          type="file"
+          className="hidden"
+          accept="image/png,image/jpg,image/jpeg,image/webp"
+          ref={avatarUploaderRef}
+        />
         <Avatar className="w-24 h-24 cursor-default" onClick={uploadUserAvatar}>
           {props.user.avatar && (
             <AvatarImage

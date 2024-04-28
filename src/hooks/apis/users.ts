@@ -1,3 +1,5 @@
+import { userAtom } from '@/stores/user'
+import { useSetAtom } from 'jotai'
 import useSWR, { mutate } from 'swr'
 import { R, useFetch } from '../ofetch'
 
@@ -32,6 +34,7 @@ export function useLogin() {
     execute
   }
 }
+
 export function useToken() {
   const ofetch = useFetch()
   const execute = async () => {
@@ -62,6 +65,33 @@ export function useRegister() {
       method: 'POST',
       body: params
     })
+  }
+  return {
+    execute
+  }
+}
+
+export type UserUpdateForm = {
+  nickName: string
+  avatar: string
+}
+
+export function useUpdateUser() {
+  const ofetch = useFetch()
+  const setUser = useSetAtom(userAtom)
+  const execute = async (params: Partial<UserUpdateForm>) => {
+    if (Object.keys(params).length === 0) {
+      throw new Error('no data to update')
+    }
+    await ofetch<R<void>>('/user/set', {
+      method: 'POST',
+      body: params
+    })
+    // TODO: maybe mutate /me is better?
+    setUser((prev) => ({
+      ...prev!,
+      ...params
+    }))
   }
   return {
     execute

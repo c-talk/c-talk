@@ -9,6 +9,12 @@ export enum ChatType {
   Group = 2
 }
 
+export enum ResourceType {
+  Image = 1,
+  Voice = 2,
+  File = 3
+}
+
 export type BasePo = {
   id: string
   createTime: string
