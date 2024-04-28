@@ -47,7 +47,7 @@ export const useFetch = () => {
 
       // Add `?t=1640125211170` to query search params
       options.query = options.query || {}
-      options.query.t = new Date()
+      options.query.t = Date.now()
     },
 
     async onRequestError({ request, error }) {

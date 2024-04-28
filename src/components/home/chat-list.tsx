@@ -4,8 +4,14 @@ import dayjs from 'dayjs'
 import { useMemo, useState, type MouseEventHandler } from 'react'
 
 import { useFriendsListSWR } from '@/hooks/apis/chat'
-import { ChatListAtom, operationItemAtom } from '@/stores/home'
-import { useAtomValue } from 'jotai'
+import {
+  ChatListAtom,
+  chatRoomIDAtom,
+  chatRoomTypeAtom,
+  operationItemAtom
+} from '@/stores/home'
+import { ChatType } from '@/types/globals'
+import { useAtomValue, useSetAtom } from 'jotai'
 import styles from './chat-list.module.scss'
 import { OperationType } from './layout'
 import UserItem from './user-item'
@@ -91,13 +97,25 @@ export function Chats(props: ChatListProps) {
 
 export function ContactsList({ className }: { className?: string }) {
   const { isLoading, data } = useFriendsListSWR()
+  const setChatRoomID = useSetAtom(chatRoomIDAtom)
+  const setChatRoomType = useSetAtom(chatRoomTypeAtom)
+  const setSelectedOperationItem = useSetAtom(operationItemAtom)
   if (isLoading) {
     return <div>加载中</div>
   }
   return (
     <ScrollArea className={cn(styles['chat-list'], className)}>
-      {data?.result.map((item) => (
-        <UserItem key={item.id} userID={item.friendId} />
+      {data?.result?.map((item) => (
+        <UserItem
+          key={item.id}
+          userID={item.friendId}
+          onClick={(o) => {
+            console.log(o)
+            setChatRoomID(o.id)
+            setChatRoomType(ChatType.Private)
+            setSelectedOperationItem(OperationType.Chat)
+          }}
+        />
       ))}
     </ScrollArea>
   )

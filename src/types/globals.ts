@@ -1,12 +1,12 @@
 export enum MessageType {
-  Text = 1,
+  Text,
   Image,
   Voice
 }
 
 export enum ChatType {
-  Group = 1,
-  Private
+  Private = 1,
+  Group = 2
 }
 
 export type BasePo = {

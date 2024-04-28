@@ -7,9 +7,15 @@ import {
 } from '@/components/ui/dialog'
 import { useUserById } from '@/hooks/apis/chat'
 import { User } from '@/hooks/apis/users'
+import {
+  chatRoomIDAtom,
+  chatRoomTypeAtom,
+  profileDialogAtom
+} from '@/stores/home'
 import { userAtom } from '@/stores/user'
+import { ChatType } from '@/types/globals'
 import { open } from '@tauri-apps/api/dialog'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { useCallback } from 'react'
 import useSWR from 'swr'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
@@ -65,6 +71,9 @@ function ProfileContentWithFetcher(props: UserItemWithFetcherProps) {
 
 function ProfileContent(props: UserItemInnerProps) {
   const user = useAtomValue(userAtom)
+  const setProfileDialogOpen = useSetAtom(profileDialogAtom)
+  const setChatRoomID = useSetAtom(chatRoomIDAtom)
+  const setChatRoomType = useSetAtom(chatRoomTypeAtom)
   const uploadUserAvatar = useCallback(async () => {
     if (user?.id !== props.user.id) {
       return
@@ -108,7 +117,17 @@ function ProfileContent(props: UserItemInnerProps) {
           <div className="text-lg font-semibold">{props.user.nickName}</div>
           <div className="font-mono text-sm">{props.user.email}</div>
         </div>
-        {user?.id !== props.user.id && <Button onClick={() => {}}>聊天</Button>}
+        {user?.id !== props.user.id && (
+          <Button
+            onClick={() => {
+              setChatRoomID(props.user.id)
+              setChatRoomType(ChatType.Private)
+              setProfileDialogOpen(false)
+            }}
+          >
+            聊天
+          </Button>
+        )}
         {user?.id === props.user.id && (
           <Button onClick={() => {}}>修改密码</Button>
         )}

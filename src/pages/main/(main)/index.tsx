@@ -46,6 +46,7 @@ export default function DashboardPage() {
   const setFriendsList = useSetAtom(friendsAtom)
   useFriendsListSWR({
     onSuccess: (data) => {
+      console.log(data)
       setFriendsList(data.result || [])
     }
   })
@@ -93,7 +94,11 @@ export default function DashboardPage() {
         onOpenChange={setProfileDialog}
       />
       <OperationsPanel />
-      <ResizablePanelGroup direction="horizontal" className="h-[100vh] flex-1">
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="h-[100vh] flex-1"
+        autoSaveId="chat-main-layout"
+      >
         <ResizablePanel defaultSize={25} className="bg-slate-50">
           <div className="flex flex-col max-h-full h-fit">
             <div className="h-14 px-2 flex items-center bg-slate-200 gap-2">

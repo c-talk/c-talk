@@ -4,12 +4,25 @@ import {
   ResizablePanel,
   ResizablePanelGroup
 } from '@/components/ui/resizable'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import dayjs from 'dayjs'
-import { Suspense, useCallback, useMemo, useState } from 'react'
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 // Icons
-import { chatRoomIDAtom, chatRoomTypeAtom } from '@/stores/home'
-import { useAtom, useAtomValue } from 'jotai'
+import {
+  ChatLogsViewerIsBottomAtom,
+  chatRoomIDAtom,
+  chatRoomTypeAtom,
+  profileDialogAtom,
+  profileDialogPropsAtom
+} from '@/stores/home'
+import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary'
 
 import GgSpinner from '~icons/gg/spinner'
@@ -24,10 +37,13 @@ import {
   useUserById
 } from '@/hooks/apis/chat'
 import { friendsAtom, userAtom } from '@/stores/user'
-import { MessageType } from '@/types/globals'
+import { Message, MessageType } from '@/types/globals'
 import { Loader2 } from 'lucide-react'
 import useSWR, { mutate } from 'swr'
+import { ScrollAreaWithoutViewport } from '../ui/scroll-area'
 import styles from './chat-viewer.module.scss'
+import { ProfileDialogProps } from './profile-dialog'
+import StickerPopover from './sticker-popover'
 
 export function NoSelectedChat() {
   return (
@@ -40,7 +56,11 @@ export function NoSelectedChat() {
   )
 }
 
-export function ChatInput() {
+type ChatInputProps = {
+  onMessageSend?: (message: string) => void
+}
+
+export function ChatInput(props: ChatInputProps) {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const chatID = useAtomValue(chatRoomIDAtom)
@@ -50,9 +70,10 @@ export function ChatInput() {
     setLoading(true)
     try {
       // TODO: 支持发送图片
-      await execute(chatType, MessageType.Text, chatID, message)
+      await execute(chatType, MessageType.Text, message, chatID)
       setMessage('')
       mutate('/messages/' + chatID)
+      props.onMessageSend?.(message)
     } finally {
       setLoading(false)
     }
@@ -60,7 +81,13 @@ export function ChatInput() {
   return (
     <div className="h-full flex flex-col">
       <div className="h-8 flex items-center gap-2 px-2">
-        <SolarSmileCircleLinear className="text-lg text-slate-400" />
+        <StickerPopover
+          onStickerSelect={(sticker) => {
+            setMessage((prev) => prev + sticker)
+          }}
+        >
+          <SolarSmileCircleLinear className="text-lg text-slate-400" />
+        </StickerPopover>
         <SolarGalleryMinimalisticLinear className="text-lg text-slate-400" />
       </div>
       <div className="flex-1 flex flex-col">
@@ -127,6 +154,7 @@ export function ChatLog(props: ChatLogProps) {
     <div
       className={cn(
         'flex',
+        'my-1.5',
         isMe && 'flex-row-reverse',
         'items-center',
         'gap-3',
@@ -214,25 +242,48 @@ export function ChatLogWithFetcher(
   )
 }
 
-export function ChatLogsViewer() {
+export function ChatLogsViewer(props: {
+  viewpointRef?: React.RefObject<HTMLDivElement>
+  scrollToBottom?: () => void
+}) {
   const chatID = useAtomValue(chatRoomIDAtom)
   const chatType = useAtomValue(chatRoomTypeAtom)
   const user = useAtomValue(userAtom)
-
+  const [isBottom, setIsBottom] = useAtom(ChatLogsViewerIsBottomAtom)
+  useEffect(() => {
+    setIsBottom(true)
+  }, [chatID])
+  const [messages, setMessage] = useState<Message[]>([])
   const { execute } = useChatLogs()
   const { isLoading, error, data } = useSWR(
     !!chatID ? `/messages/${chatID}` : null,
-    () => execute(chatType, chatID),
-    { revalidateOnFocus: false }
+    () =>
+      execute(chatType, chatID, {
+        pageSize: 50
+      }),
+    {
+      revalidateOnFocus: false,
+
+      onSuccess: (data) => {
+        setMessage(data?.result?.items.reverse() || [])
+      }
+    }
   )
+  useEffect(() => {
+    if (isBottom) {
+      props.scrollToBottom?.()
+    }
+  }, [isBottom, messages])
+
   return (
-    <ScrollArea
-      className={cn(
-        'h-full flex flex-col gap-3 px-3 py-2',
-        styles['chat-viewer']
-      )}
+    <ScrollAreaWithoutViewport
+      className={cn('px-3 my-2 flex-1', styles['chat-viewer'])}
     >
-      {/* <DateDivider date="2024/4/17" />
+      <ScrollAreaPrimitive.Viewport
+        className={cn('h-full w-full rounded-[inherit]')}
+        ref={props.viewpointRef}
+      >
+        {/* <DateDivider date="2024/4/17" />
       <ChatLog
         name="Shad"
         time="2024/4/17 10:00:00"
@@ -261,74 +312,141 @@ export function ChatLogsViewer() {
         withoutHeader
         isMe
       /> */}
-      {isLoading && <Loading />}
-      {error && (
-        <div className="h-full flex items-center justify-center">
-          <SolarCloseCircleBold className="text-4xl text-slate-400" />
-          <p className="text-xs font-semibold text-slate-400">
-            {error.message}
-          </p>
-        </div>
-      )}
-      {data &&
-        data.result.items.map((item) => {
-          // TODO: 支持图片消息
-          // TODO: 添加一种算法自动插入日期分割线以及合并相邻发送者的消息
-          if (item.sender === user!.id) {
+        {isLoading && <Loading />}
+        {error && (
+          <div className="h-full flex items-center justify-center">
+            <SolarCloseCircleBold className="text-4xl text-slate-400" />
+            <p className="text-xs font-semibold text-slate-400">
+              {error.message}
+            </p>
+          </div>
+        )}
+        {data &&
+          messages.map((item) => {
+            // TODO: 支持图片消息
+            // TODO: 添加一种算法自动插入日期分割线以及合并相邻发送者的消息
+            if (item.sender === user!.id) {
+              return (
+                <ChatLog
+                  key={item.id}
+                  name={user!.nickName}
+                  time={item.createTime}
+                  message={item.content}
+                  isMe
+                />
+              )
+            }
             return (
-              <ChatLog
+              <ChatLogWithFetcher
                 key={item.id}
-                name={user!.nickName}
+                userID={item.sender}
+                isMe={false}
                 time={item.createTime}
                 message={item.content}
-                isMe
+                type={item.type}
+                withoutHeader={false}
               />
             )
-          }
-          return (
-            <ChatLogWithFetcher
-              key={item.id}
-              userID={item.sender}
-              isMe={false}
-              time={item.createTime}
-              message={item.content}
-              type={item.type}
-              withoutHeader={false}
-            />
-          )
-        })}
-    </ScrollArea>
+          })}
+      </ScrollAreaPrimitive.Viewport>
+    </ScrollAreaWithoutViewport>
   )
 }
 
 export function ChatViewerPanel() {
   const friends = useAtomValue(friendsAtom)
   const chatID = useAtomValue(chatRoomIDAtom)
+  const setProfileDialogOpen = useSetAtom(profileDialogAtom)
+  const setProfileDialogProps = useSetAtom(profileDialogPropsAtom)
   const isFriend = useMemo(
     () => !!friends.find((o) => o.friendId === chatID),
-    [friends]
+    [friends, chatID]
   )
+
   // TODO: add a api to get group info by id!
   const { execute } = useUserById()
   const { isLoading, error, data } = useSWR(`/user/${chatID}`, () =>
     execute(chatID)
   )
 
+  const scrollAreaRef = useRef<HTMLDivElement | null>(null)
+  const [isBottom, setIsBottom] = useAtom(ChatLogsViewerIsBottomAtom)
+  const [scrollHeight, setScrollHeight] = useState(0)
+  const scrollToBottom = useCallback(() => {
+    scrollAreaRef.current?.scrollTo({
+      top: scrollHeight,
+      behavior: 'smooth'
+    })
+  }, [scrollAreaRef])
+  // const scroll = useScroll(scrollAreaRef)
+  useEffect(() => {
+    const el = scrollAreaRef.current
+    const handler = (handler: Event) => {
+      const { scrollTop, scrollHeight, clientHeight } =
+        handler.target as HTMLDivElement
+      setIsBottom(Math.abs(scrollTop) + clientHeight >= scrollHeight - 1)
+      setScrollHeight(scrollHeight)
+    }
+    if (el) {
+      el.addEventListener('scroll', handler)
+    }
+    return () => {
+      if (el) {
+        el.removeEventListener('scroll', handler)
+      }
+    }
+  }, [scrollAreaRef])
+
+  useEffect(() => {
+    console.log(isBottom, scrollHeight)
+    if (isBottom) {
+      scrollToBottom()
+    }
+  }, [isBottom, scrollHeight])
+
   return (
     <>
-      <div className="h-14 border-b border-inherit border-solid flex items-center justify-between px-5">
-        <span className="text-lg font-semibold">
+      <div className="h-14 border-b border-inherit border-solid flex items-center justify-between px-5 relative">
+        <div className="absolute right-2 bottom-10">
+          <button
+            className="text-sm text-slate-900 bg-slate-100 px-4 py-1 rounded-sm"
+            onClick={() => {
+              scrollToBottom()
+            }}
+          >
+            To Bottom
+          </button>
+        </div>
+        <span
+          className="text-lg font-semibold"
+          onClick={() => {
+            setProfileDialogProps({
+              userID: chatID
+            } as ProfileDialogProps)
+            setProfileDialogOpen(true)
+          }}
+        >
           {isLoading ? '加载中...' : error ? '加载失败' : data?.result.nickName}
         </span>
       </div>
       <div className="flex-1">
-        <ResizablePanelGroup direction="vertical">
-          <ResizablePanel defaultSize={75}>
-            <ChatLogsViewer />
+        <ResizablePanelGroup
+          direction="vertical"
+          autoSaveId="chat-viewer-layout"
+        >
+          <ResizablePanel defaultSize={75} className="flex flex-col">
+            <ChatLogsViewer
+              viewpointRef={scrollAreaRef}
+              scrollToBottom={scrollToBottom}
+            />
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel defaultSize={25}>
-            {isFriend ? <ChatInput /> : <JoinChatButton />}
+            {isFriend ? (
+              <ChatInput onMessageSend={scrollToBottom} />
+            ) : (
+              <JoinChatButton />
+            )}
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
@@ -345,7 +463,7 @@ export function JoinChatButton() {
   return (
     <div className="h-full flex items-center justify-center">
       <button
-        className="text-sm text-slate-900 bg-slate-100 px-4 py-1 rounded-sm"
+        className="w-full mx-8 py-3 text-sm text-slate-900 bg-slate-100 px-4 rounded-sm"
         onClick={async () => {
           setLoading(true)
           try {
@@ -357,7 +475,9 @@ export function JoinChatButton() {
         }}
       >
         加入聊天
-        {loading && <Loader2 className="w-5 h-5 text-slate-500 animate-spin" />}
+        {loading && (
+          <Loader2 className="w-5 h-5 text-slate-500 animate-spin inline-block" />
+        )}
       </button>
     </div>
   )

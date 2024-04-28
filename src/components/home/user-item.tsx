@@ -40,7 +40,7 @@ export function UserItemWithFetcher(
         加载失败
       </div>
     )
-  return <UserItem user={data?.result} />
+  return <UserItem user={data?.result} onClick={props.onClick} />
 }
 
 export function UserItemInner(

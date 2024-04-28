@@ -40,20 +40,23 @@ export function useFriendsList() {
 
 export function useFriendsListSWR(opts: SWRConfiguration<R<Friend[]>> = {}) {
   const { execute } = useFriendsList()
-  return useSWR<R<Friend[]>>(`/friend/list`, execute, opts)
+  return useSWR<R<Friend[]>>(`/friends`, execute, {
+    // refreshInterval: 1000 * 2,
+    ...opts
+  })
 }
 
 export function useAddFriend() {
   const ofetch = useFetch()
 
   const execute = async (userID: string) => {
+    const formData = new FormData()
+    formData.append('id', userID)
     const res = await ofetch<R<Friend[]>>(`/friend/add/`, {
       method: 'POST',
-      body: {
-        id: userID
-      }
+      body: formData
     })
-    mutate('/friend/list')
+    mutate('/friends')
     return res
   }
   return {
@@ -70,12 +73,12 @@ export function useUserSearch() {
   ) => {
     const query: {
       email?: string
-      nickname?: string
+      nickName?: string
     } & PageParams = { ...basePageParams, ...pageParams }
     if (isEmail(keyword)) {
       query.email = keyword
     } else {
-      query.nickname = keyword
+      query.nickName = keyword
     }
     return ofetch<R<Page<User>>>(`/user/page`, {
       method: 'POST',
@@ -151,7 +154,7 @@ export function useSendMessage() {
           method: 'POST',
           body: {
             content,
-            messageType,
+            type: messageType,
             receiver: chatID,
             sender: latestUserRef.current!.id
           }
@@ -162,7 +165,7 @@ export function useSendMessage() {
           method: 'POST',
           body: {
             content,
-            messageType,
+            type: messageType,
             receiver: chatID,
             sender: latestUserRef.current!.id
           }

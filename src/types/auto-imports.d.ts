@@ -17,5 +17,6 @@ declare global {
   const getResourceUrl: (typeof import('../utils/url'))['getResourceUrl']
   const sleep: (typeof import('../utils/index'))['sleep']
   const useFetch: (typeof import('../hooks/ofetch'))['useFetch']
+  const useScroll: (typeof import('../hooks/useScroll'))['default']
   const useWebsocket: (typeof import('../hooks/websocket'))['useWebsocket']
 }

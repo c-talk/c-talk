@@ -13,8 +13,9 @@ export const operationItemAtom = atom<OperationType>(OperationType.Chat)
 
 export const ChatListAtom = atomWithStorage<ChatItem[]>('chat_list', []) // save the chat list in storage
 
-// Profiles
+export const ChatLogsViewerIsBottomAtom = atom<boolean>(true)
 
+// Profiles
 export const profileDialogAtom = atom<boolean>(false)
 export const profileDialogPropsAtom = atom<ProfileDialogProps>(
   {} as ProfileDialogProps
