@@ -16,9 +16,11 @@ import {
 import { userAtom } from '@/stores/user'
 import { ChatType } from '@/types/globals'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { useCallback, useEffect, useRef } from 'react'
+import { CheckIcon, Loader2 } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import useSWR from 'swr'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Input } from '../ui/input'
 
 type UserItemInnerProps = {
   user: User
@@ -75,14 +77,20 @@ function ProfileContent(props: UserItemInnerProps) {
   const setChatRoomID = useSetAtom(chatRoomIDAtom)
   const setChatRoomType = useSetAtom(chatRoomTypeAtom)
   const avatarUploaderRef = useRef<HTMLInputElement>(null)
+  const isMe = useMemo(() => user?.id === props.user.id, [user, props.user])
+  const userProfile = useMemo(
+    () => (isMe ? user : props.user),
+    [isMe, user, props.user]
+  )
+
   const uploadUserAvatar = useCallback(async () => {
-    if (user?.id !== props.user.id) {
+    if (!isMe) {
       return
     }
     // open a file dialog to upload avatar
     avatarUploaderRef.current?.click()
     // TODO: finish the resource upload logic
-  }, [user, props.user])
+  }, [isMe])
   // TODO: add password, email, nickname change logic
   const { execute: executeUploadResource } = useResourceUpload()
   const { execute: executeUpdateUser } = useUpdateUser()
@@ -104,6 +112,11 @@ function ProfileContent(props: UserItemInnerProps) {
     }
   }, [avatarUploaderRef])
 
+  // Editable nickname
+  const [editableNickname, setEditableNickname] = useState(false)
+  const [buttonLoading, setButtonLoading] = useState(false)
+  const [nickname, setNickname] = useState(userProfile?.nickName || '')
+
   return (
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
@@ -117,23 +130,61 @@ function ProfileContent(props: UserItemInnerProps) {
           ref={avatarUploaderRef}
         />
         <Avatar className="w-24 h-24 cursor-default" onClick={uploadUserAvatar}>
-          {props.user.avatar && (
-            <AvatarImage
-              src={
-                props.user.avatar
-                  ? getResourceUrl(props.user.avatar)
-                  : undefined
-              }
-              draggable={false}
-            />
-          )}
-          <AvatarFallback>{props.user.nickName}</AvatarFallback>
+          <AvatarImage
+            src={getResourceUrl(userProfile?.avatar)}
+            draggable={false}
+          />
+
+          <AvatarFallback>{userProfile?.nickName}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col items-center gap-2">
-          <div className="text-lg font-semibold">{props.user.nickName}</div>
-          <div className="font-mono text-sm">{props.user.email}</div>
+          {editableNickname ? (
+            <div className="flex items-center gap-2">
+              <Input
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+              />
+
+              <Button
+                onClick={async () => {
+                  if (nickname === userProfile!.nickName) {
+                    setEditableNickname(false)
+                    return
+                  }
+                  setButtonLoading(true)
+                  try {
+                    await executeUpdateUser({ nickName: nickname })
+                    setEditableNickname(false)
+                  } finally {
+                    setButtonLoading(false)
+                  }
+                }}
+                variant="outline"
+                size="icon"
+                disabled={buttonLoading}
+              >
+                {buttonLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <CheckIcon className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
+          ) : (
+            <div
+              className="text-lg font-semibold"
+              onClick={() => {
+                if (isMe) {
+                  setEditableNickname(true)
+                }
+              }}
+            >
+              {userProfile!.nickName}
+            </div>
+          )}
+          <div className="font-mono text-sm">{userProfile!.email}</div>
         </div>
-        {user?.id !== props.user.id && (
+        {!isMe && (
           <Button
             onClick={() => {
               setChatRoomID(props.user.id)
@@ -144,9 +195,7 @@ function ProfileContent(props: UserItemInnerProps) {
             聊天
           </Button>
         )}
-        {user?.id === props.user.id && (
-          <Button onClick={() => {}}>修改密码</Button>
-        )}
+        {isMe && <Button onClick={() => {}}>修改密码</Button>}
       </div>
     </DialogContent>
   )
