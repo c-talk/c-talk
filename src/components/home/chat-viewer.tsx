@@ -391,7 +391,7 @@ export function ChatLogsViewer(props: {
   const onLoadMore = () => {
     setSize((size) => size + 1)
   }
-  const [, { rootRef }] = useInfiniteScroll({
+  const [infiniteRef, { rootRef }] = useInfiniteScroll({
     loading: isLoading,
     disabled: !!error,
     hasNextPage,
@@ -498,6 +498,14 @@ export function ChatLogsViewer(props: {
             <p className="text-xs font-semibold text-slate-400">
               {error.message}
             </p>
+          </div>
+        )}
+        {hasNextPage && (
+          <div
+            className="h-10 flex items-center justify-center"
+            ref={infiniteRef}
+          >
+            <GgSpinner className="w-5 h-5 text-slate-500 animate-spin" />
           </div>
         )}
         {items}
