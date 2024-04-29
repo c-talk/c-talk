@@ -21,6 +21,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import useSWR from 'swr'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Input } from '../ui/input'
+import ChangePasswordDialog from './change-password-dialog'
 
 type UserItemInnerProps = {
   user: User
@@ -201,7 +202,11 @@ function ProfileContent(props: UserItemInnerProps) {
             聊天
           </Button>
         )}
-        {isMe && <Button onClick={() => {}}>修改密码</Button>}
+        {isMe && (
+          <ChangePasswordDialog>
+            <Button onClick={() => {}}>修改密码</Button>
+          </ChangePasswordDialog>
+        )}
       </div>
     </DialogContent>
   )

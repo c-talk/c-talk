@@ -97,3 +97,22 @@ export function useUpdateUser() {
     execute
   }
 }
+
+export type ChangePasswordForm = {
+  oriPassword: string
+  password: string
+  rePassword: string
+}
+
+export function useChangePassword() {
+  const ofetch = useFetch()
+  const execute = async (params: ChangePasswordForm) => {
+    return ofetch<R<void>>('/user/changePassword', {
+      method: 'POST',
+      body: params
+    })
+  }
+  return {
+    execute
+  }
+}

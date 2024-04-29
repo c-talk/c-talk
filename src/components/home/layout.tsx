@@ -19,7 +19,9 @@ import {
   profileDialogPropsAtom
 } from '@/stores/home'
 import { userAtom, websocketAuthTokenAtom } from '@/stores/user'
+import { DialogTrigger } from '@radix-ui/react-dialog'
 import { useAtom, useSetAtom } from 'jotai'
+import ChangePasswordDialog from './change-password-dialog'
 import styles from './layout.module.scss'
 import { ProfileDialogProps } from './profile-dialog'
 
@@ -68,41 +70,45 @@ export function OperationsPanel() {
     >
       <div className="h-full flex flex-col pt-5 pb-3 gap-3 items-center">
         <div className="flex w-full items-center justify-center">
-          <ContextMenu>
-            <ContextMenuTrigger>
-              <Avatar className="w-10 h-10 cursor-default">
-                {user?.avatar && (
-                  <AvatarImage
-                    src={getResourceUrl(user?.avatar)}
-                    draggable={false}
-                  />
-                )}
-                <AvatarFallback>{user?.nickName}</AvatarFallback>
-              </Avatar>
-            </ContextMenuTrigger>
-            <ContextMenuContent>
-              <ContextMenuItem
-                onClick={() => {
-                  setProfileDialogProps({
-                    user: user as User
-                  } as ProfileDialogProps)
-                  setProfileDialogOpen(true)
-                }}
-              >
-                信息
-              </ContextMenuItem>
-              <ContextMenuItem>修改密码</ContextMenuItem>
-              <ContextMenuItem
-                onClick={() => {
-                  setUser(null)
-                  setWebsocketAuthToken(null)
-                  navigate('/')
-                }}
-              >
-                登出
-              </ContextMenuItem>
-            </ContextMenuContent>
-          </ContextMenu>
+          <ChangePasswordDialog>
+            <ContextMenu>
+              <ContextMenuTrigger>
+                <Avatar className="w-10 h-10 cursor-default">
+                  {user?.avatar && (
+                    <AvatarImage
+                      src={getResourceUrl(user?.avatar)}
+                      draggable={false}
+                    />
+                  )}
+                  <AvatarFallback>{user?.nickName}</AvatarFallback>
+                </Avatar>
+              </ContextMenuTrigger>
+              <ContextMenuContent>
+                <ContextMenuItem
+                  onClick={() => {
+                    setProfileDialogProps({
+                      user: user as User
+                    } as ProfileDialogProps)
+                    setProfileDialogOpen(true)
+                  }}
+                >
+                  信息
+                </ContextMenuItem>
+                <DialogTrigger asChild>
+                  <ContextMenuItem>修改密码</ContextMenuItem>
+                </DialogTrigger>
+                <ContextMenuItem
+                  onClick={() => {
+                    setUser(null)
+                    setWebsocketAuthToken(null)
+                    navigate('/')
+                  }}
+                >
+                  登出
+                </ContextMenuItem>
+              </ContextMenuContent>
+            </ContextMenu>
+          </ChangePasswordDialog>
         </div>
         <OperationItem
           active={selectedOperationItem === OperationType.Chat}
