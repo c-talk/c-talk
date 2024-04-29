@@ -1,14 +1,10 @@
-import {
-  chatListTryUpdateWhileNewMessageAtom,
-  chatRoomIDAtom
-} from '@/stores/home'
+import { chatListTryUpdateWhileNewMessageAtom } from '@/stores/home'
 import { websocketAuthTokenAtom } from '@/stores/user'
 import { ChatType, Message } from '@/types/globals'
-import { useLatest } from 'ahooks'
-import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import { useEffect, useRef } from 'react'
 import io from 'socket.io-client'
-import { mutate } from 'swr'
+import useGlobalMutation from './useGlobalMutation'
 
 export enum WebsocketState {
   CONNECTING = 0,
@@ -76,9 +72,8 @@ export const useWebsocket = (params: {
 }
 
 export function useWebsocketWithHandler() {
-  const chatID = useAtomValue(chatRoomIDAtom)
-  const latestChatIDRef = useLatest(chatID)
   const newMessageReceived = useSetAtom(chatListTryUpdateWhileNewMessageAtom)
+  const mutate = useGlobalMutation()
   useWebsocket({
     onConnected: (socket) => {
       socket.on('private', (content: Message | string) => {
@@ -90,7 +85,7 @@ export function useWebsocketWithHandler() {
         mutate(
           (key) =>
             typeof key === 'string' &&
-            key.startsWith(`/messages/${latestChatIDRef.current}`)
+            key.includes(`/messages/${content.sender}`) // Sender should be the private chat ID
         )
         newMessageReceived({
           ...content,

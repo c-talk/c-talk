@@ -129,6 +129,8 @@
     "qs": "6.12.1",
     "react-helmet": "6.1.0",
     "react-i18next": "14.1.0",
+    "react-infinite-scroll-hook": "^4.1.1",
+    "rooks": "^7.14.1",
     "sass": "1.75.0",
     "shikiji": "0.10.2",
     "socket.io-client": "^4.7.5",

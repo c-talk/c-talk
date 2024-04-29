@@ -9,6 +9,7 @@ import {
   Suspense,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState
@@ -28,6 +29,7 @@ import {
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary'
+import useInfiniteScroll from 'react-infinite-scroll-hook'
 
 import GgSpinner from '~icons/gg/spinner'
 import SolarCloseCircleBold from '~icons/solar/close-circle-bold'
@@ -41,10 +43,13 @@ import {
   useUserById
 } from '@/hooks/apis/chat'
 import { Resource } from '@/hooks/apis/resource'
+import useGlobalMutation from '@/hooks/useGlobalMutation'
 import { userAtom } from '@/stores/user'
 import { ChatType, Message, MessageType } from '@/types/globals'
+import { useMemoizedFn } from 'ahooks'
 import { Loader2 } from 'lucide-react'
 import useSWR, { mutate } from 'swr'
+import useSWRInfinite from 'swr/infinite'
 import { ScrollAreaWithoutViewport } from '../ui/scroll-area'
 import styles from './chat-viewer.module.scss'
 import { ProfileDialogProps } from './profile-dialog'
@@ -120,7 +125,8 @@ export function ChatInput(props: ChatInputProps) {
 
   const newMessageReceived = useSetAtom(chatListTryUpdateWhileNewMessageAtom)
   const { execute } = useSendMessage()
-  const sendMessage = useCallback(
+  const mutate = useGlobalMutation()
+  const sendMessage = useMemoizedFn(
     async (messageType: MessageType = MessageType.Text, content?: string) => {
       setLoading(true)
       try {
@@ -128,7 +134,10 @@ export function ChatInput(props: ChatInputProps) {
         const msg = content || message
         const res = await execute(chatType, messageType, msg, chatID)
         setMessage('')
-        mutate('/messages/' + chatID)
+        mutate(
+          (key) =>
+            typeof key === 'string' && key.includes(`/messages/${chatID}`)
+        )
         props.onMessageSend?.(msg)
         newMessageReceived({
           ...res.result,
@@ -138,12 +147,11 @@ export function ChatInput(props: ChatInputProps) {
       } finally {
         setLoading(false)
       }
-    },
-    [message, chatID, chatType]
+    }
   )
-  const onImageUploaded = useCallback((resource: Resource) => {
+  const onImageUploaded = useMemoizedFn((resource: Resource) => {
     sendMessage(MessageType.Image, resource.id)
-  }, [])
+  })
 
   return (
     <div className="h-full flex flex-col">
@@ -320,7 +328,7 @@ export function ChatLogWithFetcher(
   const { isLoading, error, data } = useSWR(
     `/user/${props.userID}`,
     () => execute(props.userID),
-    { revalidateOnFocus: false }
+    { revalidateOnFocus: true }
   )
   if (isLoading) {
     return <Loading />
@@ -339,7 +347,7 @@ export function ChatLogWithFetcher(
 }
 
 export function ChatLogsViewer(props: {
-  viewpointRef?: React.RefObject<HTMLDivElement>
+  viewpointRef?: React.RefCallback<HTMLDivElement>
   scrollToBottom?: () => void
 }) {
   const chatID = useAtomValue(chatRoomIDAtom)
@@ -349,76 +357,139 @@ export function ChatLogsViewer(props: {
   useEffect(() => {
     setIsBottom(true)
   }, [chatID])
-  const [messages, setMessage] = useState<Message[]>([])
-  const { execute } = useChatLogs()
-  const { isLoading, error, data } = useSWR(
-    !!chatID ? `/messages/${chatID}` : null,
-    () =>
-      execute(chatType, chatID, {
-        pageSize: 50
-      }),
-    {
-      revalidateOnFocus: false,
 
-      onSuccess: (data) => {
-        setMessage(data?.result?.items.reverse() || [])
-      }
+  // 消息获取部分
+  const PAGE_SIZE = 20
+  const { execute } = useChatLogs()
+  const { isLoading, error, data, setSize, size } = useSWRInfinite(
+    (pageIndex, previousPageData) => {
+      if (!chatID) return null
+      if (previousPageData && !previousPageData.result.items?.length)
+        return null
+      return `/messages/${chatID}?page=${pageIndex + 1}&pageSize=${PAGE_SIZE}`
+    },
+    (url) => {
+      console.log(url)
+      const parsedURL = new URL(url, window.location.href)
+      return execute(chatType, chatID, {
+        pageNum: Number(parsedURL.searchParams.get('page') || 1),
+        pageSize: PAGE_SIZE
+      })
+    },
+    {
+      revalidateOnFocus: true,
+      revalidateAll: true
     }
   )
+
+  // 实现无限滚动
+  const total = useMemo(() => data?.[0].result.total || 0, [data])
+  const hasNextPage = useMemo(() => {
+    console.log(size)
+    return total > size * PAGE_SIZE
+  }, [total, size])
+  const onLoadMore = () => {
+    setSize((size) => size + 1)
+  }
+  const [, { rootRef }] = useInfiniteScroll({
+    loading: isLoading,
+    disabled: !!error,
+    hasNextPage,
+    onLoadMore
+    // rootMargin: '400px 0px 0px 0px'
+  })
+  const scrollableRootRef = useRef<HTMLDivElement | null>(null)
+  const lastScrollDistanceToBottomRef = useRef<number>()
+
+  const messages = useMemo(() => {
+    return [...(data || [])].reverse()?.map((page) => {
+      console.log(page)
+      return [...(page.result.items || [])].reverse()
+    })
+  }, [data])
+  useLayoutEffect(() => {
+    const scrollableRoot = scrollableRootRef.current
+    const lastScrollDistanceToBottom =
+      lastScrollDistanceToBottomRef.current ?? 0
+    if (scrollableRoot) {
+      scrollableRoot.scrollTop =
+        scrollableRoot.scrollHeight - lastScrollDistanceToBottom
+    }
+  }, [messages, rootRef])
+  const rootRefSetter = useCallback(
+    (node: HTMLDivElement) => {
+      rootRef(node)
+      props.viewpointRef?.(node)
+      scrollableRootRef.current = node
+    },
+    [rootRef]
+  )
+  const handleRootScroll = useCallback(() => {
+    const rootNode = scrollableRootRef.current
+    if (rootNode) {
+      const scrollDistanceToBottom = rootNode.scrollHeight - rootNode.scrollTop
+      lastScrollDistanceToBottomRef.current = scrollDistanceToBottom
+    }
+  }, [])
+  // const combinedRef = useForkRef(rootRefSetter, props.viewpointRef)
+
+  // 自动滚动到底部
   useEffect(() => {
     if (isBottom) {
       props.scrollToBottom?.()
     }
   }, [isBottom, messages])
+
   const items = useMemo(() => {
-    if (!data) return null
+    if (!messages.length) return null
     let current = ''
     let previousNode: Message | null = null
-    return messages.map((item) => {
-      // TODO: 支持图片消息
-      // TODO: 添加一种算法自动插入日期分割线以及合并相邻发送者的消息
-      const items = (
-        <>
-          {current !== dayjs(item.createTime).format('YYYY-MM-DD') && (
-            <DateDivider key={item.createTime} date={item.createTime} />
-          )}
-          {item.sender === user!.id ? (
-            <ChatLog
-              key={item.id}
-              name={user!.nickName}
-              time={item.createTime}
-              message={item.content}
-              withoutHeader={previousNode?.sender === item.sender}
-              type={item.type}
-              avatar={user!.avatar}
-              userID={item.sender}
-              isMe
-            />
-          ) : (
-            <ChatLogWithFetcher
-              key={item.id}
-              userID={item.sender}
-              isMe={false}
-              time={item.createTime}
-              message={item.content}
-              type={item.type}
-              withoutHeader={previousNode?.sender === item.sender}
-            />
-          )}
-        </>
-      )
-      current = dayjs(item.createTime).format('YYYY-MM-DD')
-      previousNode = item
-      return items
+    return messages.map((page) => {
+      return page.map((item) => {
+        const items = (
+          <>
+            {current !== dayjs(item.createTime).format('YYYY-MM-DD') && (
+              <DateDivider key={item.createTime} date={item.createTime} />
+            )}
+            {item.sender === user!.id ? (
+              <ChatLog
+                key={item.id}
+                name={user!.nickName}
+                time={item.createTime}
+                message={item.content}
+                withoutHeader={previousNode?.sender === item.sender}
+                type={item.type}
+                avatar={user!.avatar}
+                userID={item.sender}
+                isMe
+              />
+            ) : (
+              <ChatLogWithFetcher
+                key={item.id}
+                userID={item.sender}
+                isMe={false}
+                time={item.createTime}
+                message={item.content}
+                type={item.type}
+                withoutHeader={previousNode?.sender === item.sender}
+              />
+            )}
+          </>
+        )
+        current = dayjs(item.createTime).format('YYYY-MM-DD')
+        previousNode = item
+        return items
+      })
     })
-  }, [data, messages])
+  }, [messages])
   return (
     <ScrollAreaWithoutViewport
       className={cn('px-3 my-2 flex-1', styles['chat-viewer'])}
     >
       <ScrollAreaPrimitive.Viewport
         className={cn('h-full w-full rounded-[inherit]')}
-        ref={props.viewpointRef}
+        ref={rootRefSetter}
+        onScroll={handleRootScroll}
       >
         {isLoading && <Loading />}
         {error && (
@@ -504,7 +575,7 @@ export function ChatViewerPanel() {
         >
           <ResizablePanel defaultSize={75} className="flex flex-col">
             <ChatLogsViewer
-              viewpointRef={scrollAreaRef}
+              viewpointRef={(ref) => (scrollAreaRef.current = ref)}
               scrollToBottom={() => {
                 scrollToBottom(scrollAreaRef.current?.scrollHeight)
               }}

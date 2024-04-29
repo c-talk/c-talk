@@ -15,9 +15,10 @@ import {
 } from '@/stores/home'
 import { userAtom } from '@/stores/user'
 import { ChatType } from '@/types/globals'
+import { useMemoizedFn } from 'ahooks'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { CheckIcon, Loader2 } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import useSWR from 'swr'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Input } from '../ui/input'
@@ -84,14 +85,14 @@ function ProfileContent(props: UserItemInnerProps) {
     [isMe, user, props.user]
   )
 
-  const uploadUserAvatar = useCallback(async () => {
+  const uploadUserAvatar = useMemoizedFn(async () => {
     if (!isMe) {
       return
     }
     // open a file dialog to upload avatar
     avatarUploaderRef.current?.click()
     // TODO: finish the resource upload logic
-  }, [isMe])
+  })
   // TODO: add password, email, nickname change logic
   const { execute: executeUploadResource } = useResourceUpload()
   const { execute: executeUpdateUser } = useUpdateUser()
@@ -117,7 +118,7 @@ function ProfileContent(props: UserItemInnerProps) {
   const [editableNickname, setEditableNickname] = useState(false)
   const [buttonLoading, setButtonLoading] = useState(false)
   const [nickname, setNickname] = useState(userProfile?.nickName || '')
-  const handleUpdateNickname = useCallback(async () => {
+  const handleUpdateNickname = useMemoizedFn(async () => {
     if (nickname === userProfile!.nickName) {
       setEditableNickname(false)
       return
@@ -129,7 +130,7 @@ function ProfileContent(props: UserItemInnerProps) {
     } finally {
       setButtonLoading(false)
     }
-  }, [nickname, userProfile, executeUpdateUser])
+  })
 
   return (
     <DialogContent className="sm:max-w-[425px]">
