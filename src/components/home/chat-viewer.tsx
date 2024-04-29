@@ -354,9 +354,6 @@ export function ChatLogsViewer(props: {
   const chatType = useAtomValue(chatRoomTypeAtom)
   const user = useAtomValue(userAtom)
   const [isBottom, setIsBottom] = useAtom(ChatLogsViewerIsBottomAtom)
-  useEffect(() => {
-    setIsBottom(true)
-  }, [chatID])
 
   // 消息获取部分
   const PAGE_SIZE = 20
@@ -381,6 +378,10 @@ export function ChatLogsViewer(props: {
       revalidateAll: true
     }
   )
+  useEffect(() => {
+    setIsBottom(true)
+    setSize(1) // 重置页数
+  }, [chatID])
 
   // 实现无限滚动
   const total = useMemo(() => data?.[0].result.total || 0, [data])
@@ -438,7 +439,7 @@ export function ChatLogsViewer(props: {
     if (isBottom) {
       props.scrollToBottom?.()
     }
-  }, [isBottom, messages])
+  }, [isBottom, messages, props.scrollToBottom])
 
   const items = useMemo(() => {
     if (!messages.length) return null
