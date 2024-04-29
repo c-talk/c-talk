@@ -79,6 +79,7 @@
     "@commitlint/cli": "19.2.2",
     "@commitlint/config-conventional": "19.2.2",
     "@commitlint/types": "19.0.3",
+    "@fancyapps/ui": "^5.0.36",
     "@iconify/json": "2.2.200",
     "@tauri-apps/cli": "1.5.11",
     "@types/lodash-es": "^4.17.12",

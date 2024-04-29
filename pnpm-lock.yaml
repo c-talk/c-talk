@@ -160,6 +160,9 @@ devDependencies:
   '@commitlint/types':
     specifier: 19.0.3
     version: 19.0.3
+  '@fancyapps/ui':
+    specifier: ^5.0.36
+    version: 5.0.36
   '@iconify/json':
     specifier: 2.2.200
     version: 2.2.200
@@ -1184,6 +1187,10 @@ packages:
   /@eslint/js@8.56.0:
     resolution: {integrity: sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dev: true
+
+  /@fancyapps/ui@5.0.36:
+    resolution: {integrity: sha512-GMygQzp1MBTFNTT6AzpbL6pXTD6bTxwjmmpI1fe8Ozmmiseu8/g82Sudl1YhcbZmS4bJgaBOF5THDFGpXQ1fDw==}
     dev: true
 
   /@floating-ui/core@1.6.0:

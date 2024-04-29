@@ -14,6 +14,7 @@ declare global {
   const TailwindIndicator: (typeof import('../components/tailwind-indicator'))['TailwindIndicator']
   const WebsocketState: (typeof import('../hooks/websocket'))['WebsocketState']
   const cn: (typeof import('../utils/ui'))['cn']
+  const fancyBox: (typeof import('../components/fancy-box'))['default']
   const getResourceUrl: (typeof import('../utils/url'))['getResourceUrl']
   const sleep: (typeof import('../utils/index'))['sleep']
   const swr: (typeof import('../hooks/swr'))['default']

@@ -50,6 +50,7 @@ import { useMemoizedFn } from 'ahooks'
 import { Loader2 } from 'lucide-react'
 import useSWR, { mutate } from 'swr'
 import useSWRInfinite from 'swr/infinite'
+import Fancybox from '../fancy-box'
 import { ScrollAreaWithoutViewport } from '../ui/scroll-area'
 import styles from './chat-viewer.module.scss'
 import { ProfileDialogProps } from './profile-dialog'
@@ -309,10 +310,12 @@ export function ChatLog(props: ChatLogProps) {
           {type === MessageType.Text ? (
             message
           ) : (
-            <img
-              src={getResourceUrl(message)}
-              className="max-w-[23rem] rounded-sm"
-            />
+            <a data-src={getResourceUrl(message)} data-fancybox="gallery">
+              <img
+                src={getResourceUrl(message)}
+                className="rounded-md max-w-[10rem] max-h-[10rem]"
+              />
+            </a>
           )}
         </div>
       </div>
@@ -492,24 +495,32 @@ export function ChatLogsViewer(props: {
         ref={rootRefSetter}
         onScroll={handleRootScroll}
       >
-        {isLoading && <Loading />}
-        {error && (
-          <div className="h-full flex items-center justify-center">
-            <SolarCloseCircleBold className="text-4xl text-slate-400" />
-            <p className="text-xs font-semibold text-slate-400">
-              {error.message}
-            </p>
-          </div>
-        )}
-        {hasNextPage && (
-          <div
-            className="h-10 flex items-center justify-center"
-            ref={infiniteRef}
-          >
-            <GgSpinner className="w-5 h-5 text-slate-500 animate-spin" />
-          </div>
-        )}
-        {items}
+        <Fancybox
+          options={{
+            Carousel: {
+              infinite: false
+            }
+          }}
+        >
+          {isLoading && <Loading />}
+          {error && (
+            <div className="h-full flex items-center justify-center">
+              <SolarCloseCircleBold className="text-4xl text-slate-400" />
+              <p className="text-xs font-semibold text-slate-400">
+                {error.message}
+              </p>
+            </div>
+          )}
+          {hasNextPage && (
+            <div
+              className="h-10 flex items-center justify-center"
+              ref={infiniteRef}
+            >
+              <GgSpinner className="w-5 h-5 text-slate-500 animate-spin" />
+            </div>
+          )}
+          {items}
+        </Fancybox>
       </ScrollAreaPrimitive.Viewport>
     </ScrollAreaWithoutViewport>
   )
