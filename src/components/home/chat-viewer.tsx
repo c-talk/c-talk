@@ -203,6 +203,7 @@ export function DateDivider(props: { date: string }) {
 }
 
 type ChatLogProps = {
+  userID: string
   isMe?: boolean
   withoutHeader?: boolean
   name: string
@@ -213,7 +214,10 @@ type ChatLogProps = {
 }
 
 export function ChatLog(props: ChatLogProps) {
+  const setProfileDialogOpen = useSetAtom(profileDialogAtom)
+  const setProfileDialogProps = useSetAtom(profileDialogPropsAtom)
   const {
+    userID,
     isMe = false,
     withoutHeader = false,
     name,
@@ -229,7 +233,7 @@ export function ChatLog(props: ChatLogProps) {
         'flex',
         'my-1.5',
         isMe && 'flex-row-reverse',
-        'items-center',
+        // 'items-center',
         'gap-3',
         'relative',
         styles['chat-log']
@@ -249,7 +253,15 @@ export function ChatLog(props: ChatLogProps) {
           {date.format('HH:mm')}
         </div>
       ) : (
-        <Avatar className="w-10 h-10">
+        <Avatar
+          className="w-10 h-10"
+          onClick={() => {
+            setProfileDialogProps({
+              userID: userID
+            } as ProfileDialogProps)
+            setProfileDialogOpen(true)
+          }}
+        >
           <AvatarImage
             src={avatar ? getResourceUrl(avatar) : undefined}
             draggable={false}
@@ -281,7 +293,7 @@ export function ChatLog(props: ChatLogProps) {
         <div
           className={cn(
             styles.message,
-            'text-xs',
+            'text-sm mt-1',
             isMe ? 'text-right' : 'text-left',
             type === MessageType.Image && isMe && 'flex flex-row-reverse'
           )}
@@ -379,6 +391,7 @@ export function ChatLogsViewer(props: {
               withoutHeader={previousNode?.sender === item.sender}
               type={item.type}
               avatar={user!.avatar}
+              userID={item.sender}
               isMe
             />
           ) : (
