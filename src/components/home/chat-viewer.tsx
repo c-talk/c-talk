@@ -446,13 +446,17 @@ export function ChatLogsViewer(props: {
 
   const items = useMemo(() => {
     if (!messages.length) return null
-    let current = ''
+    let currentDate = ''
     let previousNode: Message | null = null
     return messages.map((page) => {
       return page.map((item) => {
+        const createDate = dayjs(item.createTime).format('YYYY-MM-DD')
+        if (createDate !== currentDate) {
+          previousNode = null
+        }
         const items = (
           <>
-            {current !== dayjs(item.createTime).format('YYYY-MM-DD') && (
+            {currentDate !== createDate && (
               <DateDivider key={item.createTime} date={item.createTime} />
             )}
             {item.sender === user!.id ? (
@@ -480,8 +484,8 @@ export function ChatLogsViewer(props: {
             )}
           </>
         )
-        current = dayjs(item.createTime).format('YYYY-MM-DD')
         previousNode = item
+        currentDate = createDate
         return items
       })
     })
