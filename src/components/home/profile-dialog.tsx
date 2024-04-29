@@ -116,6 +116,19 @@ function ProfileContent(props: UserItemInnerProps) {
   const [editableNickname, setEditableNickname] = useState(false)
   const [buttonLoading, setButtonLoading] = useState(false)
   const [nickname, setNickname] = useState(userProfile?.nickName || '')
+  const handleUpdateNickname = useCallback(async () => {
+    if (nickname === userProfile!.nickName) {
+      setEditableNickname(false)
+      return
+    }
+    setButtonLoading(true)
+    try {
+      await executeUpdateUser({ nickName: nickname })
+      setEditableNickname(false)
+    } finally {
+      setButtonLoading(false)
+    }
+  }, [nickname, userProfile, executeUpdateUser])
 
   return (
     <DialogContent className="sm:max-w-[425px]">
@@ -143,22 +156,15 @@ function ProfileContent(props: UserItemInnerProps) {
               <Input
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleUpdateNickname()
+                  }
+                }}
               />
 
               <Button
-                onClick={async () => {
-                  if (nickname === userProfile!.nickName) {
-                    setEditableNickname(false)
-                    return
-                  }
-                  setButtonLoading(true)
-                  try {
-                    await executeUpdateUser({ nickName: nickname })
-                    setEditableNickname(false)
-                  } finally {
-                    setButtonLoading(false)
-                  }
-                }}
+                onClick={handleUpdateNickname}
                 variant="outline"
                 size="icon"
                 disabled={buttonLoading}
