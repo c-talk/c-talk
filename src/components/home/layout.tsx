@@ -72,7 +72,10 @@ export function OperationsPanel() {
             <ContextMenuTrigger>
               <Avatar className="w-10 h-10 cursor-default">
                 {user?.avatar && (
-                  <AvatarImage src={user?.avatar} draggable={false} />
+                  <AvatarImage
+                    src={getResourceUrl(user?.avatar)}
+                    draggable={false}
+                  />
                 )}
                 <AvatarFallback>{user?.nickName}</AvatarFallback>
               </Avatar>

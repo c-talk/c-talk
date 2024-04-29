@@ -84,7 +84,7 @@ export function ChatItem(props: ChatItemProps) {
       onClick={onClick}
     >
       <Avatar className="w-10 h-10">
-        <AvatarImage src={meta.avatar} draggable={false} />
+        <AvatarImage src={getResourceUrl(meta.avatar)} draggable={false} />
         <AvatarFallback>{meta.name}</AvatarFallback>
       </Avatar>
       <div className="flex-1 flex flex-col">

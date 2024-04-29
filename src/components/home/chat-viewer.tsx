@@ -219,7 +219,8 @@ export function ChatLog(props: ChatLogProps) {
     name,
     avatar,
     time,
-    message
+    message,
+    type
   } = props
   const date = useMemo(() => dayjs(time), [time])
   return (
@@ -249,7 +250,10 @@ export function ChatLog(props: ChatLogProps) {
         </div>
       ) : (
         <Avatar className="w-10 h-10">
-          <AvatarImage src={avatar} draggable={false} />
+          <AvatarImage
+            src={avatar ? getResourceUrl(avatar) : undefined}
+            draggable={false}
+          />
           <AvatarFallback>{name}</AvatarFallback>
         </Avatar>
       )}
@@ -278,10 +282,18 @@ export function ChatLog(props: ChatLogProps) {
           className={cn(
             styles.message,
             'text-xs',
-            isMe ? 'text-right' : 'text-left'
+            isMe ? 'text-right' : 'text-left',
+            type === MessageType.Image && isMe && 'flex flex-row-reverse'
           )}
         >
-          {message}
+          {type === MessageType.Text ? (
+            message
+          ) : (
+            <img
+              src={getResourceUrl(message)}
+              className="max-w-[23rem] rounded-sm"
+            />
+          )}
         </div>
       </div>
       <div className="w-10"></div>
@@ -365,6 +377,8 @@ export function ChatLogsViewer(props: {
               time={item.createTime}
               message={item.content}
               withoutHeader={previousNode?.sender === item.sender}
+              type={item.type}
+              avatar={user!.avatar}
               isMe
             />
           ) : (

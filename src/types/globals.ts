@@ -1,5 +1,5 @@
 export enum MessageType {
-  Text,
+  Text = 1,
   Image,
   Voice
 }
