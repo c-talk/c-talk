@@ -159,7 +159,7 @@ export function ChatItem(props: ChatItemProps) {
           <div className="font-bold text-sm">{meta.name}</div>
           <div className="text-xs text-slate-600">{formattedTime}</div>
         </div>
-        <div className="text-xs text-slate-600">
+        <div className="text-xs text-slate-600 line-clamp-1 text-ellipsis overflow-hidden">
           {message
             ? message.type === MessageType.Text
               ? meta.chatType === ChatType.Group

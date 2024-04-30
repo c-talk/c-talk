@@ -28,8 +28,10 @@ export default function GroupItem(
         </Avatar>
       </div>
       <div className="flex flex-col">
-        <div className="text-base text-slate-900">{group.name}</div>
-        <div className="text-xs text-slate-500">{group.desc}</div>
+        <div className="text-sm text-slate-900">{group.name}</div>
+        <div className="text-xs text-slate-500 line-clamp-1 text-ellipsis overflow-hidden">
+          {group.desc}
+        </div>
       </div>
     </div>
   )

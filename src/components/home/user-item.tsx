@@ -62,7 +62,12 @@ export function UserItemInner(
           <AvatarFallback>{props?.nickName}</AvatarFallback>
         </Avatar>
       </div>
-      <div className="text-base font-semibold">{props.nickName}</div>
+      <div>
+        <div className="text-sm font-semibold">{props.nickName}</div>
+        <div className="text-xs text-slate-500 line-clamp-1 text-ellipsis overflow-hidden">
+          {props.email}
+        </div>
+      </div>
     </div>
   )
 }
