@@ -92,6 +92,22 @@ export function useWebsocketWithHandler() {
           chatType: ChatType.Private
         })
       })
+      socket.on('group', (content: Message | string) => {
+        console.log(content)
+        if (typeof content === 'string') {
+          content = JSON.parse(content) as Message
+        }
+        // 处理群组消息
+        mutate(
+          (key) =>
+            typeof key === 'string' &&
+            key.includes(`/messages/${content.receiver}`) // Receiver should be the group chat ID
+        )
+        newMessageReceived({
+          ...content,
+          chatType: ChatType.Group
+        })
+      })
     }
   })
 }
