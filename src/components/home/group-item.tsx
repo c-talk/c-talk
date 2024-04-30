@@ -20,7 +20,7 @@ export default function GroupItem(
           {group.avatar && (
             <AvatarImage
               className="object-cover"
-              src={group.avatar}
+              src={getResourceUrl(group.avatar)}
               draggable={false}
             />
           )}
@@ -59,6 +59,6 @@ export function GroupItemWithFetcher(
       群组不存在
     </div>
   ) : (
-    <GroupItem group={data!.result} {...props} />
+    <GroupItem group={data!.result.group} {...props} />
   )
 }

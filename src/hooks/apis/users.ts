@@ -149,7 +149,7 @@ export function useUserSearch() {
 export function useUserById() {
   const ofetch = useFetch()
   const execute = async (userID: string) => {
-    return ofetch<R<User>>(`/user/get/${userID}`)
+    return ofetch<R<User & { friend: boolean }>>(`/user/get/${userID}`)
   }
   return {
     execute

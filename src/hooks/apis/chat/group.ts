@@ -1,5 +1,7 @@
 import { Page, R } from '@/hooks/ofetch'
+import { userAtom } from '@/stores/user'
 import { BasePo, PageParams } from '@/types/globals'
+import { useAtomValue } from 'jotai'
 import { basePageParams } from '../shared'
 
 export type GroupSearchForm = {
@@ -34,10 +36,23 @@ export function useGroupSearch() {
   }
 }
 
+export type Member = {
+  gid: string
+  uid: string
+  role: string[]
+  alias: string | null
+}
+
+export type GetGroupVo = {
+  group: Group
+  member: boolean
+  memberList: Member[]
+}
+
 export function useGroupById() {
   const ofetch = useFetch()
   const execute = async (groupID: string) => {
-    return ofetch<R<Group>>(`/group/get/${groupID}`)
+    return ofetch<R<GetGroupVo>>(`/group/get/${groupID}`)
   }
   return {
     execute
@@ -95,6 +110,24 @@ export function useGroupUpdate() {
     return ofetch<R<Group>>('/group/set', {
       method: 'POST',
       body: params
+    })
+  }
+  return {
+    execute
+  }
+}
+
+export function useJoinedGroups() {
+  const ofetch = useFetch()
+  const user = useAtomValue(userAtom)
+  const execute = async (page: Partial<PageParams> = {}) => {
+    const pageParams = { ...basePageParams, ...page } as PageParams
+    return ofetch<R<Page<Group>>>(`/group/page/joined`, {
+      method: 'POST',
+      body: {
+        ...pageParams,
+        uid: user!.id
+      }
     })
   }
   return {

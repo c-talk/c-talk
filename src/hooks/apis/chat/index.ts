@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Page, R } from '@/hooks/ofetch'
+import useGlobalMutation from '@/hooks/useGlobalMutation'
 import { userAtom } from '@/stores/user'
 import { ChatType, Message, MessageType, PageParams } from '@/types/globals'
 import { useLatest } from 'ahooks'
 import { useAtomValue } from 'jotai'
 import { basePageParams } from '../shared'
-import { useUserSearch } from '../users'
-import { useGroupSearch } from './group'
+import { useUserById, useUserSearch } from '../users'
+import { useAddFriend } from './friends'
+import { useGroupById, useGroupSearch, useJoinGroup } from './group'
 
 export * from './friends'
 export * from './group'
@@ -96,6 +98,69 @@ export function useChatSearch() {
       userSearch.execute(search)
     ])
     return result.map((r) => r.result.items)
+  }
+  return {
+    execute
+  }
+}
+
+export type ChatMeta = {
+  id: string
+  name: string
+  desc?: string
+  avatar?: string
+  banner?: string
+  type: ChatType
+  joined: boolean
+}
+
+export function useChatMeta() {
+  const getUser = useUserById()
+  const getGroup = useGroupById()
+  const execute = async (chatID: string, chatType: ChatType) => {
+    const meta = {} as ChatMeta
+    switch (chatType) {
+      case ChatType.Private:
+        const user = await getUser.execute(chatID)
+        meta.id = user.result.id
+        meta.name = user.result.nickName
+        meta.avatar = user.result.avatar
+        meta.type = ChatType.Private
+        meta.joined = user.result.friend
+        break
+      case ChatType.Group:
+        const group = await getGroup.execute(chatID)
+        Object.assign(meta, group.result.group)
+        meta.joined = group.result.member
+        break
+    }
+    return meta
+  }
+  return {
+    execute
+  }
+}
+
+export function useJoinChat() {
+  const addFriend = useAddFriend()
+  const joinGroup = useJoinGroup()
+  const mutate = useGlobalMutation()
+  const execute = async (chatID: string, chatType: ChatType) => {
+    switch (chatType) {
+      case ChatType.Private:
+        await addFriend.execute(chatID)
+        mutate('/friends') // TODO: replace with infinite query
+        mutate(`/user/${chatID}`)
+        break
+      case ChatType.Group:
+        await joinGroup.execute(chatID)
+        mutate(`/group/${chatID}`)
+        mutate(
+          (key) => typeof key === 'string' && key.includes('/joined/groups')
+        )
+        break
+    }
+    mutate(`/chat/${chatID}`)
   }
   return {
     execute

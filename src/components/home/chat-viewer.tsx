@@ -20,7 +20,6 @@ import {
   chatListTryUpdateWhileNewMessageAtom,
   chatRoomIDAtom,
   chatRoomTypeAtom,
-  isChatJoinAtom,
   profileDialogAtom,
   profileDialogPropsAtom,
   uploadImageDialogAtom,
@@ -36,7 +35,12 @@ import SolarCloseCircleBold from '~icons/solar/close-circle-bold'
 import SolarGalleryMinimalisticLinear from '~icons/solar/gallery-minimalistic-linear'
 import SolarSmileCircleLinear from '~icons/solar/smile-circle-linear'
 
-import { useAddFriend, useChatLogs, useSendMessage } from '@/hooks/apis/chat'
+import {
+  useChatLogs,
+  useChatMeta,
+  useJoinChat,
+  useSendMessage
+} from '@/hooks/apis/chat'
 import { Resource } from '@/hooks/apis/resource'
 import { useUserById } from '@/hooks/apis/users'
 import useGlobalMutation from '@/hooks/useGlobalMutation'
@@ -44,7 +48,7 @@ import { userAtom } from '@/stores/user'
 import { ChatType, Message, MessageType } from '@/types/globals'
 import { useMemoizedFn } from 'ahooks'
 import { Loader2 } from 'lucide-react'
-import useSWR, { mutate } from 'swr'
+import useSWR from 'swr'
 import useSWRInfinite from 'swr/infinite'
 import Fancybox from '../fancy-box'
 import { ScrollAreaWithoutViewport } from '../ui/scroll-area'
@@ -384,7 +388,7 @@ export function ChatLogsViewer(props: {
   }, [chatID])
 
   // 实现无限滚动
-  const total = useMemo(() => data?.[0].result.total || 0, [data])
+  const total = useMemo(() => data?.[0].result?.total || 0, [data])
   const hasNextPage = useMemo(() => {
     console.log(size)
     return total > size * PAGE_SIZE
@@ -405,7 +409,7 @@ export function ChatLogsViewer(props: {
   const messages = useMemo(() => {
     return [...(data || [])].reverse()?.map((page) => {
       console.log(page)
-      return [...(page.result.items || [])].reverse()
+      return [...(page.result?.items || [])].reverse()
     })
   }, [data])
   useLayoutEffect(() => {
@@ -529,15 +533,15 @@ export function ChatLogsViewer(props: {
 
 export function ChatViewerPanel() {
   const chatID = useAtomValue(chatRoomIDAtom)
+  const chatType = useAtomValue(chatRoomTypeAtom)
   const setProfileDialogOpen = useSetAtom(profileDialogAtom)
   const setProfileDialogProps = useSetAtom(profileDialogPropsAtom)
-  const isFriend = useAtomValue(isChatJoinAtom)
 
-  // TODO: add a api to get group info by id!
-  const { execute } = useUserById()
-  const { isLoading, error, data } = useSWR(`/user/${chatID}`, () =>
-    execute(chatID)
+  const getChatMeta = useChatMeta()
+  const { isLoading, error, data } = useSWR(`/chat/${chatID}`, () =>
+    getChatMeta.execute(chatID, chatType)
   )
+  useEffect(() => console.log(error), [error])
 
   const scrollAreaRef = useRef<HTMLDivElement | null>(null)
   const [isBottom, setIsBottom] = useAtom(ChatLogsViewerIsBottomAtom)
@@ -586,7 +590,7 @@ export function ChatViewerPanel() {
             setProfileDialogOpen(true)
           }}
         >
-          {isLoading ? '加载中...' : error ? '加载失败' : data?.result.nickName}
+          {isLoading ? '加载中...' : error ? '加载失败' : data?.name}
         </span>
       </div>
       <div className="flex-1">
@@ -604,7 +608,7 @@ export function ChatViewerPanel() {
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel defaultSize={25}>
-            {isFriend ? (
+            {data?.joined ? (
               <ChatInput onMessageSend={() => scrollToBottom()} />
             ) : (
               <JoinChatButton />
@@ -618,9 +622,9 @@ export function ChatViewerPanel() {
 
 export function JoinChatButton() {
   const chatID = useAtomValue(chatRoomIDAtom)
-  // const chatType = useAtomValue(chatRoomTypeAtom)
+  const chatType = useAtomValue(chatRoomTypeAtom)
   // TODO: add add group api
-  const { execute } = useAddFriend()
+  const { execute } = useJoinChat()
   const [loading, setLoading] = useState(false)
   return (
     <div className="h-full flex items-center justify-center">
@@ -629,8 +633,7 @@ export function JoinChatButton() {
         onClick={async () => {
           setLoading(true)
           try {
-            await execute(chatID)
-            mutate('/friends')
+            await execute(chatID, chatType)
           } finally {
             setLoading(false)
           }
