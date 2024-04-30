@@ -1,5 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
 import dayjs from 'dayjs'
 import { useMemo, type MouseEventHandler } from 'react'
 
@@ -12,10 +14,12 @@ import {
   chatRoomTypeAtom,
   operationItemAtom
 } from '@/stores/home'
+
 import { ChatType, Message, MessageType } from '@/types/globals'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import useSWR from 'swr'
 import styles from './chat-list.module.scss'
+import CreateGroupDialog from './group-create-dialog'
 import { OperationType } from './layout'
 import UserItem from './user-item'
 
@@ -140,7 +144,7 @@ export function Chats(props: ChatListProps) {
   )
 }
 
-export function ContactsList({ className }: { className?: string }) {
+export function FriendsList({ className }: { className?: string }) {
   const { isLoading, data } = useFriendsListSWR()
   const setChatRoomID = useSetAtom(chatRoomIDAtom)
   const setChatRoomType = useSetAtom(chatRoomTypeAtom)
@@ -149,8 +153,9 @@ export function ContactsList({ className }: { className?: string }) {
   if (isLoading) {
     return <div>加载中</div>
   }
+
   return (
-    <ScrollArea className={cn(styles['chat-list'], className)}>
+    <ScrollArea className={cn(styles['chat-list'], 'flex-1', className)}>
       {data?.result?.map((item) => (
         <UserItem
           key={item.id}
@@ -168,5 +173,28 @@ export function ContactsList({ className }: { className?: string }) {
         />
       ))}
     </ScrollArea>
+  )
+}
+
+export function ContactsList({ className }: { className?: string }) {
+  return (
+    <Tabs defaultValue="friends" className="flex-1 flex flex-col">
+      <TabsList className="grid w-full grid-cols-2">
+        <TabsTrigger value="friends">好友</TabsTrigger>
+        <TabsTrigger value="groups">群组</TabsTrigger>
+      </TabsList>
+      <TabsContent value="friends" className="flex-1">
+        <FriendsList className={cn(className)} />
+      </TabsContent>
+      <TabsContent value="groups" className="flex-1 flex flex-col">
+        <div className="flex-1">asdasd</div>
+
+        <CreateGroupDialog>
+          <button className="h-10 text-xs font-semibold bg-slate-100 border-t">
+            创建群组
+          </button>
+        </CreateGroupDialog>
+      </TabsContent>
+    </Tabs>
   )
 }

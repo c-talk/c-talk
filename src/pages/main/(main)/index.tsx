@@ -89,7 +89,7 @@ export default function DashboardPage() {
         autoSaveId="chat-main-layout"
       >
         <ResizablePanel defaultSize={25} className="bg-slate-50">
-          <div className="flex flex-col max-h-full h-fit">
+          <div className="flex flex-col h-full">
             <div className="h-14 px-2 flex items-center bg-slate-200 gap-2">
               <Input placeholder="Search" className="h-2/3 w-full" />
               <SearchDialog />

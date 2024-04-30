@@ -47,8 +47,8 @@ export function useGroupById() {
 export type CreateGroupForm = {
   name: string
   desc: string
-  avatar: string
-  banner: string
+  avatar?: string
+  banner?: string
 }
 
 export function useCreateGroup() {
