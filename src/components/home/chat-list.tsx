@@ -3,7 +3,8 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import dayjs from 'dayjs'
 import { useMemo, type MouseEventHandler } from 'react'
 
-import { useFriendsListSWR, useUserById } from '@/hooks/apis/chat'
+import { useFriendsListSWR } from '@/hooks/apis/chat'
+import { useUserById } from '@/hooks/apis/users'
 import {
   chatListAtom,
   chatListTryAddAtom,

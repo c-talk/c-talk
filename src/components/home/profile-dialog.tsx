@@ -5,9 +5,8 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useUserById } from '@/hooks/apis/chat'
 import { useResourceUpload } from '@/hooks/apis/resource'
-import { User, useUpdateUser } from '@/hooks/apis/users'
+import { User, useUpdateUser, useUserById } from '@/hooks/apis/users'
 import {
   chatRoomIDAtom,
   chatRoomTypeAtom,

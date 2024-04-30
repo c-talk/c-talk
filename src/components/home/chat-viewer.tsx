@@ -36,13 +36,9 @@ import SolarCloseCircleBold from '~icons/solar/close-circle-bold'
 import SolarGalleryMinimalisticLinear from '~icons/solar/gallery-minimalistic-linear'
 import SolarSmileCircleLinear from '~icons/solar/smile-circle-linear'
 
-import {
-  useAddFriend,
-  useChatLogs,
-  useSendMessage,
-  useUserById
-} from '@/hooks/apis/chat'
+import { useAddFriend, useChatLogs, useSendMessage } from '@/hooks/apis/chat'
 import { Resource } from '@/hooks/apis/resource'
+import { useUserById } from '@/hooks/apis/users'
 import useGlobalMutation from '@/hooks/useGlobalMutation'
 import { userAtom } from '@/stores/user'
 import { ChatType, Message, MessageType } from '@/types/globals'

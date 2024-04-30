@@ -53,3 +53,8 @@ export type GroupDetail = {
   created_at: string
   members: UserDetail[]
 }
+
+export type PageParams = {
+  pageNum: number
+  pageSize: number
+}

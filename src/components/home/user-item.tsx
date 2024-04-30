@@ -1,5 +1,4 @@
-import { useUserById } from '@/hooks/apis/chat'
-import { User } from '@/hooks/apis/users'
+import { User, useUserById } from '@/hooks/apis/users'
 import useSWR from 'swr'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 

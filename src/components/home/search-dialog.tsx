@@ -5,11 +5,11 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-import { useUserSearch } from '@/hooks/apis/chat'
+import { Group, useChatSearch } from '@/hooks/apis/chat'
 import { useDebounce } from 'ahooks'
 import clsx from 'clsx'
 import { Loader2 } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import useSWR from 'swr'
 import { Input } from '../ui/input'
 
@@ -18,6 +18,8 @@ import { chatRoomIDAtom, chatRoomTypeAtom } from '@/stores/home'
 import { userAtom } from '@/stores/user'
 import { ChatType } from '@/types/globals'
 import { useAtomValue, useSetAtom } from 'jotai'
+import { ScrollArea } from '../ui/scroll-area'
+import GroupItem from './group-item'
 import styles from './search-dialog.module.scss'
 import UserItem from './user-item'
 
@@ -26,17 +28,23 @@ function SearchDialogContent(props: { onUserSelect?: (user: User) => void }) {
   const user = useAtomValue(userAtom)
   const [searchKeyword, setSearchKeyword] = useState('')
   const deferredSearchKeyword = useDebounce(searchKeyword)
-  const [searchList, setSearchList] = useState<User[]>([])
-  const { execute: executeUserSearch } = useUserSearch()
+  const [searchList, setSearchList] = useState<[Group[], Group[], User[]]>(
+    Array(3).fill([]) as [Group[], Group[], User[]]
+  )
+  const { execute: executeChatSearch } = useChatSearch()
   const { isLoading } = useSWR(
-    !!deferredSearchKeyword ? ['/user/search', deferredSearchKeyword] : null,
-    () => executeUserSearch(deferredSearchKeyword),
+    !!deferredSearchKeyword ? ['/chat/search', deferredSearchKeyword] : null,
+    () => executeChatSearch(deferredSearchKeyword),
     {
       onSuccess: (data) => {
-        console.log(data)
-        setSearchList(data.result.items)
+        setSearchList(data as [Group[], Group[], User[]])
       }
     }
+  )
+
+  const total = useMemo(
+    () => searchList.reduce((acc, cur) => acc + (cur?.length || 0), 0),
+    [searchList]
   )
 
   return (
@@ -59,23 +67,41 @@ function SearchDialogContent(props: { onUserSelect?: (user: User) => void }) {
               </div>
             )}
           </div>
-          {searchList.length > 0 ? (
-            <div className="grid gap-2">
-              {searchList
-                .filter((o) => o.id !== user!.id)
-                .map((item) => (
-                  <UserItem
-                    key={item.id}
-                    user={item}
-                    onClick={props.onUserSelect}
-                  />
+          <div className="grid gap-2">
+            <ScrollArea className="h-80">
+              {total === 0 && (
+                <div className="h-14 flex items-center justify-center text-slate-500">
+                  无搜索结果
+                </div>
+              )}
+              {searchList[2]?.length > 0 && (
+                <div className="grid gap-2">
+                  <div className="text-slate-800 text-sm ml-3">用户</div>
+                  {searchList[2]
+                    .filter((o) => o.id !== user!.id)
+                    .map((item) => (
+                      <UserItem
+                        key={item.id}
+                        user={item}
+                        onClick={props.onUserSelect}
+                      />
+                    ))}
+                </div>
+              )}
+              {searchList[0]?.length > 0 ||
+                (searchList[1]?.length > 0 && (
+                  <div className="grid gap-2">
+                    <div className="text-slate-800 text-sm ml-3">群组</div>
+                    {searchList[0]?.map((item) => (
+                      <GroupItem key={item.id} group={item} />
+                    ))}
+                    {searchList[1]?.map((item) => (
+                      <GroupItem key={item.id} group={item} />
+                    ))}
+                  </div>
                 ))}
-            </div>
-          ) : (
-            <div className="h-14 flex items-center justify-center text-slate-500">
-              无搜索结果
-            </div>
-          )}
+            </ScrollArea>
+          </div>
         </div>
       </DialogHeader>
     </DialogContent>

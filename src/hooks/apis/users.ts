@@ -1,7 +1,10 @@
 import { userAtom } from '@/stores/user'
+import { PageParams } from '@/types/globals'
 import { useSetAtom } from 'jotai'
 import useSWR, { mutate } from 'swr'
-import { R, useFetch } from '../ofetch'
+import isEmail from 'validator/es/lib/isEmail'
+import { Page, R, useFetch } from '../ofetch'
+import { basePageParams } from './shared'
 
 export interface User {
   id: string
@@ -111,6 +114,42 @@ export function useChangePassword() {
       method: 'POST',
       body: params
     })
+  }
+  return {
+    execute
+  }
+}
+
+export function useUserSearch() {
+  const ofetch = useFetch()
+
+  const execute = async (
+    keyword: string,
+    pageParams: Partial<PageParams> = {}
+  ) => {
+    const query: {
+      email?: string
+      nickName?: string
+    } & PageParams = { ...basePageParams, ...pageParams }
+    if (isEmail(keyword)) {
+      query.email = keyword
+    } else {
+      query.nickName = keyword
+    }
+    return ofetch<R<Page<User>>>(`/user/page`, {
+      method: 'POST',
+      body: query
+    })
+  }
+  return {
+    execute
+  }
+}
+
+export function useUserById() {
+  const ofetch = useFetch()
+  const execute = async (userID: string) => {
+    return ofetch<R<User>>(`/user/get/${userID}`)
   }
   return {
     execute
