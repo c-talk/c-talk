@@ -76,6 +76,7 @@ export function OperationsPanel() {
                 <Avatar className="w-10 h-10 cursor-default">
                   {user?.avatar && (
                     <AvatarImage
+                      className="object-cover"
                       src={getResourceUrl(user?.avatar)}
                       draggable={false}
                     />

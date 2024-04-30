@@ -146,6 +146,7 @@ function ProfileContent(props: UserItemInnerProps) {
         />
         <Avatar className="w-24 h-24 cursor-default" onClick={uploadUserAvatar}>
           <AvatarImage
+            className="object-cover"
             src={getResourceUrl(userProfile?.avatar)}
             draggable={false}
           />

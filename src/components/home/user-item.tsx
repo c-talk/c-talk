@@ -55,6 +55,7 @@ export function UserItemInner(
         <Avatar className="w-12 h-12 cursor-default">
           {props?.avatar && (
             <AvatarImage
+              className="object-cover"
               src={props?.avatar ? getResourceUrl(props?.avatar) : undefined}
               draggable={false}
             />

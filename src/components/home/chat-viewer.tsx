@@ -272,6 +272,7 @@ export function ChatLog(props: ChatLogProps) {
           }}
         >
           <AvatarImage
+            className="object-cover"
             src={avatar ? getResourceUrl(avatar) : undefined}
             draggable={false}
           />
