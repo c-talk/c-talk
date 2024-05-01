@@ -105,6 +105,7 @@ export function useWebsocketWithHandler() {
         )
         newMessageReceived({
           ...content,
+          chatID: content.receiver,
           chatType: ChatType.Group
         })
       })

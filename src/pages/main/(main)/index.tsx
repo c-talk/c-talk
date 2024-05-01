@@ -9,7 +9,6 @@ import {
   ResizablePanel,
   ResizablePanelGroup
 } from '@/components/ui/resizable'
-import { useFriendsListSWR } from '@/hooks/apis/chat'
 import { useToken } from '@/hooks/apis/users'
 import { useNavigate } from '@/router'
 import { profileDialogAtom, profileDialogPropsAtom } from '@/stores/home'
@@ -37,9 +36,6 @@ export default function DashboardPage() {
   }, [websocketToken, user])
   useWebsocketWithHandler()
 
-  // Friends
-  useFriendsListSWR()
-
   // Dialogs
   const [profileDialog, setProfileDialog] = useAtom(profileDialogAtom)
   const profileDialogProps = useAtomValue(profileDialogPropsAtom)
@@ -53,27 +49,6 @@ export default function DashboardPage() {
   if (isUserExpired) {
     return null
   }
-
-  // const chats = [
-  //   {
-  //     name: 'Shad',
-  //     avatar: 'https://github.com/shadcn.png',
-  //     time: '2024/4/17 10:00:00',
-  //     message: 'Hey! How are you?'
-  //   },
-  //   {
-  //     name: 'Shad',
-  //     avatar: 'https://github.com/shadcn.png',
-  //     time: '2024/4/17 10:00:00',
-  //     message: 'Hey! How are you?'
-  //   },
-  //   {
-  //     name: 'Shad',
-  //     avatar: 'https://github.com/shadcn.png',
-  //     time: '2024/4/17 10:00:00',
-  //     message: 'Hey! How are you?'
-  //   }
-  // ] satisfies ChatItem[]
 
   return (
     <div className="flex h-[100vh]">

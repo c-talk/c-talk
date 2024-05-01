@@ -89,6 +89,13 @@ export function ChatItemWithGroupFetcher(props: ChatItemWithFetcherProps) {
         加载失败
       </div>
     )
+  if (!data?.result) {
+    return (
+      <div className="h-14 flex items-center justify-center text-slate-500">
+        群组不存在
+      </div>
+    )
+  }
   return (
     <ChatItem
       {...props}
