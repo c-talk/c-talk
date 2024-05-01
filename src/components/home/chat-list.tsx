@@ -22,10 +22,11 @@ import {
   operationItemAtom
 } from '@/stores/home'
 
+import { userAtom } from '@/stores/user'
 import { ChatType, Message, MessageType } from '@/types/globals'
 import { ScrollAreaViewport } from '@radix-ui/react-scroll-area'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { Loader2 } from 'lucide-react'
+import { Dot, Loader2 } from 'lucide-react'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import useSWR from 'swr'
 import useSWRInfinite from 'swr/infinite'
@@ -37,6 +38,7 @@ import UserItem from './user-item'
 
 export type ChatItem = {
   meta: ChatItemChatMeta
+  unread: boolean // TODO: It should be number in the future
   message: Message | null
   ts: number // timestamp
 }
@@ -131,8 +133,17 @@ export function ChatItemWithUserFetcher(props: ChatItemWithFetcherProps) {
 }
 
 export function ChatItem(props: ChatItemProps) {
-  const { selected = false, meta, ts, message, className, onClick } = props
+  const {
+    selected = false,
+    meta,
+    ts,
+    message,
+    className,
+    onClick,
+    unread
+  } = props
   const formattedTime = useMemo(() => dayjs(ts).format('HH:mm'), [ts])
+  const user = useAtomValue(userAtom)
   const getUser = useUserById()
   const { data: userData } = useSWR(
     () =>
@@ -163,12 +174,18 @@ export function ChatItem(props: ChatItemProps) {
           {message
             ? message.type === MessageType.Text
               ? meta.chatType === ChatType.Group
-                ? userData?.result?.nickName
+                ? userData?.result?.nickName &&
+                  userData?.result?.id !== user?.id
                   ? `${userData?.result?.nickName}: ${message.content}`
                   : message.content
                 : message.content
               : '[图片]'
             : '　'}
+          {unread && (
+            <span className="text-xs text-red-500">
+              <Dot />
+            </span>
+          )}
         </div>
       </div>
     </div>

@@ -24,7 +24,10 @@ import styles from './search-dialog.module.scss'
 import UserItem from './user-item'
 
 // TODO: add group 搜索
-function SearchDialogContent(props: { onUserSelect?: (user: User) => void }) {
+function SearchDialogContent(props: {
+  onUserSelect?: (user: User) => void
+  onGroupSelect?: (group: string) => void
+}) {
   const user = useAtomValue(userAtom)
   const [searchKeyword, setSearchKeyword] = useState('')
   const deferredSearchKeyword = useDebounce(searchKeyword)
@@ -50,7 +53,7 @@ function SearchDialogContent(props: { onUserSelect?: (user: User) => void }) {
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>搜索</DialogTitle>
+        <DialogTitle>发现</DialogTitle>
         <div className="grid gap-2">
           <div className="relative h-14 flex items-center gap-2">
             <Input
@@ -92,12 +95,17 @@ function SearchDialogContent(props: { onUserSelect?: (user: User) => void }) {
                 (searchList[1]?.length > 0 && (
                   <div className="grid gap-2">
                     <div className="text-slate-800 text-sm ml-3">群组</div>
-                    {searchList[0]?.map((item) => (
-                      <GroupItem key={item.id} group={item} />
-                    ))}
-                    {searchList[1]?.map((item) => (
-                      <GroupItem key={item.id} group={item} />
-                    ))}
+                    {(searchList[0] || [])
+                      .concat(searchList[1] || [])
+                      .map((item) => (
+                        <GroupItem
+                          key={item.id}
+                          group={item}
+                          onClick={(group) => {
+                            props.onGroupSelect?.(group)
+                          }}
+                        />
+                      ))}
                   </div>
                 ))}
             </ScrollArea>
@@ -127,6 +135,11 @@ export default function SearchDialog(props: {
           setChatRoomID(user.id)
           setChatRoomType(ChatType.Private)
           props.onUserSelect?.(user)
+        }}
+        onGroupSelect={(group) => {
+          setOpen(false)
+          setChatRoomID(group)
+          setChatRoomType(ChatType.Group)
         }}
       />
     </Dialog>

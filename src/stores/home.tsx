@@ -3,9 +3,10 @@ import { OperationType } from '@/components/home/layout'
 import { ProfileDialogProps } from '@/components/home/profile-dialog'
 import { UploadImageConfirmProps } from '@/components/home/upload-image-confirm-dialog'
 import { ChatType, Message } from '@/types/globals'
+import dayjs from 'dayjs'
 import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { friendsAtom } from './user'
+import { friendsAtom, userAtom } from './user'
 
 // Chats
 export const chatRoomIDAtom = atom<string>('')
@@ -44,6 +45,7 @@ export const chatListTryAddAtom = atom(
           chatType: params.chatType
         },
         message: null,
+        unread: false, // If the chat is new, it should not be unread
         ts: Date.now()
       },
       ...prev
@@ -61,6 +63,7 @@ export const chatListTryUpdateWhileNewMessageAtom = atom(
     }
   ) => {
     const list = get(chatListAtom)
+    const user = get(userAtom)
     if (
       list.find((chat) =>
         message.chatID
@@ -78,8 +81,9 @@ export const chatListTryUpdateWhileNewMessageAtom = atom(
             ) {
               return {
                 ...chat,
+                unread: user?.id !== message.sender,
                 message,
-                ts: Date.now()
+                ts: dayjs(message.createTime).valueOf()
               }
             }
             return chat
@@ -94,7 +98,8 @@ export const chatListTryUpdateWhileNewMessageAtom = atom(
             chatType: message.chatType
           },
           message,
-          ts: Date.now()
+          unread: user?.id !== message.sender,
+          ts: dayjs(message.createTime).valueOf()
         },
         ...prev
       ])

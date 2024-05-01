@@ -28,13 +28,14 @@ export function PageTransition() {
       }}
       animate={{
         opacity: 1,
-        filter: 'blur(0px)'
+        filter: 'blur(0px)',
+        transition: commonTransition
       }}
       exit={{
         opacity: 0,
-        filter: 'blur(10px)'
+        filter: 'blur(10px)',
+        transition: commonTransition
       }}
-      transition={commonTransition}
     >
       <AnimatedOutlet />
     </motion.div>

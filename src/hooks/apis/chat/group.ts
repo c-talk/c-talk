@@ -84,7 +84,7 @@ export function useJoinGroup() {
   const execute = async (groupID: string) => {
     return ofetch<R<void>>(`/group/join`, {
       method: 'POST',
-      body: { groupID }
+      body: { id: groupID }
     })
   }
   return {
