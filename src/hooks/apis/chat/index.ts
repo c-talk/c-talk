@@ -1,10 +1,11 @@
+import { chatListTryAddAtom } from './../../../stores/home'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Page, R } from '@/hooks/ofetch'
 import useGlobalMutation from '@/hooks/useGlobalMutation'
 import { userAtom } from '@/stores/user'
 import { ChatType, Message, MessageType, PageParams } from '@/types/globals'
 import { useLatest } from 'ahooks'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { basePageParams } from '../shared'
 import { useUserById, useUserSearch } from '../users'
 import { useAddFriend } from './friends'
@@ -144,6 +145,7 @@ export function useChatMeta() {
 export function useJoinChat() {
   const addFriend = useAddFriend()
   const joinGroup = useJoinGroup()
+  const tryAddChatList = useSetAtom(chatListTryAddAtom)
   const mutate = useGlobalMutation()
   const execute = async (chatID: string, chatType: ChatType) => {
     switch (chatType) {
@@ -160,6 +162,10 @@ export function useJoinChat() {
         )
         break
     }
+    tryAddChatList({
+      chatID,
+      chatType
+    })
     mutate(`/chat/${chatID}`)
   }
   return {

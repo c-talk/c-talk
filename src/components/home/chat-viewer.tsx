@@ -45,7 +45,7 @@ import { Resource } from '@/hooks/apis/resource'
 import { useUserById } from '@/hooks/apis/users'
 import useGlobalMutation from '@/hooks/useGlobalMutation'
 import { userAtom } from '@/stores/user'
-import { ChatType, Message, MessageType } from '@/types/globals'
+import { Message, MessageType } from '@/types/globals'
 import { useMemoizedFn } from 'ahooks'
 import { Loader2 } from 'lucide-react'
 import useSWR from 'swr'
@@ -116,6 +116,7 @@ type ChatInputProps = {
 
 export function ChatInput(props: ChatInputProps) {
   const [message, setMessage] = useState('')
+  const messageInputRef = useRef<HTMLTextAreaElement>(null)
   const [loading, setLoading] = useState(false)
   const chatID = useAtomValue(chatRoomIDAtom)
   const chatType = useAtomValue(chatRoomTypeAtom)
@@ -143,8 +144,9 @@ export function ChatInput(props: ChatInputProps) {
         newMessageReceived({
           ...res.result,
           chatID: chatID,
-          chatType: ChatType.Private // TODO: support group chat
+          chatType: chatType
         })
+        messageInputRef.current?.focus()
       } finally {
         setLoading(false)
       }
@@ -174,6 +176,7 @@ export function ChatInput(props: ChatInputProps) {
       <div className="flex-1 flex flex-col">
         <textarea
           className="flex-1 w-full h-full px-2 py-1 text-sm text-slate-900 rounded-none resize-none outline-0 relative"
+          ref={messageInputRef}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => {

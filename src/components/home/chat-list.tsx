@@ -103,7 +103,6 @@ export function ChatItemWithGroupFetcher(props: ChatItemWithFetcherProps) {
 
 export function ChatItemWithUserFetcher(props: ChatItemWithFetcherProps) {
   const { meta } = props
-  // TODO: add group chat
   const { execute } = useUserById()
   const { data, isLoading, error } = useSWR(`/user/${meta.chatID}`, () =>
     execute(meta.chatID)
@@ -120,6 +119,13 @@ export function ChatItemWithUserFetcher(props: ChatItemWithFetcherProps) {
         加载失败
       </div>
     )
+  if (!data?.result) {
+    return (
+      <div className="h-14 flex items-center justify-center text-slate-500">
+        用户不存在
+      </div>
+    )
+  }
   return (
     <ChatItem
       {...props}
@@ -170,19 +176,21 @@ export function ChatItem(props: ChatItemProps) {
           <div className="font-bold text-sm">{meta.name}</div>
           <div className="text-xs text-slate-600">{formattedTime}</div>
         </div>
-        <div className="text-xs text-slate-600 line-clamp-1 text-ellipsis overflow-hidden">
-          {message
-            ? message.type === MessageType.Text
-              ? meta.chatType === ChatType.Group
-                ? userData?.result?.nickName &&
-                  userData?.result?.id !== user?.id
-                  ? `${userData?.result?.nickName}: ${message.content}`
+        <div className="flex gap-2 items-center">
+          <span className="flex-1 text-xs text-slate-600 line-clamp-1 text-ellipsis overflow-hidden">
+            {message
+              ? message.type === MessageType.Text
+                ? meta.chatType === ChatType.Group
+                  ? userData?.result?.nickName &&
+                    userData?.result?.id !== user?.id
+                    ? `${userData?.result?.nickName}: ${message.content}`
+                    : message.content
                   : message.content
-                : message.content
-              : '[图片]'
-            : '　'}
+                : '[图片]'
+              : '　'}
+          </span>
           {unread && (
-            <span className="text-xs text-red-500">
+            <span className="text-[0.5rem]/[1rem] text-red-500">
               <Dot />
             </span>
           )}
@@ -269,7 +277,7 @@ export function GroupList({ className }: { className?: string }) {
   const pageSize = 20
   const { data, isLoading, error, size, setSize } = useSWRInfinite(
     (index, prev) => {
-      if (prev && !prev.result.items?.length) return null
+      if (prev && !prev.result?.items?.length) return null
       return `/joined/groups?page=${index + 1}&pageSize=${pageSize}`
     },
     (url) => {
@@ -282,7 +290,7 @@ export function GroupList({ className }: { className?: string }) {
       revalidateAll: true
     }
   )
-  const total = useMemo(() => data?.[0]?.result.total || 0, [data])
+  const total = useMemo(() => data?.[0]?.result?.total || 0, [data])
   const hasNextPage = useMemo(() => {
     console.log(size)
     return total > size * pageSize
@@ -304,7 +312,7 @@ export function GroupList({ className }: { className?: string }) {
       <ScrollAreaViewport ref={rootRef}>
         {error && <div>加载失败</div>}
         {data?.map((page) =>
-          page.result.items.map((item) => {
+          page.result?.items.map((item) => {
             return (
               <GroupItem
                 key={item.id}
