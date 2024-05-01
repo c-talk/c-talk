@@ -107,7 +107,6 @@ export const chatListTryUpdateWhileNewMessageAtom = atom(
     }
   }
 )
-
 export const setUnreadToReadAtom = atom(null, (_, set, chatID: string) => {
   set(chatListAtom, (prev) =>
     prev.map((chat) => {
@@ -119,6 +118,11 @@ export const setUnreadToReadAtom = atom(null, (_, set, chatID: string) => {
       }
       return chat
     })
+  )
+})
+export const removeChatItemAtom = atom(null, (_, set, chatID: string) => {
+  set(chatListAtom, (prev) =>
+    prev.filter((chat) => chat.meta.chatID !== chatID)
   )
 })
 

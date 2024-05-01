@@ -20,6 +20,7 @@ import {
   chatRoomIDAtom,
   chatRoomTypeAtom,
   operationItemAtom,
+  removeChatItemAtom,
   setUnreadToReadAtom
 } from '@/stores/home'
 
@@ -31,6 +32,12 @@ import { Dot, Loader2 } from 'lucide-react'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import useSWR from 'swr'
 import useSWRInfinite from 'swr/infinite'
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger
+} from '../ui/context-menu'
 import styles from './chat-list.module.scss'
 import CreateGroupDialog from './group-create-dialog'
 import GroupItem from './group-item'
@@ -227,19 +234,36 @@ export function Chats(props: ChatListProps) {
   const [chatRoomId, setChatRoomId] = useAtom(chatRoomIDAtom)
   const setChatRoomType = useSetAtom(chatRoomTypeAtom)
   const setUnreadToRead = useSetAtom(setUnreadToReadAtom)
+  const removeChatFromChatList = useSetAtom(removeChatItemAtom)
   return (
     <ScrollArea className={cn(styles['chat-list'], className)}>
       {chats.map((chat) => (
-        <ChatItemWithFetcher
-          key={chat.meta.chatID}
-          selected={chatRoomId === chat.meta.chatID}
-          onClick={() => {
-            setChatRoomId(chat.meta.chatID)
-            setChatRoomType(chat.meta.chatType)
-            setUnreadToRead(chat.meta.chatID)
-          }}
-          {...chat}
-        />
+        <ContextMenu key={chat.meta.chatID}>
+          <ContextMenuTrigger>
+            <ChatItemWithFetcher
+              selected={chatRoomId === chat.meta.chatID}
+              onClick={() => {
+                setChatRoomId(chat.meta.chatID)
+                setChatRoomType(chat.meta.chatType)
+                setUnreadToRead(chat.meta.chatID)
+              }}
+              {...chat}
+            />
+          </ContextMenuTrigger>
+          <ContextMenuContent>
+            <ContextMenuItem
+              onClick={() => {
+                if (chat.meta.chatID === chatRoomId) {
+                  setChatRoomId('')
+                  setChatRoomType(ChatType.Private)
+                }
+                removeChatFromChatList(chat.meta.chatID)
+              }}
+            >
+              删除
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
       ))}
     </ScrollArea>
   )
