@@ -24,6 +24,10 @@ export const operationItemAtom = atom<OperationType>(OperationType.Chat)
 export const ChatLogsViewerIsBottomAtom = atom<boolean>(true)
 
 // Chat Lists
+export const chatListSyncCursorAtom = atomWithStorage<number>(
+  'chat_list_sync_cursor',
+  0
+) // 持有最后一次同步的时间戳，用于判断服务端消息是否需要插入到列表中
 export const chatListAtom = atomWithStorage<ChatItem[]>('chat_list', []) // save the chat list in storage
 export const chatListTryAddAtom = atom(
   null,

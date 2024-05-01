@@ -134,3 +134,10 @@ export function useJoinedGroups() {
     execute
   }
 }
+
+// export function useGroupMemberList() {
+//   const ofetch = useFetch()
+//   const execute = async (groupID: string) => {
+//     return ofetch<R<Member[]>>(`/group/member/list/${groupID}`)
+//   }
+// }

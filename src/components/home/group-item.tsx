@@ -12,7 +12,7 @@ export default function GroupItem(
   const { group, onClick } = props
   return (
     <div
-      className="h-14 w-full flex gap-4 items-center hover:bg-slate-100/60 p-3 rounded-md"
+      className="h-14 w-full flex gap-4 items-center hover:bg-slate-100/60 p-3 rounded-md cursor-default"
       onClick={() => onClick?.(group.id)}
     >
       <div className="w-12 h-12 bg-slate-200 rounded-full">

@@ -53,6 +53,29 @@ const DrawerContent = React.forwardRef<
 ))
 DrawerContent.displayName = 'DrawerContent'
 
+const DrawerContentWithRight = React.forwardRef<
+  React.ElementRef<typeof DrawerPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <DrawerPortal>
+    <DrawerOverlay />
+    <DrawerPrimitive.Content
+      ref={ref}
+      className={cn(
+        'fixed inset-y-0 right-0 bottom-0 z-50 flex h-[100vh] w-[300px] flex-col rounded-l-[10px] border bg-background',
+        className
+      )}
+      {...props}
+    >
+      <div className="flex gap-2 items-center">
+        <div className="ml-3 h-[100px] w-2 rounded-full bg-muted" />
+        <div className="flex-1 h-[100vh]">{children}</div>
+      </div>
+    </DrawerPrimitive.Content>
+  </DrawerPortal>
+))
+DrawerContentWithRight.displayName = 'DrawerContentWithRight'
+
 const DrawerHeader = ({
   className,
   ...props
@@ -104,13 +127,14 @@ DrawerDescription.displayName = DrawerPrimitive.Description.displayName
 
 export {
   Drawer,
-  DrawerPortal,
-  DrawerOverlay,
-  DrawerTrigger,
   DrawerClose,
   DrawerContent,
-  DrawerHeader,
+  DrawerContentWithRight,
+  DrawerDescription,
   DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerPortal,
   DrawerTitle,
-  DrawerDescription
+  DrawerTrigger
 }

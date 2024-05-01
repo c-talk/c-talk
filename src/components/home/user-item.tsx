@@ -57,7 +57,7 @@ export function UserItemInner(
         'flex items-center h-14 hover:bg-slate-100/60',
         hideInfo &&
           'w-14 hover:cursor-pointer justify-center hover:rounded-full',
-        !hideInfo && 'w-full gap-4  rounded-md p-3'
+        !hideInfo && 'w-full gap-4  rounded-md p-3 cursor-default'
       )}
       onClick={() => onClick?.(user)}
     >

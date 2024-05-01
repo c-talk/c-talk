@@ -36,6 +36,7 @@ import GgSpinner from '~icons/gg/spinner'
 import SolarCloseCircleBold from '~icons/solar/close-circle-bold'
 import SolarGalleryMinimalisticLinear from '~icons/solar/gallery-minimalistic-linear'
 import SolarSmileCircleLinear from '~icons/solar/smile-circle-linear'
+import SolarUsersGroupRoundedBroken from '~icons/solar/users-group-rounded-broken'
 
 import {
   useChatLogs,
@@ -55,6 +56,7 @@ import useSWRInfinite from 'swr/infinite'
 import Fancybox from '../fancy-box'
 import { ScrollAreaWithoutViewport } from '../ui/scroll-area'
 import styles from './chat-viewer.module.scss'
+import GroupListViewerDrawer from './group-list-viewer'
 import { GroupProfileDialogProps } from './group-profile-dialog'
 import { ProfileDialogProps } from './profile-dialog'
 import StickerPopover from './sticker-popover'
@@ -605,9 +607,16 @@ export function ChatViewerPanel() {
   return (
     <>
       <div className="h-14 border-b border-inherit border-solid flex items-center justify-between px-5 relative">
-        <span className="text-lg font-semibold" onClick={onChatNameClick}>
+        <div className="text-lg font-semibold" onClick={onChatNameClick}>
           {isLoading ? '加载中...' : error ? '加载失败' : data?.name}
-        </span>
+        </div>
+        <div className="flex gap-2 items-center">
+          {chatType === ChatType.Group && (
+            <GroupListViewerDrawer>
+              <SolarUsersGroupRoundedBroken className="text-[1.25rem] mt-1" />
+            </GroupListViewerDrawer>
+          )}
+        </div>
       </div>
       <div className="flex-1">
         <ResizablePanelGroup

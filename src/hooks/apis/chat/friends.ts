@@ -1,4 +1,5 @@
 import { R } from '@/hooks/ofetch'
+import useGlobalMutation from '@/hooks/useGlobalMutation'
 import { friendsAtom, userAtom } from '@/stores/user'
 import { useLatest } from 'ahooks'
 import { useAtomValue, useSetAtom } from 'jotai'
@@ -49,6 +50,21 @@ export function useAddFriend() {
     const res = await ofetch<R<Friend[]>>(`/friend/add/`, {
       method: 'POST',
       body: formData
+    })
+    mutate('/friends')
+    return res
+  }
+  return {
+    execute
+  }
+}
+
+export function useRemoveFriend() {
+  const ofetch = useFetch()
+  const mutate = useGlobalMutation()
+  const execute = async (userId: string) => {
+    const res = await ofetch<R<Friend[]>>(`/friend/remove/${userId}`, {
+      method: 'POST'
     })
     mutate('/friends')
     return res
