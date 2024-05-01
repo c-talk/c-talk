@@ -10,7 +10,7 @@ import TsconfigPaths from 'vite-tsconfig-paths'
 
 import { defineConfig } from 'vite'
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     TsconfigPaths(),
     React(),
@@ -34,6 +34,9 @@ export default defineConfig({
       compiler: 'jsx' // or 'solid'
     })
   ],
+  esbuild: {
+    drop: mode === 'development' ? undefined : ['console', 'debugger']
+  },
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
@@ -47,4 +50,4 @@ export default defineConfig({
   // 3. to make use of `TAURI_DEBUG` and other env variables
   // https://tauri.app/v1/api/config#buildconfig.beforedevcommand
   envPrefix: ['VITE_', 'TAURI_']
-})
+}))

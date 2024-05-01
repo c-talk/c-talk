@@ -1,4 +1,5 @@
 import { ChatItem } from '@/components/home/chat-list'
+import { GroupProfileDialogProps } from '@/components/home/group-profile-dialog'
 import { OperationType } from '@/components/home/layout'
 import { ProfileDialogProps } from '@/components/home/profile-dialog'
 import { UploadImageConfirmProps } from '@/components/home/upload-image-confirm-dialog'
@@ -107,9 +108,27 @@ export const chatListTryUpdateWhileNewMessageAtom = atom(
   }
 )
 
+export const setUnreadToReadAtom = atom(null, (_, set, chatID: string) => {
+  set(chatListAtom, (prev) =>
+    prev.map((chat) => {
+      if (chat.meta.chatID === chatID) {
+        return {
+          ...chat,
+          unread: false
+        }
+      }
+      return chat
+    })
+  )
+})
+
 // Profiles
 export const profileDialogAtom = atom<boolean>(false)
 export const profileDialogPropsAtom = atom<ProfileDialogProps>(
+  {} as ProfileDialogProps
+)
+export const groupProfileDialogAtom = atom<boolean>(false)
+export const groupProfileDialogPropsAtom = atom<GroupProfileDialogProps>(
   {} as ProfileDialogProps
 )
 

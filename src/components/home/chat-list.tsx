@@ -19,7 +19,8 @@ import {
   chatListTryAddAtom,
   chatRoomIDAtom,
   chatRoomTypeAtom,
-  operationItemAtom
+  operationItemAtom,
+  setUnreadToReadAtom
 } from '@/stores/home'
 
 import { userAtom } from '@/stores/user'
@@ -225,6 +226,7 @@ export function Chats(props: ChatListProps) {
   const chats = useAtomValue(chatListAtom)
   const [chatRoomId, setChatRoomId] = useAtom(chatRoomIDAtom)
   const setChatRoomType = useSetAtom(chatRoomTypeAtom)
+  const setUnreadToRead = useSetAtom(setUnreadToReadAtom)
   return (
     <ScrollArea className={cn(styles['chat-list'], className)}>
       {chats.map((chat) => (
@@ -234,6 +236,7 @@ export function Chats(props: ChatListProps) {
           onClick={() => {
             setChatRoomId(chat.meta.chatID)
             setChatRoomType(chat.meta.chatType)
+            setUnreadToRead(chat.meta.chatID)
           }}
           {...chat}
         />

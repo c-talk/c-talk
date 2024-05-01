@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 export type UserItemProps = {
   userID?: string
   user?: User
+  hideInfo?: boolean
   onClick?: (user: User) => void
 }
 
@@ -13,15 +14,13 @@ export default function UserItem(props: UserItemProps) {
     return null
   }
   if (props.userID) {
-    return <UserItemWithFetcher userID={props.userID} onClick={props.onClick} />
+    return <UserItemWithFetcher userID={props.userID} {...props} />
   }
-  return <UserItemInner {...(props.user as User)} onClick={props.onClick} />
+  return <UserItemInner user={props.user!} {...props} />
 }
 
 export function UserItemWithFetcher(
-  props: Required<Omit<UserItemProps, 'user' | 'onClick'>> & {
-    onClick?: (user: User) => void
-  }
+  props: Required<Pick<UserItemProps, 'userID'>> & Omit<UserItemProps, 'userID'>
 ) {
   const { execute } = useUserById()
   const { data, isLoading, error } = useSWR(`/user/${props.userID}`, () =>
@@ -39,35 +38,49 @@ export function UserItemWithFetcher(
         加载失败
       </div>
     )
-  return <UserItem user={data?.result} onClick={props.onClick} />
+  if (!data)
+    return (
+      <div className="h-14 flex items-center justify-center text-slate-500">
+        无数据
+      </div>
+    )
+  return <UserItemInner user={data.result} {...props} />
 }
 
 export function UserItemInner(
-  props: User & { onClick?: (user: User) => void }
+  props: Required<Pick<UserItemProps, 'user'>> & Omit<UserItemProps, 'user'>
 ) {
+  const { user, hideInfo = false, onClick } = props
   return (
     <div
-      className="h-14 w-full flex gap-4 items-center hover:bg-slate-100/60 p-3 rounded-md"
-      onClick={() => props.onClick?.(props)}
+      className={cn(
+        'flex items-center h-14 hover:bg-slate-100/60',
+        hideInfo &&
+          'w-14 hover:cursor-pointer justify-center hover:rounded-full',
+        !hideInfo && 'w-full gap-4  rounded-md p-3'
+      )}
+      onClick={() => onClick?.(user)}
     >
       <div className="w-12 h-12 bg-slate-200 rounded-full">
         <Avatar className="w-12 h-12 cursor-default">
-          {props?.avatar && (
+          {user.avatar && (
             <AvatarImage
               className="object-cover"
-              src={props?.avatar ? getResourceUrl(props?.avatar) : undefined}
+              src={user.avatar ? getResourceUrl(user.avatar) : undefined}
               draggable={false}
             />
           )}
-          <AvatarFallback>{props?.nickName}</AvatarFallback>
+          <AvatarFallback>{user.nickName}</AvatarFallback>
         </Avatar>
       </div>
-      <div>
-        <div className="text-sm font-semibold">{props.nickName}</div>
-        <div className="text-xs text-slate-500 line-clamp-1 text-ellipsis overflow-hidden">
-          {props.email}
+      {!hideInfo && (
+        <div>
+          <div className="text-sm font-semibold">{user.nickName}</div>
+          <div className="text-xs text-slate-500 line-clamp-1 text-ellipsis overflow-hidden">
+            {user.email}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

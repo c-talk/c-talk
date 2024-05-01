@@ -43,7 +43,7 @@ export type Member = {
   alias: string | null
 }
 
-export type GetGroupVo = {
+export type GroupVo = {
   group: Group
   member: boolean
   memberList: Member[]
@@ -52,7 +52,7 @@ export type GetGroupVo = {
 export function useGroupById() {
   const ofetch = useFetch()
   const execute = async (groupID: string) => {
-    return ofetch<R<GetGroupVo>>(`/group/get/${groupID}`)
+    return ofetch<R<GroupVo>>(`/group/get/${groupID}`)
   }
   return {
     execute

@@ -1,5 +1,6 @@
 import ChatList from '@/components/home/chat-list'
 import { ChatViewer } from '@/components/home/chat-viewer'
+import GroupProfileDialog from '@/components/home/group-profile-dialog'
 import { OperationsPanel } from '@/components/home/layout'
 import ProfileDialog from '@/components/home/profile-dialog'
 import SearchDialog from '@/components/home/search-dialog'
@@ -11,7 +12,12 @@ import {
 } from '@/components/ui/resizable'
 import { useToken } from '@/hooks/apis/users'
 import { useNavigate } from '@/router'
-import { profileDialogAtom, profileDialogPropsAtom } from '@/stores/home'
+import {
+  groupProfileDialogAtom,
+  groupProfileDialogPropsAtom,
+  profileDialogAtom,
+  profileDialogPropsAtom
+} from '@/stores/home'
 import {
   isUserExpiredAtom,
   userAtom,
@@ -39,6 +45,10 @@ export default function DashboardPage() {
   // Dialogs
   const [profileDialog, setProfileDialog] = useAtom(profileDialogAtom)
   const profileDialogProps = useAtomValue(profileDialogPropsAtom)
+  const [groupProfileDialog, setGroupProfileDialog] = useAtom(
+    groupProfileDialogAtom
+  )
+  const groupProfileDialogProps = useAtomValue(groupProfileDialogPropsAtom)
 
   useEffect(() => {
     if (isUserExpired) {
@@ -52,6 +62,11 @@ export default function DashboardPage() {
 
   return (
     <div className="flex h-[100vh]">
+      <GroupProfileDialog
+        {...groupProfileDialogProps}
+        open={groupProfileDialog}
+        onOpenChange={setGroupProfileDialog}
+      />
       <ProfileDialog
         {...profileDialogProps}
         open={profileDialog}

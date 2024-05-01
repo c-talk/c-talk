@@ -20,6 +20,8 @@ import {
   chatListTryUpdateWhileNewMessageAtom,
   chatRoomIDAtom,
   chatRoomTypeAtom,
+  groupProfileDialogAtom,
+  groupProfileDialogPropsAtom,
   profileDialogAtom,
   profileDialogPropsAtom,
   uploadImageDialogAtom,
@@ -45,7 +47,7 @@ import { Resource } from '@/hooks/apis/resource'
 import { useUserById } from '@/hooks/apis/users'
 import useGlobalMutation from '@/hooks/useGlobalMutation'
 import { userAtom } from '@/stores/user'
-import { Message, MessageType } from '@/types/globals'
+import { ChatType, Message, MessageType } from '@/types/globals'
 import { useMemoizedFn } from 'ahooks'
 import { Loader2 } from 'lucide-react'
 import useSWR from 'swr'
@@ -53,6 +55,7 @@ import useSWRInfinite from 'swr/infinite'
 import Fancybox from '../fancy-box'
 import { ScrollAreaWithoutViewport } from '../ui/scroll-area'
 import styles from './chat-viewer.module.scss'
+import { GroupProfileDialogProps } from './group-profile-dialog'
 import { ProfileDialogProps } from './profile-dialog'
 import StickerPopover from './sticker-popover'
 import UploadImageConfirmDialog from './upload-image-confirm-dialog'
@@ -539,6 +542,8 @@ export function ChatViewerPanel() {
   const chatType = useAtomValue(chatRoomTypeAtom)
   const setProfileDialogOpen = useSetAtom(profileDialogAtom)
   const setProfileDialogProps = useSetAtom(profileDialogPropsAtom)
+  const setGroupProfileDialogOpen = useSetAtom(groupProfileDialogAtom)
+  const setGroupProfileDialogProps = useSetAtom(groupProfileDialogPropsAtom)
 
   const getChatMeta = useChatMeta()
   const { isLoading, error, data } = useSWR(`/chat/${chatID}`, () =>
@@ -580,19 +585,27 @@ export function ChatViewerPanel() {
       scrollToBottom()
     }
   }, [isBottom, scrollHeight])
-
+  const onChatNameClick = useMemoizedFn(() => {
+    console.log(chatType)
+    switch (chatType) {
+      case ChatType.Group:
+        setGroupProfileDialogProps({
+          groupID: chatID
+        } as GroupProfileDialogProps)
+        setGroupProfileDialogOpen(true)
+        break
+      case ChatType.Private:
+        setProfileDialogProps({
+          userID: chatID
+        } as ProfileDialogProps)
+        setProfileDialogOpen(true)
+        break
+    }
+  })
   return (
     <>
       <div className="h-14 border-b border-inherit border-solid flex items-center justify-between px-5 relative">
-        <span
-          className="text-lg font-semibold"
-          onClick={() => {
-            setProfileDialogProps({
-              userID: chatID
-            } as ProfileDialogProps)
-            setProfileDialogOpen(true)
-          }}
-        >
+        <span className="text-lg font-semibold" onClick={onChatNameClick}>
           {isLoading ? '加载中...' : error ? '加载失败' : data?.name}
         </span>
       </div>
