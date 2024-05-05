@@ -4,6 +4,8 @@ import { ChatType, Message } from '@/types/globals'
 import { useAtom, useSetAtom } from 'jotai'
 import { useEffect, useRef } from 'react'
 import io from 'socket.io-client'
+import { useChatMeta } from './apis/chat'
+import useNotification from './use-notification'
 import useGlobalMutation from './useGlobalMutation'
 
 export enum WebsocketState {
@@ -77,6 +79,9 @@ export const useWebsocket = (params: {
 export function useWebsocketWithHandler() {
   const newMessageReceived = useSetAtom(chatListTryUpdateWhileNewMessageAtom)
   const mutate = useGlobalMutation()
+  const notification = useNotification()
+  const getChatMeta = useChatMeta()
+  // TODO: 为通知获取聊天元数据提供缓存
   useWebsocket({
     onConnected: (socket) => {
       socket.on('private', (content: Message | string) => {
@@ -94,6 +99,16 @@ export function useWebsocketWithHandler() {
           ...content,
           chatType: ChatType.Private
         })
+        getChatMeta
+          .execute(content.sender, ChatType.Private)
+          .then((meta) => {
+            notification.showNotification({
+              title: meta.name,
+              body: content.content,
+              icon: getResourceUrl(meta.avatar)
+            })
+          })
+          .catch(console.error)
       })
       socket.on('group', (content: Message | string) => {
         console.log(content)
@@ -111,6 +126,18 @@ export function useWebsocketWithHandler() {
           chatID: content.receiver,
           chatType: ChatType.Group
         })
+        Promise.all([
+          getChatMeta.execute(content.receiver, ChatType.Group),
+          getChatMeta.execute(content.sender, ChatType.Private)
+        ])
+          .then(([groupMeta, userMeta]) => {
+            notification.showNotification({
+              title: groupMeta.name,
+              body: `${userMeta.name}: ${content.content}`,
+              icon: getResourceUrl(groupMeta.avatar)
+            })
+          })
+          .catch(console.error)
       })
     }
   })

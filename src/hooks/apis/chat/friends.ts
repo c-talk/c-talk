@@ -1,15 +1,18 @@
 import { R } from '@/hooks/ofetch'
 import useGlobalMutation from '@/hooks/useGlobalMutation'
 import { friendsAtom, userAtom } from '@/stores/user'
+import { Message } from '@/types/globals'
 import { useLatest } from 'ahooks'
 import { useAtomValue, useSetAtom } from 'jotai'
 import useSWR, { SWRConfiguration, mutate } from 'swr'
+import { User } from '../users'
 
 export type Friend = {
   id: string
-  name: string
-  avatar: string
+  uid: string
   friendId: string
+  friend: User
+  message?: Message
 }
 export function useFriendsList() {
   const ofetch = useFetch()
@@ -17,7 +20,10 @@ export function useFriendsList() {
   const latestUserRef = useLatest(user)
 
   const execute = async () => {
-    return ofetch<R<Friend[]>>(`/friend/list/${latestUserRef.current?.id}`)
+    return ofetch<R<Friend[]>>(`/friend/list/${latestUserRef.current?.id}`, {
+      method: 'POST',
+      body: {}
+    })
   }
   return {
     execute

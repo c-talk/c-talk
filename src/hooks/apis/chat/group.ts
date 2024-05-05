@@ -117,12 +117,20 @@ export function useGroupUpdate() {
   }
 }
 
+export type JoinedGroupVo = {
+  id: string
+  gid: string
+  uid: string
+  group: Group
+  createTime: string
+}
+
 export function useJoinedGroups() {
   const ofetch = useFetch()
   const user = useAtomValue(userAtom)
   const execute = async (page: Partial<PageParams> = {}) => {
     const pageParams = { ...basePageParams, ...page } as PageParams
-    return ofetch<R<Page<Group>>>(`/group/page/joined`, {
+    return ofetch<R<Page<JoinedGroupVo>>>(`/group/page/joined`, {
       method: 'POST',
       body: {
         ...pageParams,

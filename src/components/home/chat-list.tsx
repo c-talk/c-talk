@@ -282,20 +282,26 @@ export function FriendsList({ className }: { className?: string }) {
   return (
     <ScrollArea className={cn(styles['chat-list'], 'flex-1', className)}>
       {data?.result?.map((item) => (
-        <UserItem
-          key={item.id}
-          userID={item.friendId}
-          onClick={(o) => {
-            console.log(o)
-            setChatRoomID(o.id)
-            setChatRoomType(ChatType.Private)
-            setSelectedOperationItem(OperationType.Chat)
-            tryAddChatToChatList({
-              chatID: o.id,
-              chatType: ChatType.Private
-            })
-          }}
-        />
+        <ContextMenu key={item.friendId}>
+          <ContextMenuTrigger>
+            <UserItem
+              userID={item.friendId}
+              onClick={(o) => {
+                console.log(o)
+                setChatRoomID(o.id)
+                setChatRoomType(ChatType.Private)
+                setSelectedOperationItem(OperationType.Chat)
+                tryAddChatToChatList({
+                  chatID: o.id,
+                  chatType: ChatType.Private
+                })
+              }}
+            />
+          </ContextMenuTrigger>
+          <ContextMenuContent>
+            <ContextMenuItem onClick={() => {}}>删除好友</ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
       ))}
     </ScrollArea>
   )
@@ -348,19 +354,25 @@ export function GroupList({ className }: { className?: string }) {
         {data?.map((page) =>
           page.result?.items.map((item) => {
             return (
-              <GroupItem
-                key={item.id}
-                group={item}
-                onClick={(group) => {
-                  setChatRoomID(group)
-                  setChatRoomType(ChatType.Group)
-                  tryAddChatToChatList({
-                    chatID: group,
-                    chatType: ChatType.Group
-                  })
-                  setSelectedOperationItem(OperationType.Chat)
-                }}
-              />
+              <ContextMenu key={item.id}>
+                <ContextMenuTrigger>
+                  <GroupItem
+                    group={item.group}
+                    onClick={(group) => {
+                      setChatRoomID(group)
+                      setChatRoomType(ChatType.Group)
+                      tryAddChatToChatList({
+                        chatID: group,
+                        chatType: ChatType.Group
+                      })
+                      setSelectedOperationItem(OperationType.Chat)
+                    }}
+                  />
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  <ContextMenuItem onClick={() => {}}>退出群组</ContextMenuItem>
+                </ContextMenuContent>
+              </ContextMenu>
             )
           })
         )}

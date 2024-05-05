@@ -348,6 +348,14 @@ export function ChatLogWithFetcher(
   if (error) {
     throw error
   }
+  if (!data || !data.result) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <SolarCloseCircleBold className="text-4xl text-slate-400" />
+        <p className="text-xs font-semibold text-slate-400">用户不存在</p>
+      </div>
+    )
+  }
   return (
     <ChatLog
       {...props}

@@ -11,6 +11,7 @@ import {
   ResizablePanelGroup
 } from '@/components/ui/resizable'
 import { useToken } from '@/hooks/apis/users'
+import useNotification from '@/hooks/use-notification'
 import { useNavigate } from '@/router'
 import {
   groupProfileDialogAtom,
@@ -33,6 +34,7 @@ export default function DashboardPage() {
   const user = useAtomValue(userAtom)
   const { execute: executeGetWebsocketToken } = useToken()
   const navigate = useNavigate()
+  useNotification() // Just for requesting notification permission
   useAsyncEffect(async () => {
     if (websocketToken === null && !!user) {
       const token = await executeGetWebsocketToken()
