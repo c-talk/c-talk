@@ -25,7 +25,7 @@ export const useFetch = () => {
   // console.log(user)
 
   return ofetch.create({
-    baseURL: `http://100.98.108.126:1002`,
+    baseURL: import.meta.env.VITE_HTTP_ENDPOINT,
     // timeout: 5000,
     retry: 5,
     async onRequest({ request, options }) {

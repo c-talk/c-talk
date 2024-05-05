@@ -30,12 +30,15 @@ export const useWebsocket = (params: {
     console.log(websocketAuthToken)
     window.addEventListener('beforeunload', handlePageUnload)
     if (websocketAuthToken) {
-      const socket = (socketRef.current = io('http://100.98.108.126:1003', {
-        query: {
-          token: websocketAuthToken.token
-        },
-        transports: ['polling']
-      }))
+      const socket = (socketRef.current = io(
+        import.meta.env.VITE_SOCKET_IO_ENDPOINT,
+        {
+          query: {
+            token: websocketAuthToken.token
+          }
+          // transports: ['polling']
+        }
+      ))
 
       socket.on('connect', () => {
         params.onConnected?.(socket)

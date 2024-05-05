@@ -26,6 +26,6 @@
     },
     "types": ["unplugin-icons/types/react"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "env.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

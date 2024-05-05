@@ -1,4 +1,5 @@
 import Generouted from '@generouted/react-router/plugin'
+import { ValidateEnv } from '@julr/vite-plugin-validate-env'
 import React from '@vitejs/plugin-react'
 import AutoImport from 'unplugin-auto-import/vite'
 import IconsResolver from 'unplugin-icons/resolver'
@@ -17,6 +18,7 @@ export default defineConfig(({ mode }) => ({
     Svgr(),
     Generouted(),
     SassDts(),
+    ValidateEnv(),
     I18nextLoader({
       paths: ['./locales']
     }),
