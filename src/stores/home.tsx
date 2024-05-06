@@ -129,6 +129,22 @@ export const removeChatItemAtom = atom(null, (_, set, chatID: string) => {
     prev.filter((chat) => chat.meta.chatID !== chatID)
   )
 })
+export const setChatItemNameAtom = atom(
+  null,
+  (_, set, params: { chatID: string; name: string }) => {
+    set(chatListAtom, (prev) =>
+      prev.map((chat) => {
+        if (chat.meta.chatID === params.chatID) {
+          return {
+            ...chat,
+            name: params.name
+          }
+        }
+        return chat
+      })
+    )
+  }
+)
 
 // Profiles
 export const profileDialogAtom = atom<boolean>(false)
@@ -145,3 +161,12 @@ export const uploadImageDialogAtom = atom<boolean>(false)
 export const uploadImageDialogPropsAtom = atom<UploadImageConfirmProps>(
   {} as UploadImageConfirmProps
 )
+
+export const chatListSearchInputAtom = atom<string>('')
+export const filteredChatListAtom = atom((get) => {
+  const filterText = get(chatListSearchInputAtom)
+  const list = get(chatListAtom)
+  return list.filter((chat) =>
+    !!filterText && chat.name ? chat.name.includes(filterText) : true
+  )
+})

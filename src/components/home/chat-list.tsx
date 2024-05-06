@@ -15,12 +15,14 @@ import {
 } from '@/hooks/apis/chat'
 import { useUserById } from '@/hooks/apis/users'
 import {
-  chatListAtom,
+  chatListSearchInputAtom,
   chatListTryAddAtom,
   chatRoomIDAtom,
   chatRoomTypeAtom,
+  filteredChatListAtom,
   operationItemAtom,
   removeChatItemAtom,
+  setChatItemNameAtom,
   setUnreadToReadAtom
 } from '@/stores/home'
 
@@ -46,6 +48,7 @@ import UserItem from './user-item'
 
 export type ChatItem = {
   meta: ChatItemChatMeta
+  name?: string // 当前仅用作排序
   unread: boolean // TODO: It should be number in the future
   message: Message | null
   ts: number // timestamp
@@ -82,8 +85,20 @@ export function ChatItemWithFetcher(props: ChatItemWithFetcherProps) {
 export function ChatItemWithGroupFetcher(props: ChatItemWithFetcherProps) {
   const { meta } = props
   const { execute } = useGroupById()
-  const { data, isLoading, error } = useSWR(`/group/${meta.chatID}`, () =>
-    execute(meta.chatID)
+  const setName = useSetAtom(setChatItemNameAtom)
+  const { data, isLoading, error } = useSWR(
+    `/group/${meta.chatID}`,
+    () => execute(meta.chatID),
+    {
+      onSuccess(data) {
+        if (data.result.group.name) {
+          setName({
+            chatID: meta.chatID,
+            name: data.result.group.name
+          })
+        }
+      }
+    }
   )
   if (isLoading)
     return (
@@ -119,8 +134,20 @@ export function ChatItemWithGroupFetcher(props: ChatItemWithFetcherProps) {
 export function ChatItemWithUserFetcher(props: ChatItemWithFetcherProps) {
   const { meta } = props
   const { execute } = useUserById()
-  const { data, isLoading, error } = useSWR(`/user/${meta.chatID}`, () =>
-    execute(meta.chatID)
+  const setName = useSetAtom(setChatItemNameAtom)
+  const { data, isLoading, error } = useSWR(
+    `/user/${meta.chatID}`,
+    () => execute(meta.chatID),
+    {
+      onSuccess(data) {
+        if (data.result.nickName) {
+          setName({
+            chatID: meta.chatID,
+            name: data.result.nickName
+          })
+        }
+      }
+    }
   )
   if (isLoading)
     return (
@@ -230,14 +257,15 @@ export default function ChatList({ className }: { className?: string }) {
 
 export function Chats(props: ChatListProps) {
   const { className } = props
-  const chats = useAtomValue(chatListAtom)
+  // const chats = useAtomValue(chatListAtom)
+  const filteredChats = useAtomValue(filteredChatListAtom)
   const [chatRoomId, setChatRoomId] = useAtom(chatRoomIDAtom)
   const setChatRoomType = useSetAtom(chatRoomTypeAtom)
   const setUnreadToRead = useSetAtom(setUnreadToReadAtom)
   const removeChatFromChatList = useSetAtom(removeChatItemAtom)
   return (
     <ScrollArea className={cn(styles['chat-list'], className)}>
-      {chats.map((chat) => (
+      {filteredChats.map((chat) => (
         <ContextMenu key={chat.meta.chatID}>
           <ContextMenuTrigger>
             <ChatItemWithFetcher
@@ -275,13 +303,30 @@ export function FriendsList({ className }: { className?: string }) {
   const setChatRoomType = useSetAtom(chatRoomTypeAtom)
   const setSelectedOperationItem = useSetAtom(operationItemAtom)
   const tryAddChatToChatList = useSetAtom(chatListTryAddAtom)
+
+  const filteredText = useAtomValue(chatListSearchInputAtom)
+  const filteredData = useMemo(
+    () =>
+      data
+        ? {
+            ...data,
+            result: [...(data.result || [])].filter((item) =>
+              !!filteredText
+                ? item.friend.nickName.includes(filteredText)
+                : true
+            )
+          }
+        : undefined,
+    [data, filteredText]
+  )
+
   if (isLoading) {
     return <div>加载中</div>
   }
 
   return (
     <ScrollArea className={cn(styles['chat-list'], 'flex-1', className)}>
-      {data?.result?.map((item) => (
+      {filteredData?.result.map((item) => (
         <ContextMenu key={item.friendId}>
           <ContextMenuTrigger>
             <UserItem
@@ -345,13 +390,29 @@ export function GroupList({ className }: { className?: string }) {
     onLoadMore
     // rootMargin: '400px 0px 0px 0px'
   })
+
+  const filteredText = useAtomValue(chatListSearchInputAtom)
+  const filteredData = useMemo(
+    () =>
+      [...(data || [])].map((page) => ({
+        ...page,
+        result: {
+          ...page.result,
+          items: [...(page.result?.items || [])].filter((item) =>
+            !!filteredText ? item.group.name.includes(filteredText) : true
+          )
+        }
+      })),
+    [data, filteredText]
+  )
+
   return (
     <ScrollAreaWithoutViewport
       className={cn(styles['chat-list'], 'flex-1', className)}
     >
       <ScrollAreaViewport ref={rootRef}>
         {error && <div>加载失败</div>}
-        {data?.map((page) =>
+        {filteredData.map((page) =>
           page.result?.items.map((item) => {
             return (
               <ContextMenu key={item.id}>

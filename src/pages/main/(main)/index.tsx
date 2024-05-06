@@ -14,6 +14,7 @@ import { useToken } from '@/hooks/apis/users'
 import useNotification from '@/hooks/use-notification'
 import { useNavigate } from '@/router'
 import {
+  chatListSearchInputAtom,
   groupProfileDialogAtom,
   groupProfileDialogPropsAtom,
   profileDialogAtom,
@@ -51,6 +52,7 @@ export default function DashboardPage() {
     groupProfileDialogAtom
   )
   const groupProfileDialogProps = useAtomValue(groupProfileDialogPropsAtom)
+  const [searchInput, setSearchInput] = useAtom(chatListSearchInputAtom)
 
   useEffect(() => {
     if (isUserExpired) {
@@ -83,7 +85,12 @@ export default function DashboardPage() {
         <ResizablePanel defaultSize={25} className="bg-slate-50">
           <div className="flex flex-col h-full">
             <div className="h-14 px-2 flex items-center bg-slate-200 gap-2">
-              <Input placeholder="Search" className="h-2/3 w-full" />
+              <Input
+                placeholder="Search"
+                className="h-2/3 w-full"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+              />
               <SearchDialog />
             </div>
             <ChatList className="flex-1" />
