@@ -1,6 +1,10 @@
+import { ToastAction } from '@/components/ui/toast'
+import { useToast } from '@/components/ui/use-toast'
 import { chatListTryUpdateWhileNewMessageAtom } from '@/stores/home'
+import { socketIOIndicatorAtom } from '@/stores/socket-io'
 import { websocketAuthTokenAtom } from '@/stores/user'
 import { ChatType, Message } from '@/types/globals'
+import { useMemoizedFn } from 'ahooks'
 import { useAtom, useSetAtom } from 'jotai'
 import { useEffect, useRef } from 'react'
 import io from 'socket.io-client'
@@ -8,28 +12,31 @@ import { useChatMeta } from './apis/chat'
 import useNotification from './use-notification'
 import useGlobalMutation from './useGlobalMutation'
 
-export enum WebsocketState {
-  CONNECTING = 0,
-  OPEN = 1,
-  CLOSING = 2,
-  CLOSED = 3
+export enum SocketIOState {
+  CONNECTING,
+  CONNECTED, // 用于展示成功连接的状态
+  IDLE, // connected
+  RECONNECTING,
+  CLOSED
 }
 
-export const useWebsocket = (params: {
-  onConnected?: (ref: ReturnType<typeof io>) => void
-  onDisconnected?: (ref: ReturnType<typeof io>) => void
+export type SocketIOInstance = ReturnType<typeof io>
+
+export const useSocketIO = (params: {
+  onConnected?: (ref: SocketIOInstance) => void
+  onDisconnected?: (ref: SocketIOInstance) => void
 }) => {
   const [websocketAuthToken, setWebsocketAuthToken] = useAtom(
     websocketAuthTokenAtom
   )
-  const socketRef = useRef<ReturnType<typeof io> | null>(null)
-  const handlePageUnload = () => {
+  const socketRef = useRef<SocketIOInstance | null>(null)
+  const setSocketIOState = useSetAtom(socketIOIndicatorAtom)
+  const handlePageUnload = useMemoizedFn(() => {
     if (socketRef.current) {
       socketRef.current.disconnect()
     }
-  }
+  })
   useEffect(() => {
-    console.log(websocketAuthToken)
     window.addEventListener('beforeunload', handlePageUnload)
     if (websocketAuthToken) {
       const socket = (socketRef.current = io(
@@ -37,19 +44,27 @@ export const useWebsocket = (params: {
         {
           query: {
             token: websocketAuthToken.token
-          }
-          // transports: ['polling']
+          },
+          withCredentials: true, // 传递 Cookie，用于 K8s Ingress 粘性会话
+          transports: ['polling']
+          // transports: ['websocket', 'polling']
         }
       ))
 
       socket.on('connect', () => {
+        setSocketIOState(SocketIOState.IDLE)
         params.onConnected?.(socket)
+        setTimeout(() => setSocketIOState(SocketIOState.CONNECTED), 1000)
       })
       socket.on('connect_error', (err) => {
         if (err.message === 'xhr poll error') {
           // 重新连接
           setTimeout(() => setWebsocketAuthToken(null), 1000)
         }
+        setSocketIOState(SocketIOState.CLOSED)
+      })
+      socket.on('reconnect_attempt', () => {
+        setSocketIOState(SocketIOState.RECONNECTING)
       })
       socket.on('unauthorized', (error) => {
         console.error('Unauthorized:', error.message) // 打印错误消息
@@ -59,30 +74,54 @@ export const useWebsocket = (params: {
 
       socket.on('disconnect', (reason) => {
         console.log(reason)
+        setSocketIOState(SocketIOState.CLOSED)
         if (reason === 'io server disconnect') {
           // the disconnection was initiated by the server, you need to reconnect manually
+          setSocketIOState(SocketIOState.CONNECTING)
           socket.connect()
         }
         params.onDisconnected?.(socket)
       })
+      setSocketIOState(SocketIOState.CONNECTING)
       socket.connect()
+    } else {
+      setSocketIOState(SocketIOState.CLOSED)
     }
     return () => {
       window.removeEventListener('beforeunload', handlePageUnload)
       if (socketRef.current) {
         socketRef.current.disconnect()
+        setSocketIOState(SocketIOState.CLOSED)
       }
     }
   }, [websocketAuthToken])
 }
 
-export function useWebsocketWithHandler() {
+export function useSocketIOWithHandler() {
+  const setSocketIOState = useSetAtom(socketIOIndicatorAtom)
   const newMessageReceived = useSetAtom(chatListTryUpdateWhileNewMessageAtom)
   const mutate = useGlobalMutation()
   const notification = useNotification()
   const getChatMeta = useChatMeta()
+
+  const socketRef = useRef<SocketIOInstance | null>(null)
+  const toast = useToast()
+  const reconnect = useMemoizedFn(() => {
+    if (socketRef.current) {
+      socketRef.current.connect()
+      setSocketIOState(SocketIOState.CONNECTING)
+      return
+    }
+    toast.toast({
+      title: 'Socket.IO',
+      description: '与服务端的链接未初始化，请重载页面。',
+      variant: 'destructive',
+      action: <ToastAction altText="Try again">重载页面</ToastAction>
+    })
+  })
+
   // TODO: 为通知获取聊天元数据提供缓存
-  useWebsocket({
+  useSocketIO({
     onConnected: (socket) => {
       socket.on('private', (content: Message | string) => {
         console.log(content)
@@ -141,4 +180,7 @@ export function useWebsocketWithHandler() {
       })
     }
   })
+  return {
+    reconnect
+  }
 }

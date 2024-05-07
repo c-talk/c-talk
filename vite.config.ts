@@ -1,6 +1,6 @@
 import Generouted from '@generouted/react-router/plugin'
 import { ValidateEnv } from '@julr/vite-plugin-validate-env'
-import React from '@vitejs/plugin-react'
+import React from '@vitejs/plugin-react-swc'
 import AutoImport from 'unplugin-auto-import/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'

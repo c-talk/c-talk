@@ -4,13 +4,13 @@ import GroupProfileDialog from '@/components/home/group-profile-dialog'
 import { OperationsPanel } from '@/components/home/layout'
 import ProfileDialog from '@/components/home/profile-dialog'
 import SearchDialog from '@/components/home/search-dialog'
+import SocketIOIndicator from '@/components/socket-io-indicator'
 import { Input } from '@/components/ui/input'
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup
 } from '@/components/ui/resizable'
-import { useToken } from '@/hooks/apis/users'
 import useNotification from '@/hooks/use-notification'
 import { useNavigate } from '@/router'
 import {
@@ -20,30 +20,15 @@ import {
   profileDialogAtom,
   profileDialogPropsAtom
 } from '@/stores/home'
-import {
-  isUserExpiredAtom,
-  userAtom,
-  websocketAuthTokenAtom
-} from '@/stores/user'
-import { useAsyncEffect } from 'ahooks'
+import { isUserExpiredAtom } from '@/stores/user'
 import { useAtom, useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 
 export default function DashboardPage() {
   const [isUserExpired] = useAtom(isUserExpiredAtom)
-  const [websocketToken, setWebsocketToken] = useAtom(websocketAuthTokenAtom)
-  const user = useAtomValue(userAtom)
-  const { execute: executeGetWebsocketToken } = useToken()
+
   const navigate = useNavigate()
   useNotification() // Just for requesting notification permission
-  useAsyncEffect(async () => {
-    if (websocketToken === null && !!user) {
-      const token = await executeGetWebsocketToken()
-      console.log(token.result)
-      setWebsocketToken(token.result)
-    }
-  }, [websocketToken, user])
-  useWebsocketWithHandler()
 
   // Dialogs
   const [profileDialog, setProfileDialog] = useAtom(profileDialogAtom)
@@ -101,6 +86,8 @@ export default function DashboardPage() {
           <ChatViewer />
         </ResizablePanel>
       </ResizablePanelGroup>
+
+      <SocketIOIndicator />
     </div>
   )
 }

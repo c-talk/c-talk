@@ -1,10 +1,12 @@
 import { PageTransition } from '@/components/page'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { AnimatePresence } from 'framer-motion'
+import { FallbackProps } from 'react-error-boundary'
 import { Helmet } from 'react-helmet'
 import { SWRConfig } from 'swr'
 
-export const Catch = () => {
+export const Catch = ({ error }: FallbackProps) => {
+  console.error(error)
   return <div>Something went wrong... Caught at _app error boundary</div>
 }
 
