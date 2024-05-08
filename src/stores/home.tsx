@@ -24,11 +24,60 @@ export const operationItemAtom = atom<OperationType>(OperationType.Chat)
 export const ChatLogsViewerIsBottomAtom = atom<boolean>(true)
 
 // Chat Lists
-export const chatListSyncCursorAtom = atomWithStorage<number>(
-  'chat_list_sync_cursor',
-  0
+type ChatStoreItem = {
+  chat_list: ChatItem[]
+  chat_list_sync_cursor: number
+}
+// TODO: chat_map 应该保存到 Tauri 的数据库中，理想情况下应该是 RocksDB
+export const chatMapInStore = atomWithStorage<Record<string, ChatStoreItem>>(
+  'chat_map',
+  {}
+)
+
+export const chatListSyncCursorAtom = atom(
+  (get) => {
+    const user = get(userAtom)
+    const chatMap = get(chatMapInStore)
+    return chatMap[user?.id || '0']?.chat_list_sync_cursor || 0
+  },
+  (get, set, newCursor: number) => {
+    const user = get(userAtom)
+    const chatMap = get(chatMapInStore)
+    if (!user) {
+      return
+    }
+    set(chatMapInStore, {
+      ...chatMap,
+      [user.id]: {
+        ...chatMap[user.id],
+        chat_list_sync_cursor: newCursor
+      }
+    })
+  }
 ) // 持有最后一次同步的时间戳，用于判断服务端消息是否需要插入到列表中
-export const chatListAtom = atomWithStorage<ChatItem[]>('chat_list', []) // save the chat list in storage
+
+// export const chatListAtom = atomWithStorage<ChatItem[]>('chat_list', []) // save the chat list in storage
+export const chatListAtom = atom(
+  (get) => {
+    const user = get(userAtom)
+    const chatMap = get(chatMapInStore)
+    return chatMap[user?.id || '0']?.chat_list || []
+  },
+  (get, set, newChatList: ChatItem[]) => {
+    const user = get(userAtom)
+    if (!user) {
+      return
+    }
+    set(chatMapInStore, (prev) => ({
+      ...prev,
+      [user.id]: {
+        ...prev[user.id],
+        chat_list: newChatList
+      }
+    }))
+  }
+) // save the chat list in storage
+
 export const chatListTryAddAtom = atom(
   null,
   (
@@ -43,7 +92,7 @@ export const chatListTryAddAtom = atom(
     if (list.find((chat) => chat.meta.chatID === params.chatID)) {
       return
     }
-    set(chatListAtom, (prev) => [
+    set(chatListAtom, [
       {
         meta: {
           chatID: params.chatID,
@@ -53,10 +102,11 @@ export const chatListTryAddAtom = atom(
         unread: false, // If the chat is new, it should not be unread
         ts: Date.now()
       },
-      ...prev
+      ...list
     ])
   }
 )
+
 export const chatListTryUpdateWhileNewMessageAtom = atom(
   null,
   (
@@ -76,8 +126,9 @@ export const chatListTryUpdateWhileNewMessageAtom = atom(
           : chat.meta.chatID === message.sender
       )
     ) {
-      set(chatListAtom, (prev) =>
-        prev
+      set(
+        chatListAtom,
+        list
           .map((chat) => {
             if (
               message.chatID
@@ -96,7 +147,7 @@ export const chatListTryUpdateWhileNewMessageAtom = atom(
           .sort((a, b) => b.ts - a.ts)
       )
     } else {
-      set(chatListAtom, (prev) => [
+      set(chatListAtom, [
         {
           meta: {
             chatID: message.chatID || message.sender,
@@ -106,13 +157,15 @@ export const chatListTryUpdateWhileNewMessageAtom = atom(
           unread: user?.id !== message.sender,
           ts: dayjs(message.createTime).valueOf()
         },
-        ...prev
+        ...list
       ])
     }
   }
 )
-export const setUnreadToReadAtom = atom(null, (_, set, chatID: string) => {
-  set(chatListAtom, (prev) =>
+export const setUnreadToReadAtom = atom(null, (get, set, chatID: string) => {
+  const prev = get(chatListAtom)
+  set(
+    chatListAtom,
     prev.map((chat) => {
       if (chat.meta.chatID === chatID) {
         return {
@@ -124,15 +177,19 @@ export const setUnreadToReadAtom = atom(null, (_, set, chatID: string) => {
     })
   )
 })
-export const removeChatItemAtom = atom(null, (_, set, chatID: string) => {
-  set(chatListAtom, (prev) =>
+export const removeChatItemAtom = atom(null, (get, set, chatID: string) => {
+  const prev = get(chatListAtom)
+  set(
+    chatListAtom,
     prev.filter((chat) => chat.meta.chatID !== chatID)
   )
 })
 export const setChatItemNameAtom = atom(
   null,
-  (_, set, params: { chatID: string; name: string }) => {
-    set(chatListAtom, (prev) =>
+  (get, set, params: { chatID: string; name: string }) => {
+    const prev = get(chatListAtom)
+    set(
+      chatListAtom,
       prev.map((chat) => {
         if (chat.meta.chatID === params.chatID) {
           return {
