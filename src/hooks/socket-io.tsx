@@ -36,6 +36,7 @@ export const useSocketIO = (params: {
       socketRef.current.disconnect()
     }
   })
+
   useEffect(() => {
     window.addEventListener('beforeunload', handlePageUnload)
     if (websocketAuthToken) {
@@ -57,9 +58,10 @@ export const useSocketIO = (params: {
         setTimeout(() => setSocketIOState(SocketIOState.CONNECTED), 1000)
       })
       socket.on('connect_error', (err) => {
+        console.error(`socket.io: connect_error: ${err.message}`)
         if (err.message === 'xhr poll error') {
           // 重新连接
-          setTimeout(() => setWebsocketAuthToken(null), 1000)
+          setTimeout(() => setWebsocketAuthToken(null), 2000)
         }
         setSocketIOState(SocketIOState.CLOSED)
       })
