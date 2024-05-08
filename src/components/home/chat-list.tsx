@@ -86,6 +86,7 @@ export function ChatItemWithGroupFetcher(props: ChatItemWithFetcherProps) {
   const { meta } = props
   const { execute } = useGroupById()
   const setName = useSetAtom(setChatItemNameAtom)
+  const removeChatFromChatList = useSetAtom(removeChatItemAtom)
   const { data, isLoading, error } = useSWR(
     `/group/${meta.chatID}`,
     () => execute(meta.chatID),
@@ -96,6 +97,8 @@ export function ChatItemWithGroupFetcher(props: ChatItemWithFetcherProps) {
             chatID: meta.chatID,
             name: data.result.group.name
           })
+        } else {
+          removeChatFromChatList(meta.chatID) // Remove the chat if the group does not exist
         }
       }
     }
@@ -135,6 +138,7 @@ export function ChatItemWithUserFetcher(props: ChatItemWithFetcherProps) {
   const { meta } = props
   const { execute } = useUserById()
   const setName = useSetAtom(setChatItemNameAtom)
+  const removeChatFromChatList = useSetAtom(removeChatItemAtom)
   const { data, isLoading, error } = useSWR(
     `/user/${meta.chatID}`,
     () => execute(meta.chatID),
@@ -145,6 +149,8 @@ export function ChatItemWithUserFetcher(props: ChatItemWithFetcherProps) {
             chatID: meta.chatID,
             name: data.result.nickName
           })
+        } else {
+          removeChatFromChatList(meta.chatID) // Remove the chat if the user does not exist
         }
       }
     }
