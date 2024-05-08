@@ -133,6 +133,11 @@ jobs:
           args: tauri-driver
       - name: Prepare fronend
         run: pnpm build # Build frontend
+        env:
+          # these values are meaningless while no e2e tests are running, so not passing it from secrets
+          VITE_HTTP_ENDPOINT: https://ctalk-http.a632079.me
+          VITE_SOCKET_IO_ENDPOINT: https://ctalk-socketio.a632079.me
+
       # run the WebdriverIO test suite.
       # we run it through `xvfb-run` (the dependency we installed earlier) to have a fake
       # display server which allows our application to run headless without any changes to the code
