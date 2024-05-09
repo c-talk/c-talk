@@ -1,20 +1,30 @@
-# WBook
+# C Talk
 
-A tiny and beautiful txt to epub converter, with toc and metadata combined, written in Rust and Typescript.
+A simple beautiful Instant Messaging App based on Tauri and React.
+**Please note**: Currently this project is in heavy development and not ready for production use.
+
+![alt](./.github/assets/overviews.png)
 
 ## Features
 
-- PreProcess and PostProcess support
-- Send to Kindle support
-- Customizable TOC, Metadata and Content in each chapter
-- Simple but powerful template engine, based on DJANGO2 template engine
+- Built with Tauri and React
+  - Local cache and database are planned to be implemented
+- Instant interactions - data fetching are instant, and more!
+- Cross platform support
+  - Windows, macOS, Linux, and upcoming Android, ios support, provided by Tauri
+  - Web support via a hooks adapter to call hooks either Tauri api or a browser api.
+- Smooth animation and element transitions.
+- Customizable theme and color scheme. - are planned to be implemented
+- Support for multiple languages. - are planned to be implemented
+- Support for multiple accounts. - are planned to be implemented
+- Support for multiple devices. - are planned to be implemented
 
 ## Requirements
 
-- Rust 1.70+
+- Rust 1.78+
 - LLVM 11+
-- NodeJS 18+
-- PNPM 6.0+
+- NodeJS 20+
+- PNPM 9.0+
 
 ## Installation
 
