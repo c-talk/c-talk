@@ -4,8 +4,8 @@ import {
   ScrollAreaWithoutViewport
 } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-
 import dayjs from 'dayjs'
+import { partition } from 'lodash-es'
 import {
   useDeferredValue,
   useMemo,
@@ -18,7 +18,8 @@ import {
   JoinedGroupVo,
   useFriendsList,
   useGroupById,
-  useJoinedGroups
+  useJoinedGroups,
+  useLeaveGroup
 } from '@/hooks/apis/chat'
 import { useUserById } from '@/hooks/apis/users'
 import {
@@ -452,6 +453,40 @@ export function GroupList({ className }: { className?: string }) {
     setGroupToLeaveOrDismiss(group)
     setOpen(true)
   })
+  // NOTE: 本段落只是为了解决后端解散不移除群组的问题，实际上应该由后端解决
+  const leaveGroup = useLeaveGroup()
+  const onFilterOutGroupToLeave = useMemoizedFn(
+    async (filteredOutData: JoinedGroupVo[]) => {
+      console.log('开始清除失效群组...')
+      const queue: Array<ReturnType<(typeof leaveGroup)['execute']>> = []
+      for (const item of filteredOutData) {
+        console.log('清除失效群组', item)
+        queue.push(leaveGroup.execute(item.gid))
+      }
+      await Promise.all(queue)
+      console.log('清除失效群组完成')
+    }
+  )
+  const filteredData = useMemo(() => {
+    if (!data) return []
+    const filteredOutData: JoinedGroupVo[] = []
+    const res = data.map((page) => {
+      const [filtered, filterOut] = partition(
+        page.result.items,
+        (item) => item && !!item.gid && !!item.group
+      )
+      filteredOutData.push(...filterOut)
+      return {
+        ...page,
+        result: {
+          ...page.result,
+          items: filtered
+        }
+      }
+    })
+    onFilterOutGroupToLeave(filteredOutData)
+    return res
+  }, [data])
 
   return (
     <ScrollAreaWithoutViewport
@@ -464,9 +499,9 @@ export function GroupList({ className }: { className?: string }) {
           joinedGroupVo={groupToLeaveOrDismiss}
         />
         {error && <div>加载失败</div>}
-        {data?.map((page) =>
+        {filteredData?.map((page) =>
           page.result?.items
-            .filter((item) => !!item.gid && !!item.group) // 为了避免出现关系不明的群组
+            // .filter((item) => !!item && !!item.gid && !!item.group) // 为了避免出现关系不明的群组
             .map((item) => {
               return (
                 <ContextMenu key={item.id}>
