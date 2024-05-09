@@ -146,7 +146,11 @@ jobs:
       # we run it through `xvfb-run` (the dependency we installed earlier) to have a fake
       # display server which allows our application to run headless without any changes to the code
       - name: Test
-        run: pnpm test:unit && pnpm test:backend
+        run: pnpm run-p test:unit test:backend
+        env:
+          # these values are meaningless while no e2e tests are running, so not passing it from secrets
+          VITE_HTTP_ENDPOINT: https://ctalk-http.a632079.me
+          VITE_SOCKET_IO_ENDPOINT: https://ctalk-socketio.a632079.me
 
   # test_e2e:
   #   # the display name of the test job
