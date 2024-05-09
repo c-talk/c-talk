@@ -16,7 +16,7 @@ encoding_rs = "0.8"
 epub-builder = "0.7"
 send-to-kindle = "1"
 tera = "1"
-rocksdb = "0.22"
+# rocksdb = "0.22"
 
 # workspace dependencies
 serde = { workspace = true }

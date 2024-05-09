@@ -1,6 +1,6 @@
 import { Page, R } from '@/hooks/ofetch'
 import { userAtom } from '@/stores/user'
-import { BasePo, PageParams } from '@/types/globals'
+import { BasePo, Message, PageParams } from '@/types/globals'
 import { useAtomValue } from 'jotai'
 import { basePageParams } from '../shared'
 
@@ -128,7 +128,9 @@ export type JoinedGroupVo = {
 export function useJoinedGroups() {
   const ofetch = useFetch()
   const user = useAtomValue(userAtom)
-  const execute = async (page: Partial<PageParams> = {}) => {
+  const execute = async (
+    page: Partial<PageParams & { groupName: string }> = {}
+  ) => {
     const pageParams = { ...basePageParams, ...page } as PageParams
     return ofetch<R<Page<JoinedGroupVo>>>(`/group/page/joined`, {
       method: 'POST',
@@ -143,9 +145,58 @@ export function useJoinedGroups() {
   }
 }
 
-// export function useGroupMemberList() {
-//   const ofetch = useFetch()
-//   const execute = async (groupID: string) => {
-//     return ofetch<R<Member[]>>(`/group/member/list/${groupID}`)
-//   }
-// }
+export function useGroupMemberList() {
+  const ofetch = useFetch()
+  const execute = async (groupID: string) => {
+    return ofetch<R<Page<Member>>>(`/group/member/page/${groupID}`)
+  }
+  return {
+    execute
+  }
+}
+
+export function useLeaveGroup() {
+  const ofetch = useFetch()
+  const execute = async (groupID: string) => {
+    return ofetch<R<void>>(`/group/leave/exist/${groupID}`, {
+      method: 'POST'
+    })
+  }
+  return {
+    execute
+  }
+}
+
+export function useRemoveGroup() {
+  const ofetch = useFetch()
+  const execute = async (groupID: string) => {
+    return ofetch<R<void>>(`/group/remove`, {
+      method: 'POST',
+      body: { id: groupID }
+    })
+  }
+  return {
+    execute
+  }
+}
+
+export type JoinedGroupVoWithMessage = JoinedGroupVo & {
+  message: Message
+}
+
+export function useJoinedGroupWithMessage() {
+  const ofetch = useFetch()
+  const user = useAtomValue(userAtom)
+  const execute = async (page: PageParams) => {
+    return ofetch<R<Page<JoinedGroupVoWithMessage>>>(
+      `/group/page/${user!.id}/with/message`,
+      {
+        method: 'POST',
+        body: { ...basePageParams, ...page }
+      }
+    )
+  }
+  return {
+    execute
+  }
+}

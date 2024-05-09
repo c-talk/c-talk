@@ -149,6 +149,9 @@ export function useUserSearch() {
 export function useUserById() {
   const ofetch = useFetch()
   const execute = async (userID: string) => {
+    if (!userID) {
+      throw new Error('no user id')
+    }
     return ofetch<R<User & { friend: boolean }>>(`/user/get/${userID}`)
   }
   return {

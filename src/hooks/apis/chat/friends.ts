@@ -1,11 +1,12 @@
-import { R } from '@/hooks/ofetch'
+import { Page, R } from '@/hooks/ofetch'
 import useGlobalMutation from '@/hooks/useGlobalMutation'
 import { friendsAtom, userAtom } from '@/stores/user'
-import { Message } from '@/types/globals'
-import { useLatest } from 'ahooks'
+import { Message, PageParams } from '@/types/globals'
+import { useLatest, useMemoizedFn } from 'ahooks'
 import { useAtomValue, useSetAtom } from 'jotai'
 import useSWR, { SWRConfiguration, mutate } from 'swr'
 import { User } from '../users'
+import { basePageParams } from './../shared'
 
 export type Friend = {
   id: string
@@ -19,10 +20,17 @@ export function useFriendsList() {
   const user = useAtomValue(userAtom)
   const latestUserRef = useLatest(user)
 
-  const execute = async () => {
+  const execute = async (
+    params: Partial<
+      PageParams & {
+        nickName: string
+        email: string
+      }
+    > = {}
+  ) => {
     return ofetch<R<Friend[]>>(`/friend/list/${latestUserRef.current?.id}`, {
       method: 'POST',
-      body: {}
+      body: { ...params, ...basePageParams }
     })
   }
   return {
@@ -75,6 +83,28 @@ export function useRemoveFriend() {
     mutate('/friends')
     return res
   }
+  return {
+    execute
+  }
+}
+
+export function useFriendListWithMessage() {
+  const ofetch = useFetch()
+  const user = useAtomValue(userAtom)
+  const execute = useMemoizedFn(async (page: PageParams) => {
+    return ofetch<
+      R<
+        Page<
+          Friend & {
+            message: Message
+          }
+        >
+      >
+    >(`/friend/page/${user!.id}/with/message`, {
+      method: 'POST',
+      body: { ...basePageParams, ...page }
+    })
+  })
   return {
     execute
   }

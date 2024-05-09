@@ -11,6 +11,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup
 } from '@/components/ui/resizable'
+import { useSyncChatList } from '@/hooks/apis/chat/sync'
 import useNotification from '@/hooks/use-notification'
 import { useNavigate } from '@/router'
 import {
@@ -38,10 +39,12 @@ export default function DashboardPage() {
   )
   const groupProfileDialogProps = useAtomValue(groupProfileDialogPropsAtom)
   const [searchInput, setSearchInput] = useAtom(chatListSearchInputAtom)
-
+  const syncList = useSyncChatList()
   useEffect(() => {
     if (isUserExpired) {
       navigate('/')
+    } else {
+      syncList.execute()
     }
   }, [isUserExpired])
 
