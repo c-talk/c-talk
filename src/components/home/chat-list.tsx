@@ -196,7 +196,16 @@ export function ChatItem(props: ChatItemProps) {
     onClick,
     unread
   } = props
-  const formattedTime = useMemo(() => dayjs(ts).format('HH:mm'), [ts])
+  const formattedTime = useMemo(() => {
+    const time = dayjs(ts)
+    const now = dayjs()
+    if (now.diff(time, 'day') === 0) {
+      return time.format('HH:mm')
+    } else if (now.diff(time, 'day') < 6) {
+      return time.format('ddd')
+    }
+    return time.format('YYYY/MM/DD')
+  }, [ts])
   const user = useAtomValue(userAtom)
   const getUser = useUserById()
   const { data: userData } = useSWR(

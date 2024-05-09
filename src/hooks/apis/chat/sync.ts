@@ -48,7 +48,6 @@ export function useSyncChatList() {
       if (res[0]) {
         userTotal = res[0].result?.total || 0
         userPage++
-
         for (const item of res[0].result?.items || []) {
           const chat = chatList.find(
             (chat) => chat.meta.chatID === item.friendId
@@ -74,7 +73,6 @@ export function useSyncChatList() {
       if (res[1]) {
         groupTotal = res[1].result?.total || 0
         groupPage++
-
         for (const item of res[1].result?.items || []) {
           const chat = chatList.find((chat) => chat.meta.chatID === item.gid)
           if (

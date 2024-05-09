@@ -5,6 +5,8 @@ import { FallbackProps } from 'react-error-boundary'
 import { Helmet } from 'react-helmet'
 import { SWRConfig } from 'swr'
 
+import '@/libs/dayjs'
+
 export const Catch = ({ error }: FallbackProps) => {
   console.error(error)
   return <div>Something went wrong... Caught at _app error boundary</div>
