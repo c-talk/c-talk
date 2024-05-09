@@ -24,6 +24,7 @@ import {
   groupProfileDialogPropsAtom,
   profileDialogAtom,
   profileDialogPropsAtom,
+  setUnreadToReadAtom,
   uploadImageDialogAtom,
   uploadImageDialogPropsAtom
 } from '@/stores/home'
@@ -595,6 +596,7 @@ export function ChatViewerPanel() {
       scrollToBottom()
     }
   }, [isBottom, scrollHeight])
+  const setUnreadToRead = useSetAtom(setUnreadToReadAtom)
   const onChatNameClick = useMemoizedFn(() => {
     console.log(chatType)
     switch (chatType) {
@@ -612,9 +614,15 @@ export function ChatViewerPanel() {
         break
     }
   })
+
   return (
     <>
-      <div className="h-14 border-b border-inherit border-solid flex items-center justify-between px-5 relative">
+      <div
+        className="h-14 border-b border-inherit border-solid flex items-center justify-between px-5 relative"
+        onFocus={() => {
+          setUnreadToRead(chatID)
+        }}
+      >
         <div className="text-lg font-semibold" onClick={onChatNameClick}>
           {isLoading ? '加载中...' : error ? '加载失败' : data?.name}
         </div>
