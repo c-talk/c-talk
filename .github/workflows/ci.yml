@@ -60,6 +60,10 @@ jobs:
 
       - name: Prepare fronend
         run: pnpm build # Build frontend
+        env:
+          # these values are meaningless while no e2e tests are running, so not passing it from secrets
+          VITE_HTTP_ENDPOINT: https://ctalk-http.a632079.me
+          VITE_SOCKET_IO_ENDPOINT: https://ctalk-socketio.a632079.me
 
       - name: Lint
         run: pnpm lint # Lint frontend
