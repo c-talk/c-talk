@@ -1,6 +1,6 @@
 # C Talk
 
-A simple beautiful Instant Messaging App based on Tauri and React.
+A simple beautiful Instant Messaging App based on Tauri and React.  
 **Please note**: Currently this project is in heavy development and not ready for production use.
 
 ![alt](./.github/assets/overviews.png)
