@@ -46,7 +46,7 @@ export function AskDismissOrLeaveGroupAlertDialog(
       if (isOwner) {
         await dismissGroup.execute(group.group.id)
       }
-      console.log(await leaveGroup.execute(group.group.id))
+      await leaveGroup.execute(group.group.id)
       removeChatItemFromList(group.group.id)
       mutate((key) => typeof key === 'string' && key.includes('/joined/groups'))
       onOpenChange(false)
