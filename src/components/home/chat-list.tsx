@@ -394,15 +394,22 @@ export function GroupList({ className }: { className?: string }) {
 
   const joinedGroups = useJoinedGroups()
   const pageSize = 20
+  const filteredText = useAtomValue(chatListSearchInputAtom)
+  const deferredFilteredText = useDeferredValue(filteredText)
   const { data, isLoading, error, size, setSize } = useSWRInfinite(
     (index, prev) => {
       if (prev && !prev.result?.items?.length) return null
-      return `/joined/groups?page=${index + 1}&pageSize=${pageSize}`
+      return `/joined/groups?page=${index + 1}&pageSize=${pageSize}&keyword=${deferredFilteredText}`
     },
     (url) => {
       const parsedURL = new URL(url, window.location.href)
       const page = Number(parsedURL.searchParams.get('page'))
-      return joinedGroups.execute({ pageNum: page, pageSize })
+      const keyword = parsedURL.searchParams.get('keyword')
+      return joinedGroups.execute({
+        pageNum: page,
+        pageSize,
+        groupName: keyword || undefined
+      })
     },
     {
       revalidateOnFocus: true,
@@ -425,28 +432,13 @@ export function GroupList({ className }: { className?: string }) {
     // rootMargin: '400px 0px 0px 0px'
   })
 
-  const filteredText = useAtomValue(chatListSearchInputAtom)
-  const filteredData = useMemo(
-    () =>
-      [...(data || [])].map((page) => ({
-        ...page,
-        result: {
-          ...page.result,
-          items: [...(page.result?.items || [])].filter((item) =>
-            !!filteredText ? item.group.name.includes(filteredText) : true
-          )
-        }
-      })),
-    [data, filteredText]
-  )
-
   return (
     <ScrollAreaWithoutViewport
       className={cn(styles['chat-list'], 'flex-1', className)}
     >
       <ScrollAreaViewport ref={rootRef}>
         {error && <div>加载失败</div>}
-        {filteredData.map((page) =>
+        {data?.map((page) =>
           page.result?.items.map((item) => {
             return (
               <ContextMenu key={item.id}>
