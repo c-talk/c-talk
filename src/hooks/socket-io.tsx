@@ -46,8 +46,8 @@ export const useSocketIO = (params: {
           query: {
             token: websocketAuthToken.token
           },
-          withCredentials: true, // 传递 Cookie，用于 K8s Ingress 粘性会话
-          transports: ['polling']
+          withCredentials: true // 传递 Cookie，用于 K8s Ingress 粘性会话
+          // transports: ['polling']
           // transports: ['websocket', 'polling']
         }
       ))

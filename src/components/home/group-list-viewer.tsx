@@ -65,7 +65,7 @@ export default function GroupListViewerDrawer({
       <DrawerTrigger>{children}</DrawerTrigger>
       <DrawerContentWithRight>
         <DrawerHeader>
-          <DrawerTitle>成员列表</DrawerTitle>
+          <DrawerTitle>成员列表 {total ? `（${total}）` : ''}</DrawerTitle>
         </DrawerHeader>
         <ScrollAreaWithoutViewport>
           <ScrollAreaViewport ref={rootRef}>
