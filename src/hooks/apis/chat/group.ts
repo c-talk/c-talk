@@ -2,7 +2,7 @@ import { Page, R } from '@/hooks/ofetch'
 import { userAtom } from '@/stores/user'
 import { BasePo, Message, PageParams } from '@/types/globals'
 import { useAtomValue } from 'jotai'
-import { basePageParams } from '../shared'
+import { basePageParams } from './../shared'
 
 export type GroupSearchForm = {
   name: string
@@ -147,8 +147,17 @@ export function useJoinedGroups() {
 
 export function useGroupMemberList() {
   const ofetch = useFetch()
-  const execute = async (groupID: string) => {
-    return ofetch<R<Page<Member>>>(`/group/member/page/${groupID}`)
+  const execute = async (
+    groupID: string,
+    pageParams: Partial<PageParams> = {}
+  ) => {
+    return ofetch<R<Page<Member>>>(`/group/member/page/${groupID}`, {
+      method: 'POST',
+      body: {
+        ...pageParams,
+        ...basePageParams
+      }
+    })
   }
   return {
     execute
