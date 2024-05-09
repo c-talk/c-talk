@@ -53,9 +53,9 @@ export const useSocketIO = (params: {
       ))
 
       socket.on('connect', () => {
-        setSocketIOState(SocketIOState.IDLE)
+        setSocketIOState(SocketIOState.CONNECTED)
         params.onConnected?.(socket)
-        setTimeout(() => setSocketIOState(SocketIOState.CONNECTED), 1000)
+        setTimeout(() => setSocketIOState(SocketIOState.IDLE), 1000)
       })
       socket.on('connect_error', (err) => {
         console.error(`socket.io: connect_error: ${err.message}`)
