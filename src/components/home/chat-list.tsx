@@ -51,7 +51,10 @@ import {
   ContextMenuItem,
   ContextMenuTrigger
 } from '../ui/context-menu'
-import { AskDismissOrLeaveGroupAlertDialog } from './chat-list-alert-dialog'
+import {
+  AskDismissOrLeaveGroupAlertDialog,
+  AskRemoveFriendAlertDialog
+} from './chat-list-alert-dialog'
 import styles from './chat-list.module.scss'
 import CreateGroupDialog from './group-create-dialog'
 import GroupItem from './group-item'
@@ -364,8 +367,21 @@ export function FriendsList({ className }: { className?: string }) {
   const setSelectedOperationItem = useSetAtom(operationItemAtom)
   const tryAddChatToChatList = useSetAtom(chatListTryAddAtom)
 
+  // 删除好友相关
+  const [open, setOpen] = useState(false)
+  const [friendIDToRemove, setFriendIDToRemove] = useState<string | null>(null)
+  const onTryToRemoveFriend = useMemoizedFn((friendID: string) => {
+    setFriendIDToRemove(friendID)
+    setOpen(true)
+  })
+
   return (
     <ScrollArea className={cn(styles['chat-list'], 'flex-1', className)}>
+      <AskRemoveFriendAlertDialog
+        open={open}
+        onOpenChange={setOpen}
+        friendID={friendIDToRemove}
+      />
       {isLoading && (
         <div className="py-2 flex w-full items-center justify-center">
           <Loader2 className="animate-spin" />
@@ -389,7 +405,9 @@ export function FriendsList({ className }: { className?: string }) {
             />
           </ContextMenuTrigger>
           <ContextMenuContent>
-            <ContextMenuItem onClick={() => {}}>删除好友</ContextMenuItem>
+            <ContextMenuItem onClick={() => onTryToRemoveFriend(item.friendId)}>
+              删除好友
+            </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
       ))}

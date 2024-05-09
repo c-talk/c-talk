@@ -60,6 +60,8 @@ export function useRemoveFriend() {
   const ofetch = useFetch()
   const mutate = useGlobalMutation()
   const execute = async (userId: string) => {
+    const form = new FormData()
+    form.append('id', userId)
     const res = await ofetch<R<Friend[]>>(`/friend/remove/${userId}`, {
       method: 'POST'
     })
