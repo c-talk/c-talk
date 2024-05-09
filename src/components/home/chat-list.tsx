@@ -103,7 +103,7 @@ export function ChatItemWithGroupFetcher(props: ChatItemWithFetcherProps) {
     () => execute(meta.chatID),
     {
       onSuccess(data) {
-        if (data.result.group.name) {
+        if (data.result?.group?.name) {
           setName({
             chatID: meta.chatID,
             name: data.result.group.name
@@ -120,12 +120,14 @@ export function ChatItemWithGroupFetcher(props: ChatItemWithFetcherProps) {
         加载中
       </div>
     )
-  if (error)
+  if (error) {
+    console.log(error)
     return (
       <div className="h-14 flex items-center justify-center text-slate-500">
         加载失败
       </div>
     )
+  }
   if (!data?.result) {
     return (
       <div className="h-14 flex items-center justify-center text-slate-500">
@@ -155,7 +157,7 @@ export function ChatItemWithUserFetcher(props: ChatItemWithFetcherProps) {
     () => execute(meta.chatID),
     {
       onSuccess(data) {
-        if (data.result.nickName) {
+        if (data.result?.nickName) {
           setName({
             chatID: meta.chatID,
             name: data.result.nickName
