@@ -6,10 +6,16 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import dayjs from 'dayjs'
-import { useDeferredValue, useMemo, type MouseEventHandler } from 'react'
+import {
+  useDeferredValue,
+  useMemo,
+  useState,
+  type MouseEventHandler
+} from 'react'
 
 import {
   Friend,
+  JoinedGroupVo,
   useFriendsList,
   useGroupById,
   useJoinedGroups
@@ -31,6 +37,7 @@ import { R } from '@/hooks/ofetch'
 import { friendsAtom, userAtom } from '@/stores/user'
 import { ChatType, Message, MessageType } from '@/types/globals'
 import { ScrollAreaViewport } from '@radix-ui/react-scroll-area'
+import { useMemoizedFn } from 'ahooks'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { Dot, Loader2 } from 'lucide-react'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
@@ -43,6 +50,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger
 } from '../ui/context-menu'
+import { AskDismissOrLeaveGroupAlertDialog } from './chat-list-alert-dialog'
 import styles from './chat-list.module.scss'
 import CreateGroupDialog from './group-create-dialog'
 import GroupItem from './group-item'
@@ -392,6 +400,7 @@ export function GroupList({ className }: { className?: string }) {
   const setChatRoomType = useSetAtom(chatRoomTypeAtom)
   const setSelectedOperationItem = useSetAtom(operationItemAtom)
 
+  // 獲取群組列表
   const joinedGroups = useJoinedGroups()
   const pageSize = 20
   const filteredText = useAtomValue(chatListSearchInputAtom)
@@ -432,36 +441,57 @@ export function GroupList({ className }: { className?: string }) {
     // rootMargin: '400px 0px 0px 0px'
   })
 
+  // 退群、解散群相關
+  const user = useAtomValue(userAtom)
+  const [open, setOpen] = useState(false)
+  const [groupToLeaveOrDismiss, setGroupToLeaveOrDismiss] =
+    useState<JoinedGroupVo | null>(null)
+  const onTryToLeaveOrDismissGroup = useMemoizedFn((group: JoinedGroupVo) => {
+    setGroupToLeaveOrDismiss(group)
+    setOpen(true)
+  })
+
   return (
     <ScrollAreaWithoutViewport
       className={cn(styles['chat-list'], 'flex-1', className)}
     >
       <ScrollAreaViewport ref={rootRef}>
+        <AskDismissOrLeaveGroupAlertDialog
+          open={open}
+          onOpenChange={setOpen}
+          joinedGroupVo={groupToLeaveOrDismiss}
+        />
         {error && <div>加载失败</div>}
         {data?.map((page) =>
-          page.result?.items.map((item) => {
-            return (
-              <ContextMenu key={item.id}>
-                <ContextMenuTrigger>
-                  <GroupItem
-                    group={item.group}
-                    onClick={(group) => {
-                      setChatRoomID(group)
-                      setChatRoomType(ChatType.Group)
-                      tryAddChatToChatList({
-                        chatID: group,
-                        chatType: ChatType.Group
-                      })
-                      setSelectedOperationItem(OperationType.Chat)
-                    }}
-                  />
-                </ContextMenuTrigger>
-                <ContextMenuContent>
-                  <ContextMenuItem onClick={() => {}}>退出群组</ContextMenuItem>
-                </ContextMenuContent>
-              </ContextMenu>
-            )
-          })
+          page.result?.items
+            .filter((item) => !!item.gid && !!item.group) // 为了避免出现关系不明的群组
+            .map((item) => {
+              return (
+                <ContextMenu key={item.id}>
+                  <ContextMenuTrigger>
+                    <GroupItem
+                      group={item.group}
+                      onClick={(group) => {
+                        setChatRoomID(group)
+                        setChatRoomType(ChatType.Group)
+                        tryAddChatToChatList({
+                          chatID: group,
+                          chatType: ChatType.Group
+                        })
+                        setSelectedOperationItem(OperationType.Chat)
+                      }}
+                    />
+                  </ContextMenuTrigger>
+                  <ContextMenuContent>
+                    <ContextMenuItem
+                      onClick={() => onTryToLeaveOrDismissGroup(item)}
+                    >
+                      {item.group?.owner === user?.id ? '解散群组' : '退出群组'}
+                    </ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>
+              )
+            })
         )}
         {hasNextPage && (
           <div className="flex items-center justify-center" ref={infiniteRef}>

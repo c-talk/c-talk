@@ -53,7 +53,7 @@ function SearchDialogContent(props: {
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>发现</DialogTitle>
+        <DialogTitle>发现 🐳</DialogTitle>
         <div className="grid gap-2">
           <div className="relative h-14 flex items-center gap-2">
             <Input

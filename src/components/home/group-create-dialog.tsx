@@ -61,6 +61,7 @@ export default function CreateGroupDialog(props: {
     }
   })
   const watchName = form.watch('name')
+  const mutate = useGlobalMutation()
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true)
     try {
@@ -80,6 +81,7 @@ export default function CreateGroupDialog(props: {
       })
       setChatRoomID(group.result.id)
       setChatRoomType(ChatType.Group)
+      mutate((key) => typeof key === 'string' && key.includes('/joined/groups'))
       setOpen(false)
     } finally {
       setLoading(false)

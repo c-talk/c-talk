@@ -167,7 +167,7 @@ export function useGroupMemberList() {
 export function useLeaveGroup() {
   const ofetch = useFetch()
   const execute = async (groupID: string) => {
-    return ofetch<R<void>>(`/group/leave/exist/${groupID}`, {
+    return ofetch<R<void>>(`/group/member/leave/${groupID}`, {
       method: 'POST'
     })
   }
@@ -176,7 +176,7 @@ export function useLeaveGroup() {
   }
 }
 
-export function useRemoveGroup() {
+export function useDismissGroup() {
   const ofetch = useFetch()
   const execute = async (groupID: string) => {
     return ofetch<R<void>>(`/group/remove`, {
