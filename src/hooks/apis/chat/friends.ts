@@ -1,10 +1,10 @@
 import { Page, R } from '@/hooks/ofetch'
 import useGlobalMutation from '@/hooks/useGlobalMutation'
-import { friendsAtom, userAtom } from '@/stores/user'
+import { userAtom } from '@/stores/user'
 import { Message, PageParams } from '@/types/globals'
 import { useLatest, useMemoizedFn } from 'ahooks'
-import { useAtomValue, useSetAtom } from 'jotai'
-import useSWR, { SWRConfiguration, mutate } from 'swr'
+import { useAtomValue } from 'jotai'
+import { mutate } from 'swr'
 import { User } from '../users'
 import { basePageParams } from './../shared'
 
@@ -30,29 +30,12 @@ export function useFriendsList() {
   ) => {
     return ofetch<R<Friend[]>>(`/friend/list/${latestUserRef.current?.id}`, {
       method: 'POST',
-      body: { ...params, ...basePageParams }
+      body: { ...params }
     })
   }
   return {
     execute
   }
-}
-
-export function useFriendsListSWR(opts: SWRConfiguration<R<Friend[]>> = {}) {
-  const { execute } = useFriendsList()
-  const setFriends = useSetAtom(friendsAtom)
-  return useSWR<R<Friend[]>>(`/friends`, execute, {
-    onSuccess: (data) => {
-      setFriends(
-        data.result
-          ? Array.isArray(data.result)
-            ? data.result
-            : [data.result]
-          : []
-      )
-    },
-    ...opts
-  })
 }
 
 export function useAddFriend() {

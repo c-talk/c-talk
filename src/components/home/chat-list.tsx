@@ -6,10 +6,11 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import dayjs from 'dayjs'
-import { useMemo, type MouseEventHandler } from 'react'
+import { useDeferredValue, useMemo, type MouseEventHandler } from 'react'
 
 import {
-  useFriendsListSWR,
+  Friend,
+  useFriendsList,
   useGroupById,
   useJoinedGroups
 } from '@/hooks/apis/chat'
@@ -26,7 +27,8 @@ import {
   setUnreadToReadAtom
 } from '@/stores/home'
 
-import { userAtom } from '@/stores/user'
+import { R } from '@/hooks/ofetch'
+import { friendsAtom, userAtom } from '@/stores/user'
 import { ChatType, Message, MessageType } from '@/types/globals'
 import { ScrollAreaViewport } from '@radix-ui/react-scroll-area'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
@@ -34,6 +36,7 @@ import { Dot, Loader2 } from 'lucide-react'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import useSWR from 'swr'
 import useSWRInfinite from 'swr/infinite'
+import isEmail from 'validator/lib/isEmail'
 import {
   ContextMenu,
   ContextMenuContent,
@@ -313,35 +316,51 @@ export function Chats(props: ChatListProps) {
 }
 
 export function FriendsList({ className }: { className?: string }) {
-  const { isLoading, data } = useFriendsListSWR()
+  const { execute } = useFriendsList()
+  const setFriends = useSetAtom(friendsAtom)
+  const searchInputValue = useAtomValue(chatListSearchInputAtom)
+  const deferredSearchInputValue = useDeferredValue(searchInputValue)
+  const { isLoading, data } = useSWR<R<Friend[]>>(
+    [`/friends`, deferredSearchInputValue],
+    ([, deferredSearchInputValue]) => {
+      const params =
+        !deferredSearchInputValue ||
+        typeof deferredSearchInputValue !== 'string'
+          ? undefined
+          : isEmail(deferredSearchInputValue)
+            ? {
+                email: deferredSearchInputValue
+              }
+            : {
+                nickName: deferredSearchInputValue
+              }
+      return execute(params)
+    },
+    {
+      onSuccess: (data) => {
+        setFriends(
+          data.result
+            ? Array.isArray(data.result)
+              ? data.result
+              : [data.result]
+            : []
+        )
+      }
+    }
+  )
   const setChatRoomID = useSetAtom(chatRoomIDAtom)
   const setChatRoomType = useSetAtom(chatRoomTypeAtom)
   const setSelectedOperationItem = useSetAtom(operationItemAtom)
   const tryAddChatToChatList = useSetAtom(chatListTryAddAtom)
 
-  const filteredText = useAtomValue(chatListSearchInputAtom)
-  const filteredData = useMemo(
-    () =>
-      data
-        ? {
-            ...data,
-            result: [...(data.result || [])].filter((item) =>
-              !!filteredText
-                ? item.friend.nickName.includes(filteredText)
-                : true
-            )
-          }
-        : undefined,
-    [data, filteredText]
-  )
-
-  if (isLoading) {
-    return <div>加载中</div>
-  }
-
   return (
     <ScrollArea className={cn(styles['chat-list'], 'flex-1', className)}>
-      {filteredData?.result.map((item) => (
+      {isLoading && (
+        <div className="py-2 flex w-full items-center justify-center">
+          <Loader2 className="animate-spin" />
+        </div>
+      )}
+      {data?.result.map((item) => (
         <ContextMenu key={item.friendId}>
           <ContextMenuTrigger>
             <UserItem
