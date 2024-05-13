@@ -118,7 +118,16 @@ export function useSocketIOWithHandler() {
       title: 'Socket.IO',
       description: '与服务端的链接未初始化，请重载页面。',
       variant: 'destructive',
-      action: <ToastAction altText="Try again">重载页面</ToastAction>
+      action: (
+        <ToastAction
+          altText="Try again"
+          onClick={() => {
+            window.location.reload()
+          }}
+        >
+          重载页面
+        </ToastAction>
+      )
     })
   })
 
