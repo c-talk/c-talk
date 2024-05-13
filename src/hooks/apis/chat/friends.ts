@@ -58,12 +58,15 @@ export function useAddFriend() {
 
 export function useRemoveFriend() {
   const ofetch = useFetch()
+  const user = useAtomValue(userAtom)
   const mutate = useGlobalMutation()
-  const execute = async (userId: string) => {
-    const form = new FormData()
-    form.append('id', userId)
-    const res = await ofetch<R<Friend[]>>(`/friend/remove/${userId}`, {
-      method: 'POST'
+  const execute = async (friendId: string) => {
+    const res = await ofetch<R<Friend[]>>(`/friend/cut`, {
+      method: 'POST',
+      body: {
+        uid: user!.id,
+        friendId: friendId
+      }
     })
     mutate('/friends')
     return res
