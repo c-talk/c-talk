@@ -147,18 +147,21 @@ export const chatListTryUpdateWhileNewMessageAtom = atom(
           .sort((a, b) => b.ts - a.ts)
       )
     } else {
-      set(chatListAtom, [
-        {
-          meta: {
-            chatID: message.chatID || message.sender,
-            chatType: message.chatType
+      set(
+        chatListAtom,
+        [
+          {
+            meta: {
+              chatID: message.chatID || message.sender,
+              chatType: message.chatType
+            },
+            message,
+            unread: user?.id !== message.sender,
+            ts: dayjs(message.createTime).valueOf()
           },
-          message,
-          unread: user?.id !== message.sender,
-          ts: dayjs(message.createTime).valueOf()
-        },
-        ...list
-      ])
+          ...list
+        ].sort((a, b) => b.ts - a.ts)
+      )
     }
   }
 )
