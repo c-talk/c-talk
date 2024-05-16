@@ -4,6 +4,7 @@
 use shared::types::Port;
 
 mod commands;
+pub mod macros;
 
 fn main() {
     let client = sentry_tauri::sentry::init((
@@ -24,7 +25,8 @@ fn main() {
         .manage(Port(port))
         .invoke_handler(tauri::generate_handler![
             commands::greet,
-            commands::get_port
+            commands::get_port,
+            commands::send_notification
         ])
         .plugin(sentry_tauri::plugin())
         .run(tauri::generate_context!())

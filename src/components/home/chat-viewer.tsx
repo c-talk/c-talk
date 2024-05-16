@@ -140,6 +140,7 @@ export function ChatInput(props: ChatInputProps) {
       try {
         // TODO: 支持发送图片
         const msg = content || message
+        if (!msg) return
         const res = await execute(chatType, messageType, msg, chatID)
         setMessage('')
         mutate(

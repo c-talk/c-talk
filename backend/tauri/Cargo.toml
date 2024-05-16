@@ -18,10 +18,19 @@ tauri-build = { version = "1.5.1", features = [] }
 shared = { path = "../shared" }
 server = { path = "../server" }
 
-tauri = { version = "1.6.1", features = [ "notification-all", "dialog-all", "http-all", "shell-open"] }
+tauri = { version = "1.6.1", features = [
+  "notification-all",
+  "dialog-all",
+  "http-all",
+  "shell-open",
+] }
 sentry-tauri = "0.3"
 portpicker = "0.1.1"
-
+url = "2.5.0"
+reqwest = { version = "0.12", features = ["json"] }
+sha256 = "1.5.0"
+mime_guess = "2"
+glob = "0.3"
 # workspace dependencies
 serde = { workspace = true }
 serde_json = { workspace = true }

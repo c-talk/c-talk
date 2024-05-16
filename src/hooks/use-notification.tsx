@@ -24,12 +24,15 @@ export function useTauriNotification() {
     if (!(await checkPermission())) {
       return
     }
-    const { sendNotification } = await import('@tauri-apps/api/notification')
-    await sendNotification({
+    const { sendNotification } = await import('@/libs/cmds')
+    const params = {
       title: message.title,
-      body: message.body,
-      icon: message.icon
-    })
+      body: message.body
+    } as NotificationMessage
+    if (message.icon) {
+      params.icon = message.icon
+    }
+    await sendNotification(params)
   }
   return {
     checkPermission,
