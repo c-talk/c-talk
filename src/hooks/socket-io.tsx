@@ -106,9 +106,6 @@ export function useSocketIOWithHandler() {
   const notification = useNotification()
   const user = useAtomValue(userAtom)
   const userLatest = useLatest(user)
-  useEffect(() => {
-    userLatest.current = user
-  }, [user])
 
   const getChatMeta = useChatMeta()
 

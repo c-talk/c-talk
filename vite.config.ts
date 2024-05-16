@@ -37,7 +37,8 @@ export default defineConfig(({ mode }) => ({
     })
   ],
   esbuild: {
-    drop: mode === 'development' ? undefined : ['console', 'debugger']
+    drop: mode === 'development' ? undefined : ['debugger'],
+    pure: mode === 'production' ? ['console.log'] : []
   },
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
