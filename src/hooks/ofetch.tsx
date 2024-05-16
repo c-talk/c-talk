@@ -1,7 +1,7 @@
 import { useToast } from '@/components/ui/use-toast'
-import { userAtom } from '@/stores/user'
+import { userAtom, websocketAuthTokenAtom } from '@/stores/user'
 import { useLatest } from 'ahooks'
-import { useAtomValue } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import { ofetch } from 'ofetch'
 
 export interface R<T> {
@@ -19,7 +19,8 @@ export interface Page<T> {
 }
 
 export const useFetch = () => {
-  const user = useAtomValue(userAtom)
+  const [user, setUser] = useAtom(userAtom)
+  const setWebsocketAuthToken = useSetAtom(websocketAuthTokenAtom)
   const latestUserRef = useLatest(user)
   const { toast } = useToast()
   // console.log(user)
@@ -50,8 +51,13 @@ export const useFetch = () => {
       options.query.t = Date.now()
     },
 
-    async onRequestError({ request, error }) {
+    async onRequestError({ request, response, error }) {
       console.log('[fetch request error]', request, error)
+      if (response?.status === 401) {
+        setUser(null)
+        setWebsocketAuthToken(null)
+        return
+      }
       toast({
         variant: 'destructive',
         title: 'Uh oh! Something went wrong.',
@@ -94,6 +100,11 @@ export const useFetch = () => {
         response.status,
         response.body
       )
+      if (response.status === 401) {
+        setUser(null)
+        setWebsocketAuthToken(null)
+        return
+      }
       if (response._data) {
         console.error(response._data)
         if (response._data.code && response._data.message) {

@@ -7,5 +7,5 @@ export type SendNotificationParams = {
 }
 
 export function sendNotification(params: SendNotificationParams) {
-  return invoke<void>('send_notification', params)
+  return invoke<void>('send_notification', { params })
 }
