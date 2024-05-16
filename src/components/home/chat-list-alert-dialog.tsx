@@ -16,12 +16,12 @@ import {
   useRemoveFriend
 } from '@/hooks/apis/chat'
 import { useUserById } from '@/hooks/apis/users'
-import { removeChatItemAtom } from '@/stores/home'
+import { chatListAtom, removeChatItemAtom } from '@/stores/home'
 import { userAtom } from '@/stores/user'
 import { useMemoizedFn } from 'ahooks'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { Loader2 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 
 export type AskDismissOrLeaveGroupAlertDialog = {
@@ -40,7 +40,17 @@ export function AskDismissOrLeaveGroupAlertDialog(
   const isOwner = joinedGroupVo?.group.owner === user?.id
   const [loading, setLoading] = useState(false)
   const mutate = useGlobalMutation()
+  const chatList = useAtomValue(chatListAtom)
+  const [preChatList, setPreChatList] = useState(chatList)
   const removeChatItemFromList = useSetAtom(removeChatItemAtom)
+  useEffect(() => {
+    if (!open && preChatList.length !== chatList.length) {
+      mutate((key) => typeof key === 'string' && key.includes('/joined/groups'))
+    }
+    if (preChatList.length !== chatList.length) {
+      setPreChatList(chatList)
+    }
+  }, [chatList, open])
   const onLeaveOrDismissGroup = useMemoizedFn(async (group: JoinedGroupVo) => {
     if (!group) return
     setLoading(true)
@@ -50,7 +60,6 @@ export function AskDismissOrLeaveGroupAlertDialog(
       }
       await leaveGroup.execute(group.group.id)
       removeChatItemFromList(group.group.id)
-      mutate((key) => typeof key === 'string' && key.includes('/joined/groups'))
       onOpenChange(false)
     } finally {
       setLoading(false)
@@ -63,7 +72,7 @@ export function AskDismissOrLeaveGroupAlertDialog(
     () => getGroupInfo.execute(joinedGroupVo!.group.id)
   )
 
-  if (!joinedGroupVo || !data) return null
+  if (!joinedGroupVo || !data || !data.result || !data.result.group) return null
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
