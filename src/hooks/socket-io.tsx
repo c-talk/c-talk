@@ -2,10 +2,10 @@ import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { chatListTryUpdateWhileNewMessageAtom } from '@/stores/home'
 import { socketIOIndicatorAtom } from '@/stores/socket-io'
-import { websocketAuthTokenAtom } from '@/stores/user'
+import { userAtom, websocketAuthTokenAtom } from '@/stores/user'
 import { ChatType, Message } from '@/types/globals'
-import { useMemoizedFn } from 'ahooks'
-import { useAtom, useSetAtom } from 'jotai'
+import { useLatest, useMemoizedFn } from 'ahooks'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useEffect, useRef } from 'react'
 import io from 'socket.io-client'
 import { useChatMeta } from './apis/chat'
@@ -104,6 +104,12 @@ export function useSocketIOWithHandler() {
   const newMessageReceived = useSetAtom(chatListTryUpdateWhileNewMessageAtom)
   const mutate = useGlobalMutation()
   const notification = useNotification()
+  const user = useAtomValue(userAtom)
+  const userLatest = useLatest(user)
+  useEffect(() => {
+    userLatest.current = user
+  }, [user])
+
   const getChatMeta = useChatMeta()
 
   const socketRef = useRef<SocketIOInstance | null>(null)
@@ -181,11 +187,13 @@ export function useSocketIOWithHandler() {
           getChatMeta.execute(content.sender, ChatType.Private)
         ])
           .then(([groupMeta, userMeta]) => {
-            notification.showNotification({
-              title: groupMeta.name,
-              body: `${userMeta.name}: ${content.content}`,
-              icon: getResourceUrl(groupMeta.avatar)
-            })
+            if (userLatest.current?.id !== content.sender) {
+              notification.showNotification({
+                title: groupMeta.name,
+                body: `${userMeta.name}: ${content.content}`,
+                icon: getResourceUrl(groupMeta.avatar)
+              })
+            }
           })
           .catch(console.error)
       })
