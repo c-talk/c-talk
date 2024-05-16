@@ -152,12 +152,16 @@ export function ChatInput(props: ChatInputProps) {
           chatID: chatID,
           chatType: chatType
         })
-        messageInputRef.current?.focus()
       } finally {
         setLoading(false)
       }
     }
   )
+  useEffect(() => {
+    if (!message.length) {
+      messageInputRef.current?.focus()
+    }
+  }, [message])
   const onImageUploaded = useMemoizedFn((resource: Resource) => {
     sendMessage(MessageType.Image, resource.id)
   })
