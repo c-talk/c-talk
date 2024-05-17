@@ -134,6 +134,15 @@ export function useSocketIOWithHandler() {
     })
   })
 
+  const emitJoinGroup = useMemoizedFn((groupId: string) => {
+    if (!socketRef.current) {
+      return
+    }
+    socketRef.current.emit('join_group', {
+      id: groupId
+    })
+  })
+
   // TODO: 为通知获取聊天元数据提供缓存
   useSocketIO({
     onConnected: (socket) => {
@@ -197,6 +206,7 @@ export function useSocketIOWithHandler() {
     }
   })
   return {
-    reconnect
+    reconnect,
+    emitJoinGroup
   }
 }

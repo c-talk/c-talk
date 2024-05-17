@@ -2,6 +2,7 @@ import { chatListTryAddAtom } from './../../../stores/home'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Page, R } from '@/hooks/ofetch'
 import useGlobalMutation from '@/hooks/useGlobalMutation'
+import { emitJoinGroupAtom } from '@/stores/socket-io'
 import { userAtom } from '@/stores/user'
 import { ChatType, Message, MessageType, PageParams } from '@/types/globals'
 import { useLatest } from 'ahooks'
@@ -145,6 +146,7 @@ export function useChatMeta() {
 export function useJoinChat() {
   const addFriend = useAddFriend()
   const joinGroup = useJoinGroup()
+  const setEmitJoinGroup = useSetAtom(emitJoinGroupAtom)
   const tryAddChatList = useSetAtom(chatListTryAddAtom)
   const mutate = useGlobalMutation()
   const execute = async (chatID: string, chatType: ChatType) => {
@@ -156,6 +158,7 @@ export function useJoinChat() {
         break
       case ChatType.Group:
         await joinGroup.execute(chatID)
+        setEmitJoinGroup(chatID)
         mutate(`/group/${chatID}`)
         mutate(
           (key) => typeof key === 'string' && key.includes('/joined/groups')

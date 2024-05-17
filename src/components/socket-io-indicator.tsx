@@ -6,13 +6,13 @@ import {
 } from '@/components/ui/tooltip'
 import { useToken } from '@/hooks/apis/users'
 import { SocketIOState, useSocketIOWithHandler } from '@/hooks/socket-io'
-import { socketIOIndicatorAtom } from '@/stores/socket-io'
+import { emitJoinGroupAtom, socketIOIndicatorAtom } from '@/stores/socket-io'
 import { userAtom, websocketAuthTokenAtom } from '@/stores/user'
 import { useAsyncEffect } from 'ahooks'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAtom, useAtomValue } from 'jotai'
 import { Check, CircleX, Loader2 } from 'lucide-react'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 export default function SocketIOIndicator() {
   const [websocketToken, setWebsocketToken] = useAtom(websocketAuthTokenAtom)
@@ -26,7 +26,14 @@ export default function SocketIOIndicator() {
     }
   }, [websocketToken, user])
   const socketIOState = useAtomValue(socketIOIndicatorAtom)
-  const { reconnect } = useSocketIOWithHandler()
+  const [emitJoinGroupState, setEmitJoinGroupState] = useAtom(emitJoinGroupAtom)
+  const { reconnect, emitJoinGroup } = useSocketIOWithHandler()
+  useEffect(() => {
+    if (emitJoinGroupState) {
+      emitJoinGroup(emitJoinGroupState)
+      setEmitJoinGroupState(null)
+    }
+  }, [emitJoinGroupState])
   const toolTipText = useMemo(() => {
     switch (socketIOState) {
       case SocketIOState.CONNECTING:
