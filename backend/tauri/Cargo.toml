@@ -19,10 +19,10 @@ shared = { path = "../shared" }
 server = { path = "../server" }
 
 tauri = { version = "1.6.1", features = [
-  "notification-all",
   "dialog-all",
   "http-all",
   "shell-open",
+  "notification-all",
 ] }
 sentry-tauri = "0.3"
 portpicker = "0.1.1"
@@ -36,9 +36,13 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 simd-json = { workspace = true }
 tracing = { workspace = true }
-tracing-subscriber = { workspace = true }
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
+tracing-log = { workspace = true }
 thiserror = { workspace = true }
 anyhow = { workspace = true }
+
+[target.'cfg(target_os="windows")'.dependencies]
+winrt-notification = "0.5"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

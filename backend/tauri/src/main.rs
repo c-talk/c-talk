@@ -4,6 +4,7 @@
 use shared::types::Port;
 
 mod commands;
+mod logging;
 pub mod macros;
 
 fn main() {
@@ -17,7 +18,7 @@ fn main() {
 
     // Everything before here runs in both app and crash reporter processes
     let _guard = sentry_tauri::minidump::init(&client);
-
+    logging::init().expect("failed to initialize logging");
     let port = portpicker::pick_unused_port().expect("failed to find unused port");
     tauri::async_runtime::spawn(server::start(port));
     // Everything after here runs in only the app process
