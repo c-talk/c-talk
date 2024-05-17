@@ -123,7 +123,11 @@ pub async fn send_notification(
             .text1(&params.body);
         toast = if let Some(icon) = icon {
             let file_path = std::path::Path::new(&icon);
-            toast.image(file_path, "sender")
+            toast.icon(
+                file_path,
+                winrt_notification::IconCrop::Square,
+                &params.title,
+            )
         } else {
             toast
         };

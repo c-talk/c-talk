@@ -63,6 +63,7 @@ export function useSyncChatList() {
             )
             continue // 跳过同步，理由为聊天队列手动移除操作
           }
+          console.log(item)
           tryAddChatOrMessage({
             chatType: ChatType.Private,
             chatID: item.friendId,
@@ -84,6 +85,7 @@ export function useSyncChatList() {
             console.log(`skip group ${item.gid} message ${item.message?.id}`)
             continue
           }
+          console.log(item)
           tryAddChatOrMessage({
             chatType: ChatType.Group,
             chatID: item.gid,
