@@ -94,6 +94,7 @@ export const useSocketIO = (params: {
       if (socketRef.current) {
         socketRef.current.disconnect()
         setSocketIOState(SocketIOState.CLOSED)
+        socketRef.current = null
       }
     }
   }, [websocketAuthToken])
@@ -136,6 +137,7 @@ export function useSocketIOWithHandler() {
 
   const emitJoinGroup = useMemoizedFn((groupId: string) => {
     if (!socketRef.current) {
+      console.warn('Socket.IO is not initialized.')
       return
     }
     socketRef.current.emit('join_group', {
@@ -146,6 +148,7 @@ export function useSocketIOWithHandler() {
   // TODO: 为通知获取聊天元数据提供缓存
   useSocketIO({
     onConnected: (socket) => {
+      socketRef.current = socket
       socket.on('private', (content: Message | string) => {
         console.log(content)
         if (typeof content === 'string') {

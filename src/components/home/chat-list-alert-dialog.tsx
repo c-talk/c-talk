@@ -12,6 +12,7 @@ import {
   JoinedGroupVo,
   useDismissGroup,
   useGroupById,
+  useLeaveGroup,
   useRemoveFriend
 } from '@/hooks/apis/chat'
 import { useUserById } from '@/hooks/apis/users'
@@ -35,6 +36,7 @@ export function AskDismissOrLeaveGroupAlertDialog(
   const { joinedGroupVo, open, onOpenChange } = props
   const user = useAtomValue(userAtom)
   const dismissGroup = useDismissGroup()
+  const leaveGroup = useLeaveGroup()
   const isOwner = joinedGroupVo?.group.owner === user?.id
   const [loading, setLoading] = useState(false)
   const mutate = useGlobalMutation()
@@ -55,8 +57,9 @@ export function AskDismissOrLeaveGroupAlertDialog(
     try {
       if (isOwner) {
         await dismissGroup.execute(group.group.id)
+      } else {
+        await leaveGroup.execute(group.group.id)
       }
-      // await leaveGroup.execute(group.group.id)
       removeChatItemFromList(group.group.id)
       onOpenChange(false)
     } finally {
