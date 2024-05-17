@@ -108,12 +108,16 @@ export const useFetch = () => {
       if (response._data) {
         console.error(response._data)
         if (response._data.code && response._data.message) {
-          toast({
-            variant: 'destructive',
-            title: '请求错误',
-            description: `${response._data.code}: ${response._data.message}`
-            // action: <ToastAction altText="Try again">Try again</ToastAction>
-          })
+          if (response._data.message.includes('锁获取失败')) {
+            console.warn('锁获取失败')
+          } else {
+            toast({
+              variant: 'destructive',
+              title: '请求错误',
+              description: `${response._data.code}: ${response._data.message}`
+              // action: <ToastAction altText="Try again">Try again</ToastAction>
+            })
+          }
           return Promise.reject(response._data)
         }
       }
