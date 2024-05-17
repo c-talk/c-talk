@@ -90,6 +90,8 @@ export function useSyncChatList() {
             chatType: ChatType.Group,
             chatID: item.gid,
             ...item.message!
+            // createTime: (+item.message!.createTime +
+            //   1000 * 60 * 60 * 8) as unknown as string
           })
         }
       }

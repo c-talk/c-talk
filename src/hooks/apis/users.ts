@@ -1,6 +1,7 @@
 import { userAtom } from '@/stores/user'
 import { PageParams } from '@/types/globals'
-import { useSetAtom } from 'jotai'
+import { useLatest } from 'ahooks'
+import { useAtomValue, useSetAtom } from 'jotai'
 import useSWR, { mutate } from 'swr'
 import isEmail from 'validator/es/lib/isEmail'
 import { Page, R, useFetch } from '../ofetch'
@@ -40,7 +41,12 @@ export function useLogin() {
 
 export function useToken() {
   const ofetch = useFetch()
+  const user = useAtomValue(userAtom)
+  const latestUser = useLatest(user)
   const execute = async () => {
+    if (!latestUser.current) {
+      throw new Error('no user')
+    }
     return ofetch<R<WebSocketToken>>('/token/get', {
       // credentials: 'include'
     })
